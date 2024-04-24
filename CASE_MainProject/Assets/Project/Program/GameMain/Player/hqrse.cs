@@ -14,6 +14,5 @@ public class hqrse : MonoBehaviour
     void Update()
     {
         //‚Å‚©‚Ü‚³
-        //‚Å‚©‚Ü‚³
     }
 }
