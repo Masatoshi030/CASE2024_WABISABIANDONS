@@ -14,6 +14,7 @@ public class Teruchika : MonoBehaviour
     void Update()
     {
         //エビ田中
+        //カニ山田
 
     }
 }
