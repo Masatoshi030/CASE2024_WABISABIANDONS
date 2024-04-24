@@ -14,6 +14,6 @@ public class Kaichi : MonoBehaviour
     void Update()
     {
         //‚©‚¢‚¿‚«‚µ
-        //kaicha
+
     }
 }
