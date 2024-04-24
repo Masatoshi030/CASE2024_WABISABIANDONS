@@ -13,7 +13,6 @@ public class Teruchika : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //エビ田中
         //カニ山田
 
     }
