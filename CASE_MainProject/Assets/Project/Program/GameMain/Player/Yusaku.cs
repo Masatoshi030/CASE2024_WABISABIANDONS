@@ -14,5 +14,6 @@ public class Yusaku : MonoBehaviour
     void Update()
     {
         //‚¨‚·‚µ
+        //‚½‚×‚½‚¢
     }
 }
