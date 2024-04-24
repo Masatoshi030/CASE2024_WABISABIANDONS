@@ -13,7 +13,6 @@ public class Masatoshi : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //FuckYou!!!!!!
         //I love me.
     }
 }
