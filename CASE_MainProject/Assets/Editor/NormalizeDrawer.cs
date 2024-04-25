@@ -1,5 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
+using UnityEditor.Rendering;
+using Codice.CM.Client.Differences;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,6 +16,13 @@ using UnityEditor;
 public class NormalizeDrawer : PropertyDrawer
 {
     const float pad = 15.0f;
+    const float windowHeight = 100.0f;
+    const float LineWidth = 3.0f;
+
+    static string[] names = { "FromRight", "FromUp", "FromBack" };
+    enum Direction
+    {FromX, FromY, FromZ};
+    Direction direction = Direction.FromZ;
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -42,10 +55,38 @@ public class NormalizeDrawer : PropertyDrawer
         value.y = EditorGUI.Slider(ySlider, value.y, -1.0f, 1.0f);
         value.Normalize();
 
-        if(EditorGUI.EndChangeCheck())
+        Rect Window = new Rect(position.x, position.y + pad * 3, position.width, windowHeight);
+
+        Vector2 start = new Vector2(Window.position.x + Window.width / 2, Window.position.y + Window.height / 2);
+        Vector2 end = start;
+        Vector2 Add = value * Window.height / 3;
+        end.x += Add.x;
+        end.y -= Add.y;
+        EditorGUI.DrawRect(Window, Color.black);
+        Handles.color = Color.white;
+        Handles.DrawLine(start, end);
+        Handles.color = Color.red;
+        Vector2 start2 = start;
+        start2.x += value.x * LineWidth;
+        start2.y -= value.y * LineWidth;
+        Handles.DrawLine(start, start2);
+        Handles.color = Color.green;
+        Vector2 end2 = end;
+        end.x -= value.x * LineWidth;
+        end.y += value.y * LineWidth;
+        Handles.DrawLine(end, end2);
+
+        Rect WindowLabelUp = new Rect(Window.x + Window.width / 2, Window.y, pad, pad);
+        Rect WindowLabelRight = new Rect(Window.width - pad, Window.y + Window.height / 2, pad, pad);
+        EditorGUI.LabelField(WindowLabelUp, "Y");
+        EditorGUI.LabelField(WindowLabelRight, "X");
+
+        if (EditorGUI.EndChangeCheck())
         {
             property.vector2Value = value;
         }
+
+        GUILayout.Space(windowHeight);
     }
 
     void NormalizeVector3(Rect position, SerializedProperty property, GUIContent label)
@@ -68,10 +109,65 @@ public class NormalizeDrawer : PropertyDrawer
         value.z = EditorGUI.Slider(zSlider, value.z, -1.0f, 1.0f);
         value.Normalize();
 
+        Rect Window = new Rect(position.x, position.y + pad * 3, position.width, windowHeight);
+
+        Vector2 start = new Vector2(Window.x + Window.width / 2, Window.position.y + Window.height / 2);
+        Vector2 end = start;
+
+        Vector3 Add = value * Window.height / 3;
+
+        Vector2 nor = Vector2.zero;
+
+        switch (direction)
+        {
+            case Direction.FromX: end.x += Add.z;end.y -= Add.y; nor.x = value.z; nor.y = value.y; break;
+            case Direction.FromY: end.x += Add.x;end.y -= Add.z; nor.x = value.x; nor.y = value.z; break;
+            case Direction.FromZ: end.x += Add.x;end.y -= Add.y; nor.x = value.x; nor.y = value.y; break;
+        }
+        nor.Normalize();
+        EditorGUI.DrawRect(Window, Color.black);
+        Handles.color = Color.white;
+        Handles.DrawLine(start, end);
+        Handles.color = Color.red;
+        Vector2 start2 = start;
+        start2.x += nor.x * LineWidth;
+        start2.y -= nor.y * LineWidth;
+        Handles.DrawLine(start, start2);
+        Handles.color = Color.green;
+        Vector2 end2 = end;
+        end.x -= nor.x * LineWidth;
+        end.y += nor.y * LineWidth;
+        Handles.DrawLine(end, end2);
+        Rect WindowLabelUp = new Rect(Window.x + Window.width / 2, Window.y, pad, pad);
+        Rect WindowLabelRight = new Rect(Window.width - pad, Window.y + Window.height / 2, pad, pad);
+
+        switch (direction)
+        {
+            case Direction.FromX:
+                EditorGUI.LabelField(WindowLabelUp, "Y");
+                EditorGUI.LabelField(WindowLabelRight, "Z");
+                break;
+            case Direction.FromY:
+                EditorGUI.LabelField(WindowLabelUp, "Z"); 
+                EditorGUI.LabelField(WindowLabelRight, "X"); 
+                break;
+            case Direction.FromZ:
+                EditorGUI.LabelField(WindowLabelUp, "Y");
+                EditorGUI.LabelField(WindowLabelRight, "X");
+                break;
+        }
+
+        float pad2 = windowHeight + pad * 4;
+        Rect button = new Rect(position.x, position.y + pad2, position.width, position.height);
+        int buttonvalue = GUI.Toolbar(button, ((int)direction), names);
+
         if (EditorGUI.EndChangeCheck())
         {
             property.vector3Value = value;
+            direction = (Direction)buttonvalue;
         }
+
+        GUILayout.Space(pad2);
     }
 
     void NormalizeVector4(Rect position, SerializedProperty property, GUIContent label)
