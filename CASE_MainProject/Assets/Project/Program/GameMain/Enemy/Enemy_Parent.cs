@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy_Parent : MonoBehaviour
+public abstract class Enemy_Parent : MonoBehaviour
 {
     [SerializeField, Header("Å‘åHP")]
     protected float maxHp;
@@ -55,7 +55,10 @@ public class Enemy_Parent : MonoBehaviour
         {
             // €–SƒAƒjƒ[ƒVƒ‡ƒ“Ä¶
             // €–SŒã”j‰ó
+            Debug.Log("”j‰ó");
             Destroy(gameObject);
         }
     }
+
+    public abstract void DestroyFunc();
 }
