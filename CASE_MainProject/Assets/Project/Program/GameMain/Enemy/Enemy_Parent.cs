@@ -4,6 +4,15 @@ using UnityEngine;
 
 public abstract class Enemy_Parent : MonoBehaviour
 {
+    public enum EnemyType
+    { 
+        [InspectorName("モブ")]Mob, 
+        [InspectorName("ボス")]Boss
+    };
+
+    [SerializeField, Header("敵タイプ"), Toolbar(typeof(EnemyType))]
+    protected EnemyType enemyType;
+
     [SerializeField, Header("最大HP")]
     protected float maxHp;
     [SerializeField, Header("現在のHP"), ReadOnly]
@@ -13,9 +22,20 @@ public abstract class Enemy_Parent : MonoBehaviour
     [SerializeField, Header("現在の圧力"), ReadOnly]
     protected float currentPressure;
 
+    protected static GameObject target;
+
 
     protected void Start()
     {
+        if(target == null)
+        {
+            target = GameObject.Find("Player");
+            if(target != null)
+            {
+                Debug.Log("見つけた");
+            }
+        }
+
         currentHp = maxHp;
         currentPressure = maxPressure;
         Debug.Log("開始");
@@ -53,12 +73,18 @@ public abstract class Enemy_Parent : MonoBehaviour
     {
         if(currentHp <= 0.0f)
         {
-            // 死亡アニメーション再生
-            // 死亡後破壊
-            Debug.Log("破壊");
-            Destroy(gameObject);
+            // 子クラスの破壊関数を呼び出す
+            DestroyFunc();
         }
     }
 
-    public abstract void DestroyFunc();
+    /*
+     * <summary>
+     * 死亡時関数
+     * <param>
+     * なし
+     * <return>
+     * なし
+     */
+    protected abstract void DestroyFunc();
 }
