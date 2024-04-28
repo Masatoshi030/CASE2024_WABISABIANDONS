@@ -54,6 +54,16 @@ public class RateDrawer : PropertyDrawer
         value = EditorGUI.IntSlider(ValueRect, label, value, 0, maxRate);
         index++;
         Rect BarRect = new Rect(position.x, position.y + pad * index, position.width, position.height);
+        float RateValue = (float)value / (float)maxRate;
+        float TextValue = RateValue * 100.0f;
+        string text = TextValue.ToString() + "%";
+        EditorGUI.ProgressBar(BarRect, RateValue, text);
+
+        GUILayout.Space(pad * index);
+        if(EditorGUI.EndChangeCheck())
+        {
+            property.intValue = value;
+        }
     }
 }
 #endif
