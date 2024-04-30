@@ -16,11 +16,13 @@ public class EnemyTypeB : Enemy_Mob
         base.Update();
     }
 
+    //çUåÇA
     protected override void AttackFunc1()
     {
         throw new System.NotImplementedException();
     }
 
+    //çUåÇB
     protected override void AttackFunc2()
     {
         throw new System.NotImplementedException();
