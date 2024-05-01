@@ -129,7 +129,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1775649079}
+    m_TransformParent: {fileID: 1621007425}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 9d26cdf078306a74d8e7ea9cacf5c7f9,
         type: 3}
@@ -236,7 +236,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 1833997290}
   m_Lens:
-    FieldOfView: 60.000004
+    FieldOfView: 60
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -263,7 +263,7 @@ Transform:
   m_GameObject: {fileID: 83077744}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.65, z: -3.77}
+  m_LocalPosition: {x: 0, y: 2.2159185, z: -3.77}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -471,7 +471,7 @@ MonoBehaviour:
   m_ZDamping: 1
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
-  m_ScreenY: 0.5
+  m_ScreenY: 0.63
   m_CameraDistance: 3.77
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
@@ -515,8 +515,8 @@ MonoBehaviour:
     m_InputAxisName: Vertical_Joystick
     m_InputAxisValue: 0
     m_InvertInput: 1
-    m_MinValue: -45
-    m_MaxValue: 45
+    m_MinValue: -25
+    m_MaxValue: 90
     m_Wrap: 0
     m_Recentering:
       m_enabled: 0
@@ -619,7 +619,7 @@ GameObject:
   - component: {fileID: 898493150}
   m_Layer: 0
   m_Name: PlayerCamera_Brain
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -743,7 +743,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 60.000004
+  field of view: 60
   orthographic: 0
   orthographic size: 10
   m_Depth: 0
@@ -770,7 +770,7 @@ Transform:
   m_GameObject: {fileID: 898493149}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.65, z: -3.77}
+  m_LocalPosition: {x: 0, y: 2.2159185, z: -3.77}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -881,6 +881,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1621007424
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1621007425}
+  m_Layer: 0
+  m_Name: Shaft
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1621007425
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1621007424}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 75599563}
+  m_Father: {fileID: 1775649079}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1775649078
 GameObject:
   m_ObjectHideFlags: 0
@@ -891,7 +923,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1775649079}
   m_Layer: 0
-  m_Name: Shaft
+  m_Name: horizontalRotation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -910,7 +942,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 75599563}
+  - {fileID: 1621007425}
   m_Father: {fileID: 1833997290}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1827084582
@@ -1115,8 +1147,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91d397ae5e5175e4b80c556475dae21f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runSpeed: {x: 5, y: 5}
+  runSpeed: {x: 250, y: 250}
+  rotationLerpSpeed: 10
   jumpPower: 5
+  horizontalRotationShaft: {fileID: 1775649079}
   heldSteam: 100
   outSteam: 0
 --- !u!1660057539 &9223372036854775807
