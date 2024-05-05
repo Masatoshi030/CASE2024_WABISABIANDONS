@@ -4,19 +4,28 @@ using System.Collections.Generic;
 
 public class GetImagesInCanvas : MonoBehaviour
 {
-    enum SelectButton 
-    {
-        Saikai,
-        ReStart,
-        Select,
-    }
+    [Header("画面の状態　0:再開/1:リスタート/2:セレクト")]
     [SerializeField] int selectButton;
-    [SerializeField] GameObject SaikaiObjectToActivate;
-    [SerializeField] GameObject SaikaiObjectToDeactivate;
-    [SerializeField] GameObject ReStartObjectToActivate;
-    [SerializeField] GameObject ReStartObjectToDeactivate;
-    [SerializeField] GameObject SelectObjectToActivate;
-    [SerializeField] GameObject SelectObjectToDeactivate;
+
+    [Header("表示ボタンイラスト選択")]
+    [Header("再開ボタン　ON/OFF")]
+    [SerializeField]
+    GameObject SaikaiObjectToActivate;
+    [SerializeField] 
+    GameObject SaikaiObjectToDeactivate;
+
+    [Header("リスタート　ON/OFF")]
+    [SerializeField]
+    GameObject ReStartObjectToActivate;
+    [SerializeField]
+    GameObject ReStartObjectToDeactivate;
+
+    [Header("セレクトボタン　ON/OFF")]
+    [SerializeField]
+    GameObject SelectObjectToActivate;
+    [SerializeField]
+    GameObject SelectObjectToDeactivate;
+
 
     void Start()
     {
