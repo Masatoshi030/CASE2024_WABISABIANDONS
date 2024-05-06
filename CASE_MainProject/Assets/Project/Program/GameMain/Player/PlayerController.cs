@@ -5,7 +5,10 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField, Header("移動加速度")]
-    Vector2 runSpeed = new Vector2(1.0f, 1.0f);
+    float runSpeed = 1.0f;
+
+    [SerializeField, Header("蒸気最大移動加速度")]
+    float runSpeed_Steam = 1.0f;
 
     [SerializeField, Header("回転補間速度")]
     float rotationLerpSpeed = 1.0f;
@@ -38,8 +41,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("蒸気貯蔵量"), ReadOnly]
     float heldSteam = 100.0f;
 
-    [SerializeField, Header("出力蒸気量"), ReadOnly]
-    float outSteam = 0.0f;
+    [SerializeField, Header("瞬間出力蒸気量"), ReadOnly]
+    float outSteamValue = 0.0f;
+
+    [SerializeField, Header("最大瞬間出力蒸気量")]
+    float outMaxSteamValue = 0.5f;
+
+    [SerializeField, Header("スチーム音　AudioSource")]
+    AudioSource au_Steam;
+
 
     // プレイヤーのRigidbody
     Rigidbody myRigidbody;
@@ -69,12 +79,24 @@ public class PlayerController : MonoBehaviour
         //蒸気出力
         if (heldSteam > 0.0f)
         {
-            heldSteam -= (float)DualSense_Manager.instance.GetInputState().RightTrigger.TriggerValue;
+            //瞬間出力蒸気量
+            outSteamValue = (float)DualSense_Manager.instance.GetInputState().RightTrigger.TriggerValue;
+
+            //貯蔵圧力から減らす
+            heldSteam -= outSteamValue * outMaxSteamValue;
+
+            //蒸気音量調節
+            au_Steam.volume = outSteamValue;
 
             if (heldSteam < 0.0f)
             {
                 heldSteam = 0.0f;
             }
+        }
+        else
+        {
+            outSteamValue = 0.0f;
+            au_Steam.volume = 0.0f;
         }
     }
 
@@ -85,8 +107,11 @@ public class PlayerController : MonoBehaviour
         //移動量入力
         runInput = DualSense_Manager.instance.GetLeftStick();
 
-        //移動加速度
-        Vector2 runValue = runInput * runSpeed * Time.deltaTime;
+        // 移動量計算　　移動入力 × 線形補間（通常スピードと蒸気スピードの間を蒸気出力量で補間）
+        Vector2 runValue = runInput * Mathf.Lerp(runSpeed, runSpeed_Steam, outSteamValue);
+
+        //フレーム制御
+        runValue *= Time.deltaTime;
 
         //移動処理
         myRigidbody.velocity = horizontalRotation * new Vector3(runValue.x, myRigidbody.velocity.y, runValue.y);
