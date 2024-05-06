@@ -24,14 +24,18 @@ public abstract class Enemy_Mob : Enemy_Parent
     [SerializeField, Header("視野角")]
     protected float viewingAngle = 80.0f;
 
-    [SerializeField, Header("視点の高さ")]
-    protected float eyeHeight = 1.0f;
+    [SerializeField, Header("視点位置")]
+    protected Transform eyeTransform;
 
     [SerializeField, Header("状態"), Toolbar(typeof(State))]
     protected State state = State.Idle;
     
     protected void Start()
     {
+        if(eyeTransform == null)
+        {
+            eyeTransform = transform.Find("EyeTransform");
+        }
         base.Start();
     }
 
@@ -187,12 +191,10 @@ public abstract class Enemy_Mob : Enemy_Parent
             if (Mathf.Abs(angle) < viewingAngle / 2)
             {
                 Vector3 Direction = MetoTarget.normalized;
-                // 目の位置を決める
-                Vector3 eyePos = transform.position + new Vector3(0.0f, eyeHeight, 0.0f);
-                // 例の作成と表示
-                Ray ray = new Ray(eyePos, Direction);
-                Debug.DrawRay(eyePos, Direction, Color.red);
-                RaycastHit[] hits = Physics.RaycastAll(eyePos, Direction, viewingDistance);
+                // レイの作成と表示
+                Ray ray = new Ray(eyeTransform.position, Direction);
+                Debug.DrawRay(eyeTransform.position, Direction, Color.red);
+                RaycastHit[] hits = Physics.RaycastAll(eyeTransform.position, Direction, viewingDistance);
                 if (hits.Length > 0)
                 {
                     if (hits[0].transform.tag == "Player")
@@ -203,5 +205,98 @@ public abstract class Enemy_Mob : Enemy_Parent
             }
         }
         return (false, distance);
+    }
+
+    protected (bool isFind, float distance, GameObject findObject) FindObjectAtFOV(GameObject[] objects)
+    {
+        // 距離を測る
+        float distance = Vector3.Distance(target.transform.position, transform.position);
+
+        if (distance < viewingDistance)
+        {
+            // 自分からターゲットに向かうベクトル
+            Vector3 MetoTarget = target.transform.position - transform.position;
+            // ターゲットから自分に向かうベクトル
+            Vector3 TargettoMe = -MetoTarget;
+            // 外積でy軸から正面の左右どちらにあるか求める
+            Vector3 axis = Vector3.Cross(transform.forward, MetoTarget);
+
+            // 角度が+なら正面より右にいる-なら左にいる
+            float angle = Vector3.Angle(transform.forward, MetoTarget) * (axis.y < 0 ? -1.0f : 1.0f);
+
+            if (Mathf.Abs(angle) < viewingAngle / 2)
+            {
+                Vector3 Direction = MetoTarget.normalized;
+                // レイの作成と表示
+                Ray ray = new Ray(eyeTransform.position, Direction);
+                Debug.DrawRay(eyeTransform.position, Direction, Color.red);
+                RaycastHit[] hits = Physics.RaycastAll(eyeTransform.position, Direction, viewingDistance);
+                if (hits.Length > 0)
+                {
+                    for(int i = 0; i < objects.Length; i++)
+                    {
+                        if (hits[0].transform.gameObject == objects[i])
+                        {
+                            return (true, distance, objects[i]);
+                        }
+                    }
+                }
+            }
+        }
+        return (false, distance, null);
+    }
+
+    protected (bool isFind, float distance, string findTag) FindObjectAtFOV(string[] tags)
+    {
+        // 距離を測る
+        float distance = Vector3.Distance(target.transform.position, transform.position);
+
+        if (distance < viewingDistance)
+        {
+            // 自分からターゲットに向かうベクトル
+            Vector3 MetoTarget = target.transform.position - transform.position;
+            // ターゲットから自分に向かうベクトル
+            Vector3 TargettoMe = -MetoTarget;
+            // 外積でy軸から正面の左右どちらにあるか求める
+            Vector3 axis = Vector3.Cross(transform.forward, MetoTarget);
+
+            // 角度が+なら正面より右にいる-なら左にいる
+            float angle = Vector3.Angle(transform.forward, MetoTarget) * (axis.y < 0 ? -1.0f : 1.0f);
+
+            if (Mathf.Abs(angle) < viewingAngle / 2)
+            {
+                Vector3 Direction = MetoTarget.normalized;
+                // レイの作成と表示
+                Ray ray = new Ray(eyeTransform.position, Direction);
+                Debug.DrawRay(eyeTransform.position, Direction, Color.red);
+                RaycastHit[] hits = Physics.RaycastAll(eyeTransform.position, Direction, viewingDistance);
+                if (hits.Length > 0)
+                {
+                    for (int i = 0; i < tags.Length; i++)
+                    {
+                        if (hits[0].transform.tag == tags[i])
+                        {
+                            return (true, distance, tags[i]);
+                        }
+                    }
+                }
+            }
+        }
+        return (false, distance, null);
+    }
+
+    protected virtual void JudgeState()
+    {
+        // ステートのジャッジ(アニメーションの終了時に叩いたり)
+    }
+
+    public void SetState(State state)
+    {
+        this.state = state;
+    }
+
+    public void StateMethod()
+    {
+        Debug.Log(state);
     }
 }
