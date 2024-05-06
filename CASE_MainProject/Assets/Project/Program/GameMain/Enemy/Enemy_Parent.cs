@@ -10,6 +10,13 @@ public abstract class Enemy_Parent : MonoBehaviour
         [InspectorName("ボス")]Boss
     };
 
+    public struct EnemySetting
+    {
+        public EnemyType type;
+        public float hp;
+        public float pressure;
+    }
+
     [SerializeField, Header("敵タイプ"), Toolbar(typeof(EnemyType))]
     protected EnemyType enemyType;
 
@@ -32,19 +39,18 @@ public abstract class Enemy_Parent : MonoBehaviour
             target = GameObject.Find("Player");
             if(target != null)
             {
-                Debug.Log("見つけた");
+                Debug.Log("Playerの格納完了");
             }
         }
 
         currentHp = maxHp;
         currentPressure = maxPressure;
-        Debug.Log("開始");
     }
 
     // Update is called once per frame
     protected void Update()
     {
-        Debug.Log("更新");
+
     }
 
     /*
@@ -55,7 +61,7 @@ public abstract class Enemy_Parent : MonoBehaviour
      * <retrun>
      * なし
      */
-    public void Damage(float val)
+    public virtual void Damage(float val)
     {
         currentHp -= val;
         DestroyCheck();
@@ -87,4 +93,5 @@ public abstract class Enemy_Parent : MonoBehaviour
      * なし
      */
     protected abstract void DestroyFunc();
+
 }
