@@ -207,7 +207,7 @@ public abstract class Enemy_Mob : Enemy_Parent
         return (false, distance);
     }
 
-    protected (bool isFind, float distance) FindPlayerAtFOV(GameObject[] objects)
+    protected (bool isFind, float distance, GameObject findObject) FindObjectAtFOV(GameObject[] objects)
     {
         // ‹——£‚ð‘ª‚é
         float distance = Vector3.Distance(target.transform.position, transform.position);
@@ -237,16 +237,16 @@ public abstract class Enemy_Mob : Enemy_Parent
                     {
                         if (hits[0].transform.gameObject == objects[i])
                         {
-                            return (true, distance);
+                            return (true, distance, objects[i]);
                         }
                     }
                 }
             }
         }
-        return (false, distance);
+        return (false, distance, null);
     }
 
-    protected (bool isFind, float distance) FindPlayerAtFOV(string[] tags)
+    protected (bool isFind, float distance, string findTag) FindObjectAtFOV(string[] tags)
     {
         // ‹——£‚ð‘ª‚é
         float distance = Vector3.Distance(target.transform.position, transform.position);
@@ -276,13 +276,13 @@ public abstract class Enemy_Mob : Enemy_Parent
                     {
                         if (hits[0].transform.tag == tags[i])
                         {
-                            return (true, distance);
+                            return (true, distance, tags[i]);
                         }
                     }
                 }
             }
         }
-        return (false, distance);
+        return (false, distance, null);
     }
 
     protected virtual void JudgeState()
