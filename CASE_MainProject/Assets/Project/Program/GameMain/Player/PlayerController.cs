@@ -157,7 +157,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         //上昇中
-        else if(jumpState == JUMP_STATE.Rising)
+        else if (jumpState == JUMP_STATE.Rising)
         {
             //上昇中に×ボタンを押していたら
             if (DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.Down)
@@ -166,22 +166,22 @@ public class PlayerController : MonoBehaviour
 
                 //追加速度をつける
                 myRigidbody.velocity = new Vector3(
-                    myRigidbody.velocity.x, 
+                    myRigidbody.velocity.x,
                     myRigidbody.velocity.y + jumpContinuationPower * (jumpMaxTime - jumpTime / jumpMaxTime) * Time.deltaTime,
                     myRigidbody.velocity.z);
             }
 
             //ジャンプ最大時間を過ぎるか×ボタンを押すのをやめたらと降下に移行
-            if(jumpTime > jumpMaxTime || DualSense_Manager.instance.GetInputState().CrossButton != DualSenseUnity.ButtonState.Down)
+            if (jumpTime > jumpMaxTime || DualSense_Manager.instance.GetInputState().CrossButton != DualSenseUnity.ButtonState.Down)
             {
                 jumpState = JUMP_STATE.Descending;
             }
         }
         //降下中
-        else if(jumpState == JUMP_STATE.Descending)
+        else if (jumpState == JUMP_STATE.Descending)
         {
             //接地判定が有効になったらジャンプ終了
-            if(myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.On)
+            if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.On)
             {
                 jumpState = JUMP_STATE.Idle;
                 jumpTime = 0.0f;

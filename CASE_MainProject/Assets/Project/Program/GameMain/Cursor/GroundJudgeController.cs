@@ -20,6 +20,9 @@ public class GroundJudgeController : MonoBehaviour
         if(other.tag == "Ground")
         {
             onGroundState = ON_GROUND_STATE.On;
+
+            //カーソルを接地判定
+            CursorController.instance.ChangeCursorState(CursorController.ON_CURSOR_STATE.Idle);
         }
     }
 
@@ -28,6 +31,8 @@ public class GroundJudgeController : MonoBehaviour
         if (other.tag == "Ground")
         {
             onGroundState = ON_GROUND_STATE.Off;
+            //カーソルを非接地判定
+            CursorController.instance.ChangeCursorState(CursorController.ON_CURSOR_STATE.OffGround);
         }
     }
 }
