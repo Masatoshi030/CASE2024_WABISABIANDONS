@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy_TypeC : Enemy_Mob
 {
     const float pad = 20.0f;
-    enum SubState
+    enum MainState
     {[InspectorName("共通")] Common, [InspectorName("固有")] Unique };
 
     [Space(pad), Header("--インターバル--")]
@@ -19,12 +19,12 @@ public class Enemy_TypeC : Enemy_Mob
     float rangedInterval;
 
     [Space(pad), Header("--メインパラメータ--")]
-    [SerializeField, Header("ステート"), Toolbar(typeof(SubState))]
-    SubState subState = SubState.Common;
+    [SerializeField, Header("ステート"), Toolbar(typeof(MainState))]
+    MainState subState = MainState.Common;
     [SerializeField, Header("汎用カウント"), ReadOnly]
     float cnt;
-    [SerializeField, Header("回転レート"), Range(0.0f, 1.0f)]
-    float rotationRate = 0.8f;
+    [SerializeField, Header("回転レート"), Range(0.0f, 3.0f)]
+    float rotationRate = 0.6f;
     [SerializeField, Header("移動速度"), Range(0.0f, 30.0f)]
     float moveSpeed = 5.0f;
     [SerializeField, Header("移動時の消費圧力"), Range(0.0f, 20.0f)]
@@ -33,10 +33,10 @@ public class Enemy_TypeC : Enemy_Mob
     float trackingSpeedRate = 1.5f;
     [SerializeField, Header("1秒当たりの圧力回復量")]
     float pressurePerHeal = 5.0f;
-    [SerializeField, Header("逃亡ベクトル")]
-    Vector3 escapeVector;
-    [SerializeField, Header("逃亡準備時間")]
+    [SerializeField, Header("逃亡準備時間"), Range(0.0f, 5.0f)]
     float timeToPrepareEscape = 1.0f;
+    [SerializeField, Header("逃亡時回転レート"), Range(0.0f, 2.0f)]
+    float rotationRateForEscape = 0.9f;
     [SerializeField, Header("逃亡時間"), Range(0.0f, 20.0f)]
     float timeToEscape = 2.0f;
 
@@ -47,21 +47,25 @@ public class Enemy_TypeC : Enemy_Mob
     float pressureForHealMode = 15.0f;
     [SerializeField, Header("回復から復帰する圧力量")]
     float pressureForStoppedHeal = 50.0f;
+    [SerializeField, Header("逃亡後攻撃するか"), ReadOnly]
+    bool bAttackAfterEscape = false;
 
     [Space(pad), Header("--遠距離攻撃--")]
 
     [SerializeField, Header("遷移距離")]
-    float distanceForRangedAttack = 12.0f;
+    float distanceForAttack = 12.0f;
+    [SerializeField, Header("逃亡後攻撃遷移距離")]
+    float distanceForEscapeAfterAttack = 6.0f;
     [SerializeField, Header("消費圧力")]
-    float pressureForRangedAttack = 5.0f;
+    float pressureForAttack = 5.0f;
     [SerializeField, Header("最低必要圧力")]
-    float lineForRagnedAttack = 10.0f;
+    float lineForAttack = 10.0f;
     [SerializeField, Header("遠距離攻撃の弾")]
-    GameObject objectForRangedAttack;
+    GameObject objectForAttack;
     [SerializeField, Header("遠距離攻撃の速度")]
     float rangedAttackSpeed;
     [SerializeField, Header("攻撃オブジェクト生成位置")]
-    Transform rangedAttackTransform;
+    Transform attackTransform;
 
     [Space(pad), Header("--アニメーション関連--")]
     [SerializeField, Header("アニメーターコンポーネント"), ReadOnly]
@@ -86,7 +90,7 @@ public class Enemy_TypeC : Enemy_Mob
         patrol = GetComponent<Patrol>();
         animator = GetComponent<Animator>();
         targetNum = patrol.GetTargets().Length;
-        rangedAttackTransform = transform.Find("AttackTransform");
+        attackTransform = transform.Find("AttackTransform");
     }
 
     // Update is called once per frame
@@ -100,11 +104,19 @@ public class Enemy_TypeC : Enemy_Mob
 
         switch(subState)
         {
-            case SubState.Common: base.Update();break;
-            case SubState.Unique: PrepareEscape(); break;
+            case MainState.Common: base.Update();break;
+            case MainState.Unique: PrepareEscapeFunc(); break;
         }
     }
 
+    /*
+    * <summary>
+    * 待機状態関数
+    * <param>
+    * void
+    * <return>
+    * void
+     */
     protected override void IdleFunc()
     {
         cnt += Time.deltaTime;
@@ -141,6 +153,14 @@ public class Enemy_TypeC : Enemy_Mob
         }
     }
 
+    /*
+    * <summary>
+    * 移動状態関数
+    * <param>
+    * void
+    * <return>
+    * void
+    */
     protected override void MoveFunc()
     {
         cnt += Time.deltaTime;
@@ -177,6 +197,14 @@ public class Enemy_TypeC : Enemy_Mob
         }
     }
 
+    /*
+    * <summary>
+    * 追尾状態関数
+    * <param>
+    * void
+    * <return>
+    * void
+    */
     protected override void TrackingFunc()
     {
         // 追尾に圧力を使う
@@ -198,28 +226,46 @@ public class Enemy_TypeC : Enemy_Mob
             // 攻撃モードへの遷移
             Vector3 Diff = target.transform.position - transform.position;
             float dis2 = Diff.x * Diff.x + Diff.y * Diff.y + Diff.z * Diff.z;
-            float range = distanceForRangedAttack * distanceForRangedAttack;
+            float range = distanceForAttack * distanceForAttack;
 
-            // 遠距離攻撃に重きを置く
-            if (dis2 < range && currentPressure > lineForRagnedAttack)
+            // 距離が近かった場合の逃亡に重きを置く
+            if (dis2 < distanceForEscapeAfterAttack * distanceForEscapeAfterAttack && currentPressure > lineForAttack * 2)
+            {
+                cnt = 0.0f;
+                state = State.Escape;
+                bAttackAfterEscape = true;
+                // ステートを固有ステート化
+                subState = MainState.Unique;
+                return;
+            }
+            else if(currentPressure < pressureForEscapeMode)
+            {
+                cnt = 0.0f;
+                state = State.Escape;
+                subState = MainState.Unique;
+                return;
+            }
+            // 遠距離攻撃への遷移
+            if (dis2 < range && currentPressure > lineForAttack)
             {
                 Debug.Log("遠距離攻撃モードに移行");
                 cnt = 0.0f;
-                currentPressure -= pressureForRangedAttack;
+                currentPressure -= pressureForAttack;
                 animator.SetBool("bRanged", true);
                 state = State.AttackB;
                 return;
             }
-            if (currentPressure < pressureForEscapeMode)
-            {
-                cnt = 0.0f;
-                transform.LookAt(transform.position - transform.forward);
-                state = State.Escape;
-                subState = SubState.Unique;
-            }
         }
     }
 
+    /*
+    * <summary>
+    * 逃亡状態関数
+    * <param>
+    * void
+    * <return>
+    * void
+    */
     protected override void EscapeFunc()
     {
         cnt += Time.deltaTime;
@@ -229,16 +275,45 @@ public class Enemy_TypeC : Enemy_Mob
         if (cnt >= timeToEscape)
         {
             cnt = 0.0f;
-            state = State.Idle;
+            if (bAttackAfterEscape)
+            {
+                Debug.Log("遠距離攻撃モードに移行");
+                cnt = 0.0f;
+                currentPressure -= pressureForAttack;
+                animator.SetBool("bRanged", true);
+                state = State.AttackB;
+                return;
+            }
+            else
+            {
+                cnt = 0.0f;
+                state = State.Idle;
+            }
         }
     }
 
-    protected override void AttackFunc1()
+    /*
+    * <summary>
+    * 攻撃状態関数A
+    * <param>
+    * void
+    * <return>
+    * void
+    */
+    protected override void AttackFuncA()
     {
         // 近距離攻撃無し
     }
 
-    protected override void AttackFunc2()
+    /*
+    * <summary>
+    * 攻撃状態関数B
+    * <param>
+    * void
+    * <return>
+    * void
+    */
+    protected override void AttackFuncB()
     {
         cnt += Time.deltaTime;
         // アニメーション終了待ち
@@ -257,16 +332,40 @@ public class Enemy_TypeC : Enemy_Mob
         }
     }
 
+    /*
+    * <summary>
+    * 特殊状態関数A
+    * <param>
+    * void
+    * <return>
+    * void
+    */
     protected override void SpecialFuncA()
     {
         throw new System.NotImplementedException();
     }
 
+    /*
+    * <summary>
+    * 特殊状態関数B
+    * <param>
+    * void
+    * <return>
+    * void
+    */
     protected override void SpecialFuncB()
     {
         throw new System.NotImplementedException();
     }
 
+    /*
+    * <summary>
+    * 回復状態関数
+    * <param>
+    * void
+    * <return>
+    * void
+    */
     protected override void HealFunc()
     {
         cnt += Time.deltaTime;
@@ -279,49 +378,95 @@ public class Enemy_TypeC : Enemy_Mob
         }
     }
 
+    /*
+    * <summary>
+    * 死亡状態関数
+    * <param>
+    * void
+    * <return>
+    * void
+    */
     protected override void DeathFunc()
     {
         throw new System.NotImplementedException();
     }
 
+    /*
+    * <summary>
+    * 破壊時呼び出し関数
+    * <param>
+    * void
+    * <return>
+    * void
+    */
     protected override void DestroyFunc()
     {
         base.DestroyFunc();
     }
 
-    void PrepareEscape()
+    /*
+    * <summary>
+    * 逃亡準備関数
+    * 逃亡状態に入る前の準備関数
+    * <param>
+    * void
+    * <return>
+    * void
+    */
+    void PrepareEscapeFunc()
     {
         cnt += Time.deltaTime;
         // プレイヤーと逆方向へ少しずつ回転
-        Vector3 targetVector = target.transform.position - transform.position;
+        Vector3 targetVector = transform.position - target.transform.position;
         Vector3 axis = Vector3.Cross(transform.forward, targetVector);
         float angle = Vector3.Angle(transform.forward, targetVector) * (axis.y < 0 ? -1.0f : 1.0f);
-        angle = Mathf.Lerp(0.0f, angle, rotationRate) * -1;
+        angle = Mathf.Lerp(0.0f, angle, rotationRateForEscape);
         transform.Rotate(0.0f, angle * Time.deltaTime, 0.0f);
         if(cnt > timeToPrepareEscape)
         {
             cnt = 0.0f;
-            subState = SubState.Common;
+            subState = MainState.Common;
         }
     }
 
-    // 攻撃後のジャッジ
+    /*
+    * <summary>
+    * 状態判断関数
+    * <param>
+    * void
+    * <return>
+    * void
+    */
     protected override void JudgeState()
     {
         state = State.Idle;
     }
 
-    // 遠距離攻撃関数
+    /*
+    * <summary>
+    * 遠距離攻撃生成関数
+    * <param>
+    * void
+    * <return>
+    * void
+    */
     protected void PlayRangedAttack()
     {
         Vector3 AttackVector = target.transform.position - transform.position;
         AttackVector.Normalize();
-        GameObject bullet = Instantiate(objectForRangedAttack, rangedAttackTransform.position, Quaternion.identity);
+        GameObject bullet = Instantiate(objectForAttack, attackTransform.position, Quaternion.identity);
         bullet.GetComponent<Rigidbody>().AddForce(AttackVector * rangedAttackSpeed, ForceMode.Impulse);
         Debug.Log("遠距離攻撃!!");
     }
 
-    // 遠距離攻撃停止関数
+    /*
+    * <summary>
+    * 遠距離攻撃停止関数
+    * <param>
+    * void
+    * <return>
+    * void
+    */
     protected void StopRangedAttack()
     {
         // 遠距離攻撃boolをfalseに
