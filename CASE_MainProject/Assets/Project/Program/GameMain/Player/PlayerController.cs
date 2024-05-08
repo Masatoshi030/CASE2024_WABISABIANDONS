@@ -5,7 +5,10 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField, Header("移動加速度")]
-    Vector2 runSpeed = new Vector2(1.0f, 1.0f);
+    float runSpeed = 1.0f;
+
+    [SerializeField, Header("蒸気最大移動加速度")]
+    float runSpeed_Steam = 1.0f;
 
     [SerializeField, Header("回転補間速度")]
     float rotationLerpSpeed = 1.0f;
@@ -19,6 +22,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("ジャンプ力")]
     float jumpPower = 5.0f;
 
+    [SerializeField, Header("長押し加算ジャンプ力")]
+    float jumpContinuationPower = 0.01f;
+
     [SerializeField, Header("ジャンプ継続最大時間")]
     float jumpMaxTime = 1.0f;
 
@@ -29,11 +35,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("ジャンプの状態（ステート）"), Toolbar(typeof(JUMP_STATE), "JumpState")]
     JUMP_STATE jumpState = JUMP_STATE.Idle;
 
+    [SerializeField, Header("接地判定")]
+    GroundJudgeController myGroundJudgeController;
+
     [SerializeField, Header("蒸気貯蔵量"), ReadOnly]
     float heldSteam = 100.0f;
 
-    [SerializeField, Header("出力蒸気量"), ReadOnly]
-    float outSteam = 0.0f;
+    [SerializeField, Header("瞬間出力蒸気量"), ReadOnly]
+    float outSteamValue = 0.0f;
+
+    [SerializeField, Header("最大瞬間出力蒸気量")]
+    float outMaxSteamValue = 0.5f;
+
+    [SerializeField, Header("スチーム音　AudioSource")]
+    AudioSource au_Steam;
+
 
     // プレイヤーのRigidbody
     Rigidbody myRigidbody;
@@ -63,12 +79,24 @@ public class PlayerController : MonoBehaviour
         //蒸気出力
         if (heldSteam > 0.0f)
         {
-            heldSteam -= (float)DualSense_Manager.instance.GetInputState().RightTrigger.TriggerValue;
+            //瞬間出力蒸気量
+            outSteamValue = (float)DualSense_Manager.instance.GetInputState().RightTrigger.TriggerValue;
+
+            //貯蔵圧力から減らす
+            heldSteam -= outSteamValue * outMaxSteamValue;
+
+            //蒸気音量調節
+            au_Steam.volume = outSteamValue;
 
             if (heldSteam < 0.0f)
             {
                 heldSteam = 0.0f;
             }
+        }
+        else
+        {
+            outSteamValue = 0.0f;
+            au_Steam.volume = 0.0f;
         }
     }
 
@@ -79,8 +107,11 @@ public class PlayerController : MonoBehaviour
         //移動量入力
         runInput = DualSense_Manager.instance.GetLeftStick();
 
-        //移動加速度
-        Vector2 runValue = runInput * runSpeed * Time.deltaTime;
+        // 移動量計算　　移動入力 × 線形補間（通常スピードと蒸気スピードの間を蒸気出力量で補間）
+        Vector2 runValue = runInput * Mathf.Lerp(runSpeed, runSpeed_Steam, outSteamValue);
+
+        //フレーム制御
+        runValue *= Time.deltaTime;
 
         //移動処理
         myRigidbody.velocity = horizontalRotation * new Vector3(runValue.x, myRigidbody.velocity.y, runValue.y);
@@ -113,10 +144,48 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void OnJump()
     {
-
-        if(DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.NewDown)
+        //ジャンプ待ち状態
+        if (jumpState == JUMP_STATE.Idle)
         {
+            //最初の初速とジャンプ開始命令
+            if (DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.NewDown)
+            {
+                //ジャンプ上昇状態へ移行
+                jumpState = JUMP_STATE.Rising;
+                //初速をつける
+                myRigidbody.velocity = new Vector3(myRigidbody.velocity.x, jumpPower, myRigidbody.velocity.z);
+            }
+        }
+        //上昇中
+        else if (jumpState == JUMP_STATE.Rising)
+        {
+            //上昇中に×ボタンを押していたら
+            if (DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.Down)
+            {
+                jumpTime += Time.deltaTime;
 
+                //追加速度をつける
+                myRigidbody.velocity = new Vector3(
+                    myRigidbody.velocity.x,
+                    myRigidbody.velocity.y + jumpContinuationPower * (jumpMaxTime - jumpTime / jumpMaxTime) * Time.deltaTime,
+                    myRigidbody.velocity.z);
+            }
+
+            //ジャンプ最大時間を過ぎるか×ボタンを押すのをやめたらと降下に移行
+            if (jumpTime > jumpMaxTime || DualSense_Manager.instance.GetInputState().CrossButton != DualSenseUnity.ButtonState.Down)
+            {
+                jumpState = JUMP_STATE.Descending;
+            }
+        }
+        //降下中
+        else if (jumpState == JUMP_STATE.Descending)
+        {
+            //接地判定が有効になったらジャンプ終了
+            if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.On)
+            {
+                jumpState = JUMP_STATE.Idle;
+                jumpTime = 0.0f;
+            }
         }
     }
 }
