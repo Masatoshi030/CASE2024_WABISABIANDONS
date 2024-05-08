@@ -258,7 +258,7 @@ MonoBehaviour:
   currentPressure: 0
   viewingDistance: 20
   viewingAngle: 80
-  eyeHeight: 1
+  eyeTransform: {fileID: 0}
   state: 0
   waitInterval: 3
   moveInterval: 2
@@ -266,26 +266,27 @@ MonoBehaviour:
   rangedInterval: 6
   subState: 0
   cnt: 0
-  rotationRate: 0.65
+  rotationRate: 1.5
   moveSpeed: 5.2
   pressureForMove: 2
   trackingSpeedRate: 1.5
   pressurePerHeal: 5
   escapeVector: {x: 0, y: 0, z: 0}
   timeToPrepareEscape: 1
+  rotationRateForEscape: 1.35
   timeToEscape: 2
   pressureForEscapeMode: 12
   pressureForHealMode: 10
   pressureForStoppedHeal: 35
-  distanceForRangedAttack: 12
-  pressureForRangedAttack: 5
-  lineForRagnedAttack: 10
-  objectForRangedAttack: {fileID: 6806269914522788958, guid: 8d054d3b4a0136b49b065b8924f06586,
+  bAttackAfterEscape: 0
+  distanceForAttack: 12
+  distanceForEscapeAfterAttack: 6
+  pressureForAttack: 5
+  lineForAttack: 10
+  objectForAttack: {fileID: 6806269914522788958, guid: 8d054d3b4a0136b49b065b8924f06586,
     type: 3}
   rangedAttackSpeed: 20
-  distanceForCloseAttack: 5
-  pressureForCloseAttack: 2
-  lineForCloseAttack: 7
+  attackTransform: {fileID: 0}
   animator: {fileID: 0}
   patrol: {fileID: 0}
   targetNum: 0

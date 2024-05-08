@@ -49,8 +49,8 @@ public abstract class Enemy_Mob : Enemy_Parent
             case State.Move: MoveFunc(); break;
             case State.Tracking: TrackingFunc(); break;
             case State.Escape: EscapeFunc(); break;
-            case State.AttackA: AttackFunc1(); break;
-            case State.AttackB: AttackFunc2(); break;
+            case State.AttackA: AttackFuncA(); break;
+            case State.AttackB: AttackFuncB(); break;
             case State.SpecialA: SpecialFuncA(); break;
             case State.SpecialB: SpecialFuncB(); break;
             case State.Heal: HealFunc(); break;
@@ -106,7 +106,7 @@ public abstract class Enemy_Mob : Enemy_Parent
      * <return>
      * なし
      */
-    protected abstract void AttackFunc1();
+    protected abstract void AttackFuncA();
 
     /*
      * <summary>
@@ -116,7 +116,7 @@ public abstract class Enemy_Mob : Enemy_Parent
      * <return>
      * なし
      */
-    protected abstract void AttackFunc2();
+    protected abstract void AttackFuncB();
 
     /*
      * <summary>
@@ -207,6 +207,14 @@ public abstract class Enemy_Mob : Enemy_Parent
         return (false, distance);
     }
 
+    /*
+    * <summary>
+    * オブジェクト探索関数
+    * <param>
+    * GameObject[] objects
+    * <return>
+    * bool isFind, float distance, GameObject findObject
+    */
     protected (bool isFind, float distance, GameObject findObject) FindObjectAtFOV(GameObject[] objects)
     {
         // 距離を測る
@@ -246,6 +254,14 @@ public abstract class Enemy_Mob : Enemy_Parent
         return (false, distance, null);
     }
 
+    /*
+    * <summary>
+    * オブジェクト探索関数
+    * <param>
+    * string[] tags
+    * <return>
+    * bool isFind, float distance, string findTag
+    */
     protected (bool isFind, float distance, string findTag) FindObjectAtFOV(string[] tags)
     {
         // 距離を測る
@@ -285,18 +301,29 @@ public abstract class Enemy_Mob : Enemy_Parent
         return (false, distance, null);
     }
 
+    /*
+    * <summary>
+    * 状態判断関数(仮想)
+    * <param>
+    * void
+    * <return>
+    * void
+    */
     protected virtual void JudgeState()
     {
         // ステートのジャッジ(アニメーションの終了時に叩いたり)
     }
 
+    /*
+    * <summary>
+    * 状態設定関数
+    * <param>
+    * Enemy_Mob.State state
+    * <return>
+    * void
+    */
     public void SetState(State state)
     {
         this.state = state;
-    }
-
-    public void StateMethod()
-    {
-        Debug.Log(state);
     }
 }
