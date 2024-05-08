@@ -4,34 +4,39 @@ using System.Collections.Generic;
 
 public class GetImagesInCanvas : MonoBehaviour
 {
-    [Header("画面の状態　0:再開/1:リスタート/2:セレクト")]
-    [SerializeField] int selectButton;
+    [SerializeField, Header("画面の状態　0:再開/1:リスタート/2:セレクト")]
+    int selectButton;
 
     [Header("表示ボタンイラスト選択")]
-    [Header("再開ボタン　ON/OFF")]
-    [SerializeField]
+    [SerializeField, Header("再開ボタン　ON/OFF")]
     GameObject SaikaiObjectToActivate;
     [SerializeField] 
     GameObject SaikaiObjectToDeactivate;
 
-    [Header("リスタート　ON/OFF")]
-    [SerializeField]
+    [SerializeField, Header("リスタート　ON/OFF")]
     GameObject ReStartObjectToActivate;
     [SerializeField]
     GameObject ReStartObjectToDeactivate;
 
-    [Header("セレクトボタン　ON/OFF")]
-    [SerializeField]
+    [SerializeField, Header("セレクトボタン　ON/OFF")]
     GameObject SelectObjectToActivate;
     [SerializeField]
     GameObject SelectObjectToDeactivate;
 
+     [SerializeField, Header("時間保存")]
+     float timeElapsed;
+    [SerializeField, Header("ボタンのセレクト実行する間時間")]
+    float timeOut;
+    [SerializeField, Header("触っていない時間")]
+    float noTouchTime;
+    [SerializeField, Header("ボタンのクールタイム")]
+    float buttonCoolTime;
 
     void Start()
     {
         selectButton = 0;
 
-        // SaikaiObjectToActivateを非アクティブにする
+        // ボタン非アクティブにする
         SaikaiObjectToActivate.SetActive(false);
         ReStartObjectToActivate.SetActive(false);
         SelectObjectToActivate.SetActive(false);
@@ -39,25 +44,75 @@ public class GetImagesInCanvas : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.DownArrow))
+        noTouchTime += Time.deltaTime;
+        
+        //下ボタン処理
+        if (DualSense_Manager.instance.GetInputState().DPadDownButton == DualSenseUnity.ButtonState.Down)
         {
-            selectButton++;
+            //クールタイムが上がっていたらボタン入力処理
+            if (noTouchTime > buttonCoolTime)
+            {
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
+                selectButton++;
+                timeElapsed = 0.0f;
+            }
+            timeElapsed += Time.deltaTime;
+            
+            //一定時間押していると実行される処理
+            if (timeElapsed > timeOut)
+            {
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
+                selectButton++;
+                timeElapsed = 0.0f;
+            }
+
             if (selectButton > 2)
             {
                 selectButton = 0;
             }
-        }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            selectButton--;
 
-            if(selectButton<0)
+            //ボタンが触られたのでクールタイム初期化
+            noTouchTime = 0.0f;
+        }
+       
+       //上ボタン処理
+        if (DualSense_Manager.instance.GetInputState().DPadUpButton == DualSenseUnity.ButtonState.Down)
+        {
+            //クールタイムが上がっていたらボタン入力処理
+            if (noTouchTime > buttonCoolTime)
+            {
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
+                selectButton--;
+                timeElapsed = 0.0f;
+            }
+
+            timeElapsed += Time.deltaTime;
+
+            //一定時間押していると実行される処理
+            if (timeElapsed > timeOut)
+            {
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
+
+                selectButton--;
+                timeElapsed = 0.0f;
+            }
+
+            if (selectButton < 0)
             {
                 selectButton = 2;
             }
+
+            //ボタンが触られたのでクールタイム初期化
+            noTouchTime = 0.0f;
         }
 
-        if(selectButton ==0)
+        //if(DualSense_Manager.instance.GetLeftStick().y == 1.0f)
+        // {
+
+        // }
+
+
+        if (selectButton ==0)
         {
             // SaikaiObjectToActivateをアクティブにする
             SaikaiObjectToActivate.SetActive(true);
