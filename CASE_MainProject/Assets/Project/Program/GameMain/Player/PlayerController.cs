@@ -28,6 +28,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("ジャンプ継続最大時間")]
     float jumpMaxTime = 1.0f;
 
+    [SerializeField, Header("蒸気最大ジャンプ力")]
+    float jumpPower_Steam = 8.0f;
+
+    [SerializeField, Header("蒸気最大長押し加算ジャンプ力")]
+    float jumpContinuationPower_Steam = 0.02f;
+
     float jumpTime = 0.0f;
 
     enum JUMP_STATE
@@ -50,7 +56,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("スチーム音　AudioSource")]
     AudioSource au_Steam;
 
-
     // プレイヤーのRigidbody
     Rigidbody myRigidbody;
 
@@ -59,6 +64,14 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, ReadOnly]
     Vector2 runInput;
+
+    enum ATTACK_STATE
+    { Idle, Attack};
+    [SerializeField, Header("突撃状態（ステート）"), Toolbar(typeof(ATTACK_STATE), "AttackState")]
+    ATTACK_STATE attackState = ATTACK_STATE.Idle;
+
+    [SerializeField, Header("突撃初速")]
+    float attackSpeed = 5.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -98,6 +111,10 @@ public class PlayerController : MonoBehaviour
             outSteamValue = 0.0f;
             au_Steam.volume = 0.0f;
         }
+
+        //=== 突撃 ===//
+
+        OnAttack();
     }
 
     private void FixedUpdate()
@@ -115,6 +132,8 @@ public class PlayerController : MonoBehaviour
 
         //移動処理
         myRigidbody.velocity = horizontalRotation * new Vector3(runValue.x, myRigidbody.velocity.y, runValue.y);
+
+        //地面にいるときは移動アニメーション
 
 
         //=== 回転 ===//
@@ -152,8 +171,13 @@ public class PlayerController : MonoBehaviour
             {
                 //ジャンプ上昇状態へ移行
                 jumpState = JUMP_STATE.Rising;
+
+                //ジャンプアニメーション開始
+
                 //初速をつける
-                myRigidbody.velocity = new Vector3(myRigidbody.velocity.x, jumpPower, myRigidbody.velocity.z);
+                myRigidbody.velocity = new Vector3(myRigidbody.velocity.x, Mathf.Lerp(jumpPower, jumpPower_Steam, outSteamValue), myRigidbody.velocity.z);
+
+                myRigidbody.velocity = myRigidbody.velocity + transform.forward * attackSpeed;
             }
         }
         //上昇中
@@ -167,7 +191,7 @@ public class PlayerController : MonoBehaviour
                 //追加速度をつける
                 myRigidbody.velocity = new Vector3(
                     myRigidbody.velocity.x,
-                    myRigidbody.velocity.y + jumpContinuationPower * (jumpMaxTime - jumpTime / jumpMaxTime) * Time.deltaTime,
+                    myRigidbody.velocity.y + Mathf.Lerp(jumpContinuationPower, jumpContinuationPower_Steam, outSteamValue) * (jumpMaxTime - jumpTime / jumpMaxTime) * Time.deltaTime,
                     myRigidbody.velocity.z);
             }
 
@@ -184,7 +208,39 @@ public class PlayerController : MonoBehaviour
             if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.On)
             {
                 jumpState = JUMP_STATE.Idle;
+
+                //ジャンプアニメーション終了
+
                 jumpTime = 0.0f;
+            }
+        }
+    }
+
+    void OnAttack()
+    {
+        //空中にいる状態で
+        if(myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.Off)
+        {
+            //ジャンプボタンを押すと
+            if(DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.NewDown)
+            {
+                //攻撃状態へ移行
+                attackState = ATTACK_STATE.Attack;
+
+                //突撃アニメーション開始
+            }
+        }
+
+        //突撃中
+        if(attackState == ATTACK_STATE.Attack)
+        {
+            //突撃速度
+            myRigidbody.AddForce(moveRotationShaft.forward * attackSpeed, ForceMode.Force);
+
+            //地面に着地すると終了
+            if(myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.On)
+            {
+                attackState = ATTACK_STATE.Idle;
             }
         }
     }
