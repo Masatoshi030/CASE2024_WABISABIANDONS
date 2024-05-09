@@ -79,9 +79,12 @@ public class Enemy_TypeC : Enemy_Mob
     [SerializeField, Header("次の目的地"), ReadOnly]
     Vector3 nextTargetPos;
 
+    Rigidbody rb;
+
     void Start()
     {
         base.Start();
+        rb = GetComponent<Rigidbody>();
         patrol = GetComponent<Patrol>();
         animator = GetComponent<Animator>();
         targetNum = patrol.GetTargets().Length;
@@ -184,6 +187,7 @@ public class Enemy_TypeC : Enemy_Mob
                 targetIndex = 0;
             }
             nextTargetPos = patrol.GetTargets()[targetIndex].position;
+            rb.velocity = Vector3.zero;
         }
     }
 
@@ -343,7 +347,6 @@ public class Enemy_TypeC : Enemy_Mob
     */
     protected override void SpecialFuncA()
     {
-        throw new System.NotImplementedException();
     }
 
     /*
@@ -356,7 +359,6 @@ public class Enemy_TypeC : Enemy_Mob
     */
     protected override void SpecialFuncB()
     {
-        throw new System.NotImplementedException();
     }
 
     /*
@@ -389,7 +391,8 @@ public class Enemy_TypeC : Enemy_Mob
     */
     protected override void DeathFunc()
     {
-        throw new System.NotImplementedException();
+        // この前に死亡エフェクトを入れたい
+        Destroy(gameObject);
     }
 
     /*
@@ -403,6 +406,8 @@ public class Enemy_TypeC : Enemy_Mob
     protected override void DestroyFunc()
     {
         base.DestroyFunc();
+
+        animator.SetBool("bDeath", true);
     }
 
     /*
@@ -460,5 +465,19 @@ public class Enemy_TypeC : Enemy_Mob
         // 遠距離攻撃boolをfalseに
         bPrepareAttack = false;
         animator.SetBool("bRanged", bPrepareAttack);
+    }
+
+    /*
+     * <summary>
+     * ダメージ関数
+     * <param>
+     * float damageValue, Vector3 direction
+     * <return>
+     * void
+     */
+    public override void Damage(float val, Vector3 direction)
+    {
+        rb.AddForce(direction * val, ForceMode.Impulse);
+        base.Damage(val, direction);
     }
 }
