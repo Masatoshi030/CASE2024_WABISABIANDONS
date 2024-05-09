@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class Enemy_Parent : MonoBehaviour
 {
+    protected const float padA = 20.0f;
+    protected const float padB = 10.0f;
     public enum EnemyType
     { 
         [InspectorName("ƒ‚ƒu")]Mob, 
@@ -20,6 +22,7 @@ public abstract class Enemy_Parent : MonoBehaviour
     [SerializeField, Header("“Gƒ^ƒCƒv"), Toolbar(typeof(EnemyType))]
     protected EnemyType enemyType;
 
+    [Space(padA), Header("--Šî‘bƒpƒ‰ƒ[ƒ^--")]
     [SerializeField, Header("Å‘åHP")]
     protected float maxHp;
     [SerializeField, Header("Œ»İ‚ÌHP"), ReadOnly]
@@ -31,18 +34,20 @@ public abstract class Enemy_Parent : MonoBehaviour
 
     protected static GameObject target;
 
-
-    protected void Start()
+    protected void Awake()
     {
-        if(target == null)
+        if (target == null)
         {
             target = GameObject.Find("Player");
-            if(target != null)
+            if (target != null)
             {
                 Debug.Log("Player‚ÌŠi”[Š®—¹");
             }
         }
+    }
 
+    protected void Start()
+    {
         currentHp = maxHp;
         currentPressure = maxPressure;
     }
@@ -92,6 +97,5 @@ public abstract class Enemy_Parent : MonoBehaviour
      * <return>
      * ‚È‚µ
      */
-    protected abstract void DestroyFunc();
-
+    protected virtual void DestroyFunc() { }
 }
