@@ -12,6 +12,10 @@ public class HeadCollision_Manager : MonoBehaviour
     [SerializeField, Header("火花エフェクト")]
     GameObject hibana_ParticleEffect;
 
+    [SerializeField, Header("パーツ散開エフェクト")]
+    GameObject partsSplit_ParticleEffect;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,6 +51,12 @@ public class HeadCollision_Manager : MonoBehaviour
 
                     //ダメージを与える
                     other.GetComponent<Enemy_Mob>().Damage(20.0f, transform.up);
+
+                    //パーツ散開エフェクトを生成する
+                    Instantiate(partsSplit_ParticleEffect, transform.position, Quaternion.identity);
+
+                    //ヒットストップ
+                    HitStopManager.instance.HitStopEffect(0.2f, 0.25f);
 
                     //ノックバック
                     PlayerController.instance.KnockBack();
