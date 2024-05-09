@@ -4,12 +4,7 @@ using UnityEngine;
 
 public class Enemy_TypeC : Enemy_Mob
 {
-    enum MainState
-    {[InspectorName("共通")] Common, [InspectorName("固有")] Unique };
-
     [Space(padA), Header("--メインパラメータ--")]
-    [SerializeField, Header("ステート"), Toolbar(typeof(MainState))]
-    MainState subState = MainState.Common;
     [SerializeField, Header("汎用カウント"), ReadOnly]
     float cnt;
     [SerializeField, Header("回転レート"), Range(0.0f, 3.0f)]
@@ -95,11 +90,7 @@ public class Enemy_TypeC : Enemy_Mob
     // Update is called once per frame
     void Update()
     {
-        switch (subState)
-        {
-            case MainState.Common: base.Update(); break;
-            case MainState.Unique: PrepareEscapeFunc(); break;
-        }
+        base.Update();
     }
 
     /*
@@ -218,8 +209,7 @@ public class Enemy_TypeC : Enemy_Mob
                 cnt = 0.0f;
                 state = State.Escape;
                 bAttackAfterEscape = true;
-                // ステートを固有ステート化
-                subState = MainState.Unique;
+                state = State.UniqueA;
                 return;
             }
             else if (distance < distanceForAttack * distanceForAttack && currentPressure > lineForAttack)
@@ -234,8 +224,7 @@ public class Enemy_TypeC : Enemy_Mob
             else if (currentPressure < pressureForEscapeMode)
             {
                 cnt = 0.0f;
-                state = State.Escape;
-                subState = MainState.Unique;
+                state = State.UniqueA;
                 return;
             }
 
@@ -345,20 +334,20 @@ public class Enemy_TypeC : Enemy_Mob
     * <return>
     * void
     */
-    protected override void SpecialFuncA()
+    protected override void UniqueFuncA()
     {
-    }
-
-    /*
-    * <summary>
-    * 特殊状態関数B
-    * <param>
-    * void
-    * <return>
-    * void
-    */
-    protected override void SpecialFuncB()
-    {
+        cnt += Time.deltaTime;
+        // プレイヤーと逆方向へ少しずつ回転
+        Vector3 targetVector = transform.position - target.transform.position;
+        Vector3 axis = Vector3.Cross(transform.forward, targetVector);
+        float angle = Vector3.Angle(transform.forward, targetVector) * (axis.y < 0 ? -1.0f : 1.0f);
+        angle = Mathf.Lerp(0.0f, angle, rotationRateForEscape);
+        transform.Rotate(0.0f, angle * Time.deltaTime, 0.0f);
+        if (cnt > timeToPrepareEscape)
+        {
+            state = State.Escape;
+            cnt = 0.0f;
+        }
     }
 
     /*
@@ -405,34 +394,8 @@ public class Enemy_TypeC : Enemy_Mob
     */
     protected override void DestroyFunc()
     {
-        base.DestroyFunc();
-
         animator.SetBool("bDeath", true);
-    }
-
-    /*
-    * <summary>
-    * 逃亡準備関数
-    * 逃亡状態に入る前の準備関数
-    * <param>
-    * void
-    * <return>
-    * void
-    */
-    void PrepareEscapeFunc()
-    {
-        cnt += Time.deltaTime;
-        // プレイヤーと逆方向へ少しずつ回転
-        Vector3 targetVector = transform.position - target.transform.position;
-        Vector3 axis = Vector3.Cross(transform.forward, targetVector);
-        float angle = Vector3.Angle(transform.forward, targetVector) * (axis.y < 0 ? -1.0f : 1.0f);
-        angle = Mathf.Lerp(0.0f, angle, rotationRateForEscape);
-        transform.Rotate(0.0f, angle * Time.deltaTime, 0.0f);
-        if (cnt > timeToPrepareEscape)
-        {
-            cnt = 0.0f;
-            subState = MainState.Common;
-        }
+        state = State.DeathWait;
     }
 
     /*
@@ -475,9 +438,9 @@ public class Enemy_TypeC : Enemy_Mob
      * <return>
      * void
      */
-    public override void Damage(float val, Vector3 direction)
+    public override bool Damage(float val, Vector3 direction)
     {
         rb.AddForce(direction * val, ForceMode.Impulse);
-        base.Damage(val, direction);
+        return base.Damage(val, direction);
     }
 }

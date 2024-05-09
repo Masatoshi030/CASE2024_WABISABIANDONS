@@ -192,26 +192,13 @@ public class Enemy_TypeB : Enemy_Mob
 
     /*
     * <summary>
-    * UŒ‚ŠÖ”B
+    * •ÇŒƒ“ËŠÖ”
     * <param>
     * void
     * <return>
     * void
     */
-    protected override void AttackFuncB()
-    {
-        
-    }
-
-    /*
-    * <summary>
-    * “ÁêŠÖ”A
-    * <param>
-    * void
-    * <return>
-    * void
-    */
-    protected override void SpecialFuncA()
+    protected override void UniqueFuncA()
     {
         // •Ç’Ç“Ë‚ÌƒNƒ‰ƒbƒVƒ…ˆ—
         cnt += Time.deltaTime;
@@ -231,7 +218,7 @@ public class Enemy_TypeB : Enemy_Mob
     * <return>
     * void
     */
-    protected override void SpecialFuncB()
+    protected override void UniqueFuncB()
     {
         
     }
@@ -272,7 +259,7 @@ public class Enemy_TypeB : Enemy_Mob
     */
     protected override void DestroyFunc()
     {
-        base.DestroyFunc();
+        state = State.DeathWait;
         animator.SetBool("bDeath", true);
     }
 
@@ -286,16 +273,15 @@ public class Enemy_TypeB : Enemy_Mob
                 float dot = Vector3.Dot(cNormal, transform.forward);
                 if (dot < clashDot)
                 {
-                    if(currentHp > 1)
+                    if(currentHp - clashDamege > 0)
                     {
-                        state = State.SpecialA;
+                        state = State.UniqueA;
                         animator.SetBool("bClash", true);
                         Damage(clashDamege, Vector3.zero);
                         rb.isKinematic = true;
                     }
                     else
                     {
-                        state = State.SpecialB;
                         Damage(clashDamege, Vector3.zero);
                     }
                 }
