@@ -32,9 +32,13 @@ public class GetImagesInCanvas : MonoBehaviour
     [SerializeField, Header("ボタンのクールタイム")]
     float buttonCoolTime;
 
+    
+
     void Start()
     {
         selectButton = 0;
+        timeOut = 0.2f;
+        buttonCoolTime = 0.1f;
 
         // ボタン非アクティブにする
         SaikaiObjectToActivate.SetActive(false);
@@ -45,7 +49,7 @@ public class GetImagesInCanvas : MonoBehaviour
     void Update()
     {
         noTouchTime += Time.deltaTime;
-        
+
         //下ボタン処理
         if (DualSense_Manager.instance.GetInputState().DPadDownButton == DualSenseUnity.ButtonState.Down)
         {
@@ -106,11 +110,72 @@ public class GetImagesInCanvas : MonoBehaviour
             noTouchTime = 0.0f;
         }
 
-        //if(DualSense_Manager.instance.GetLeftStick().y == 1.0f)
-        // {
+        if (DualSense_Manager.instance.GetLeftStick().y > 0.5f &&
+            1.0f <= DualSense_Manager.instance.GetLeftStick().y)
+        {
+            //クールタイムが上がっていたらボタン入力処理
+            if (noTouchTime > buttonCoolTime)
+            {
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
+                selectButton--;
+                timeElapsed = 0.0f;
+            }
 
-        // }
+            timeElapsed += Time.deltaTime;
 
+            //一定時間押していると実行される処理
+            if (timeElapsed > timeOut)
+            {
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
+
+                selectButton--;
+                timeElapsed = 0.0f;
+            }
+
+            if (selectButton < 0)
+            {
+                selectButton = 2;
+            }
+
+            //ボタンが触られたのでクールタイム初期化
+            noTouchTime = 0.0f;
+        }
+
+        if (-0.5f>DualSense_Manager.instance.GetLeftStick().y &&
+             DualSense_Manager.instance.GetLeftStick().y<= - 1.0f)
+        {
+            //クールタイムが上がっていたらボタン入力処理
+            if (noTouchTime > buttonCoolTime)
+            {
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
+                selectButton++;
+                timeElapsed = 0.0f;
+            }
+
+            timeElapsed += Time.deltaTime;
+
+            //一定時間押していると実行される処理
+            if (timeElapsed > timeOut)
+            {
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
+
+                selectButton++;
+                timeElapsed = 0.0f;
+            }
+
+            if (selectButton > 2)
+            {
+                selectButton = 0;
+            }
+
+            //ボタンが触られたのでクールタイム初期化
+            noTouchTime = 0.0f;
+        }
+
+        if(DualSense_Manager.instance.GetInputState().CircleButton== DualSenseUnity.ButtonState.NewDown)
+        {
+            Debug.Log("〇ボタンが押された");
+        }
 
         if (selectButton ==0)
         {
