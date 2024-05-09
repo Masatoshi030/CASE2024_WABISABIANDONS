@@ -9,6 +9,8 @@ public class Enemy_TypeB : Enemy_Mob
     float cnt;
     [SerializeField, Header("移動速度")]
     float moveSpeed = 3.0f;
+    [SerializeField, Header("壁激突時のダメージ")]
+    float clashDamege = 1.0f;
     
 
     [Space(padB), Header("--攻撃関連--")]
@@ -253,7 +255,7 @@ public class Enemy_TypeB : Enemy_Mob
     */
     protected override void DeathFunc()
     {
-        
+        Destroy(gameObject);
     }
 
     /*
@@ -267,6 +269,7 @@ public class Enemy_TypeB : Enemy_Mob
     protected override void DestroyFunc()
     {
         base.DestroyFunc();
+        animator.SetBool("bDeath", true);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -279,8 +282,16 @@ public class Enemy_TypeB : Enemy_Mob
                 float dot = Vector3.Dot(cNormal, transform.forward);
                 if (dot < clashDot)
                 {
-                    state = State.SpecialA;
-                    animator.SetBool("bClash", true);
+                    if(currentHp > 1)
+                    {
+                        state = State.SpecialA;
+                        animator.SetBool("bClash", true);
+                        Damage(clashDamege, Vector3.zero);
+                    }
+                    else
+                    {
+                        Damage(clashDamege, Vector3.zero);
+                    }
                 }
             }
         }

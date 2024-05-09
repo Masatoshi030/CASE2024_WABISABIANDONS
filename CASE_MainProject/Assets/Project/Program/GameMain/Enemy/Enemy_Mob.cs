@@ -55,7 +55,7 @@ public abstract class Enemy_Mob : Enemy_Parent
             case State.SpecialA: SpecialFuncA(); break;
             case State.SpecialB: SpecialFuncB(); break;
             case State.Heal: HealFunc(); break;
-            case State.Death: break;
+            case State.Death: DeathFunc(); break;
         }
     }
 
