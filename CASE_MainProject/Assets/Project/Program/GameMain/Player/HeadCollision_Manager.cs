@@ -49,17 +49,24 @@ public class HeadCollision_Manager : MonoBehaviour
                     //衝突金属音
                     audioSource.PlayOneShot(soundClips[0]);
 
-                    //ダメージを与える
-                    other.GetComponent<Enemy_Mob>().Damage(20.0f, transform.up);
-
-                    //パーツ散開エフェクトを生成する
-                    Instantiate(partsSplit_ParticleEffect, transform.position, Quaternion.identity);
-
-                    //ヒットストップ
-                    HitStopManager.instance.HitStopEffect(0.2f, 0.25f);
-
                     //ノックバック
                     PlayerController.instance.KnockBack();
+                    
+                    //倒したら
+                    if (other.GetComponent<Enemy_Mob>().Damage(20.0f, transform.up))
+                    {
+                        //パーツ散開エフェクトを生成する
+                        Instantiate(partsSplit_ParticleEffect, transform.position, Quaternion.identity);
+
+                        //ヒットストップ
+                        HitStopManager.instance.HitStopEffect(0.5f, 0.25f);
+                    }
+                    //倒してない
+                    else
+                    {
+                        //ヒットストップ
+                        HitStopManager.instance.HitStopEffect(0.2f, 0.25f);
+                    }
                 }
             }
         }
