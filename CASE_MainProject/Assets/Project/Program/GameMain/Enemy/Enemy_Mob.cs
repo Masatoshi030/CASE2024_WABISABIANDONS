@@ -10,12 +10,16 @@ public abstract class Enemy_Mob : Enemy_Parent
         [InspectorName("移動")] Move,
         [InspectorName("追尾")] Tracking,
         [InspectorName("逃走")] Escape,
+        [InspectorName("被弾")] Damaged,
         [InspectorName("攻撃A")] AttackA,
         [InspectorName("攻撃B")] AttackB,
-        [InspectorName("特殊A")]SpecialA,
-        [InspectorName("特殊B")]SpecialB,
+        [InspectorName("固有A")] UniqueA,
+        [InspectorName("固有B")] UniqueB,
+        [InspectorName("固有C")] UniqueC,
+        [InspectorName("固有D")] UniqueD,
         [InspectorName("回復")] Heal,
-        [InspectorName("破壊")] Death,
+        [InspectorName("死亡待ち")]DeathWait,
+        [InspectorName("死亡")] Death,
     }
 
     [Space(padA), Header("--視認パラメータ--")]
@@ -50,11 +54,15 @@ public abstract class Enemy_Mob : Enemy_Parent
             case State.Move: MoveFunc(); break;
             case State.Tracking: TrackingFunc(); break;
             case State.Escape: EscapeFunc(); break;
+            case State.Damaged: DamagedFunc(); break;
             case State.AttackA: AttackFuncA(); break;
             case State.AttackB: AttackFuncB(); break;
-            case State.SpecialA: SpecialFuncA(); break;
-            case State.SpecialB: SpecialFuncB(); break;
+            case State.UniqueA: UniqueFuncA(); break;
+            case State.UniqueB: UniqueFuncB(); break;
+            case State.UniqueC: UniqueFuncC(); break;
+            case State.UniqueD: UniqueFuncD(); break;
             case State.Heal: HealFunc(); break;
+            case State.DeathWait: DeathWaitFunc(); break;
             case State.Death: DeathFunc(); break;
         }
     }
@@ -101,6 +109,16 @@ public abstract class Enemy_Mob : Enemy_Parent
 
     /*
      * <summary>
+     * 被弾状態関数
+     * <param>
+     * void
+     * <return>
+     * void
+     */
+    protected virtual void DamagedFunc() { }
+
+    /*
+     * <summary>
      * 攻撃関数パターンA
      * <param>
      * なし
@@ -121,23 +139,43 @@ public abstract class Enemy_Mob : Enemy_Parent
 
     /*
      * <summary>
-     * 特殊関数パターンA
+     * 固有関数パターンA
      * <param>
      * なし
      * <return>
      * なし
      */
-    protected virtual void SpecialFuncA() { }
+    protected virtual void UniqueFuncA() { }
 
     /*
      * <summary>
-     * 特殊関数パターンB
+     * 固有関数パターンB
      * <param>
      * なし
      * <return>
      * なし
      */
-    protected virtual void SpecialFuncB() { }
+    protected virtual void UniqueFuncB() { }
+
+    /*
+     * <summary>
+     * 固有関数パターンC
+     * <param>
+     * なし
+     * <return>
+     * なし
+     */
+    protected virtual void UniqueFuncC() { }
+
+    /*
+     * <summary>
+     * 固有関数パターンD
+     * <param>
+     * なし
+     * <return>
+     * なし
+     */
+    protected virtual void UniqueFuncD() { }
 
     /*
      * <summary>
@@ -151,6 +189,16 @@ public abstract class Enemy_Mob : Enemy_Parent
 
     /*
      * <summary>
+     * 死亡待ち関数
+     * <param>
+     * void
+     * <return>
+     * void
+     */
+    protected virtual void DeathWaitFunc() { }
+
+    /*
+     * <summary>
      * 死亡状態関数
      * <param>
      * なし
@@ -159,10 +207,6 @@ public abstract class Enemy_Mob : Enemy_Parent
      */
     protected virtual void DeathFunc() { }
 
-    protected override void DestroyFunc()
-    {
-
-    }
 
     /*
      * <summary>

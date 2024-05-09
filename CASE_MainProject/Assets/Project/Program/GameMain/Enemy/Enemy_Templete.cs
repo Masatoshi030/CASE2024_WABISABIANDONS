@@ -117,7 +117,7 @@ public class Enemy_Templete : Enemy_Mob
     * <return>
     * void
     */
-    protected override void SpecialFuncA()
+    protected override void UniqueFuncA()
     {
         throw new System.NotImplementedException();
     }
@@ -130,7 +130,7 @@ public class Enemy_Templete : Enemy_Mob
     * <return>
     * void
     */
-    protected override void SpecialFuncB()
+    protected override void UniqueFuncB()
     {
         throw new System.NotImplementedException();
     }

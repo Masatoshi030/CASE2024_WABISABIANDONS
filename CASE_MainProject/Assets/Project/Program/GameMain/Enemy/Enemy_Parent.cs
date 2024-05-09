@@ -62,14 +62,14 @@ public abstract class Enemy_Parent : MonoBehaviour
      * <summary>
      * ダメージ関数
      * <param>
-     * float : val ...ダメージ数
+     * float : val ...ダメージ数, Vector3 direction...向き
      * <retrun>
      * なし
      */
-    public virtual void Damage(float val, Vector3 direction)
+    public virtual bool Damage(float val, Vector3 direction)
     {
         currentHp -= val;
-        DestroyCheck();
+        return DestroyCheck();
     }
 
     /*
@@ -80,13 +80,15 @@ public abstract class Enemy_Parent : MonoBehaviour
      * <return>
      * なし
      */
-    protected void DestroyCheck()
+    protected bool DestroyCheck()
     {
         if(currentHp <= 0.0f)
         {
             // 子クラスの破壊関数を呼び出す
             DestroyFunc();
+            return true;
         }
+        return false;
     }
 
     /*
