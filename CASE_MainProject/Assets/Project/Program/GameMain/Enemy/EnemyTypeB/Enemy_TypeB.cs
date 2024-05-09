@@ -9,6 +9,8 @@ public class Enemy_TypeB : Enemy_Mob
     float cnt;
     [SerializeField, Header("移動速度")]
     float moveSpeed = 3.0f;
+    [SerializeField, Header("壁激突時のダメージ")]
+    float clashDamege = 1.0f;
     
 
     [Space(padB), Header("--攻撃関連--")]
@@ -48,11 +50,14 @@ public class Enemy_TypeB : Enemy_Mob
     [SerializeField, Header("アニメーター")]
     Animator animator;
 
+    Rigidbody rb;
+
 
     // Start is called before the first frame update
     void Start()
     {
         base.Start();
+        rb = GetComponent<Rigidbody>();
         patrol = GetComponent<Patrol>();
         animator = GetComponent<Animator>();
         targetNum = patrol.GetTargets().Length;
@@ -103,7 +108,7 @@ public class Enemy_TypeB : Enemy_Mob
         if(FindPlayerAtFOV().isFind)
         {
             cnt = 0.0f;
-            GetComponent<Rigidbody>().velocity =Vector3.zero;
+            rb.velocity =Vector3.zero;
             state = State.Tracking;
             return;
         }
@@ -117,7 +122,7 @@ public class Enemy_TypeB : Enemy_Mob
                 targetIndex = 0;
             }
             nextTargetPos = patrol.GetTargets()[targetIndex].position;
-            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
             state = State.Idle;
         }
     }
@@ -212,6 +217,7 @@ public class Enemy_TypeB : Enemy_Mob
         cnt += Time.deltaTime;
         if(cnt > clashInterval)
         {
+            rb.isKinematic = false;
             cnt = 0.0f;
             animator.SetBool("bClash", false);
         }
@@ -253,7 +259,7 @@ public class Enemy_TypeB : Enemy_Mob
     */
     protected override void DeathFunc()
     {
-        
+        Destroy(gameObject);
     }
 
     /*
@@ -267,6 +273,7 @@ public class Enemy_TypeB : Enemy_Mob
     protected override void DestroyFunc()
     {
         base.DestroyFunc();
+        animator.SetBool("bDeath", true);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -279,8 +286,18 @@ public class Enemy_TypeB : Enemy_Mob
                 float dot = Vector3.Dot(cNormal, transform.forward);
                 if (dot < clashDot)
                 {
-                    state = State.SpecialA;
-                    animator.SetBool("bClash", true);
+                    if(currentHp > 1)
+                    {
+                        state = State.SpecialA;
+                        animator.SetBool("bClash", true);
+                        Damage(clashDamege, Vector3.zero);
+                        rb.isKinematic = true;
+                    }
+                    else
+                    {
+                        state = State.SpecialB;
+                        Damage(clashDamege, Vector3.zero);
+                    }
                 }
             }
         }

@@ -66,7 +66,7 @@ public abstract class Enemy_Parent : MonoBehaviour
      * <retrun>
      * ‚È‚µ
      */
-    public virtual void Damage(float val)
+    public virtual void Damage(float val, Vector3 direction)
     {
         currentHp -= val;
         DestroyCheck();
