@@ -94,6 +94,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("噴出蒸気")]
     ParticleSystem compressor_SteamEffect;
 
+    [SerializeField, Header("ノックバック力")]
+    float knockBackPower = 5.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -319,5 +322,14 @@ public class PlayerController : MonoBehaviour
         characterAnimation.SetBool("bAttack", false);
         //姿勢を戻す
         attackShaft.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+    }
+
+    public void KnockBack()
+    {
+        //ノックバックアニメーション終了
+        characterAnimation.SetTrigger("tHit");
+
+        //突撃方向の反対ベクトルの斜め上にノックバックする
+        myRigidbody.velocity = Vector3.up * knockBackPower;
     }
 }
