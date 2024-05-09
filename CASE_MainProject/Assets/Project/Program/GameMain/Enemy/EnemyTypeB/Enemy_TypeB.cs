@@ -50,11 +50,14 @@ public class Enemy_TypeB : Enemy_Mob
     [SerializeField, Header("アニメーター")]
     Animator animator;
 
+    Rigidbody rb;
+
 
     // Start is called before the first frame update
     void Start()
     {
         base.Start();
+        rb = GetComponent<Rigidbody>();
         patrol = GetComponent<Patrol>();
         animator = GetComponent<Animator>();
         targetNum = patrol.GetTargets().Length;
@@ -105,7 +108,7 @@ public class Enemy_TypeB : Enemy_Mob
         if(FindPlayerAtFOV().isFind)
         {
             cnt = 0.0f;
-            GetComponent<Rigidbody>().velocity =Vector3.zero;
+            rb.velocity =Vector3.zero;
             state = State.Tracking;
             return;
         }
@@ -119,7 +122,7 @@ public class Enemy_TypeB : Enemy_Mob
                 targetIndex = 0;
             }
             nextTargetPos = patrol.GetTargets()[targetIndex].position;
-            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            rb.velocity = Vector3.zero;
             state = State.Idle;
         }
     }
@@ -214,6 +217,7 @@ public class Enemy_TypeB : Enemy_Mob
         cnt += Time.deltaTime;
         if(cnt > clashInterval)
         {
+            rb.isKinematic = false;
             cnt = 0.0f;
             animator.SetBool("bClash", false);
         }
@@ -287,9 +291,11 @@ public class Enemy_TypeB : Enemy_Mob
                         state = State.SpecialA;
                         animator.SetBool("bClash", true);
                         Damage(clashDamege, Vector3.zero);
+                        rb.isKinematic = true;
                     }
                     else
                     {
+                        state = State.SpecialB;
                         Damage(clashDamege, Vector3.zero);
                     }
                 }
