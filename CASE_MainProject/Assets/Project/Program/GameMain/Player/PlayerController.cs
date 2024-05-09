@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    //プレイヤーのシングルトンインスタンス
+    public static PlayerController instance;
+
     [SerializeField, Header("移動加速度")]
     float runSpeed = 1.0f;
 
@@ -44,7 +47,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("接地判定")]
     GroundJudgeController myGroundJudgeController;
 
-    [SerializeField, Header("蒸気貯蔵量"), ReadOnly]
+    [SerializeField, Header("蒸気貯蔵量")]
     float heldSteam = 100.0f;
 
     [SerializeField, Header("瞬間出力蒸気量"), ReadOnly]
@@ -65,10 +68,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField, ReadOnly]
     Vector2 runInput;
 
-    enum ATTACK_STATE
+    public enum ATTACK_STATE
     { Idle, Attack};
     [SerializeField, Header("突撃状態（ステート）"), Toolbar(typeof(ATTACK_STATE), "AttackState")]
-    ATTACK_STATE attackState = ATTACK_STATE.Idle;
+    public ATTACK_STATE attackState = ATTACK_STATE.Idle;
 
     [SerializeField, Header("突撃初速")]
     float attackSpeed = 5.0f;
@@ -88,9 +91,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("突撃の時の姿勢制御軸")]
     GameObject attackShaft;
 
+    [SerializeField, Header("噴出蒸気")]
+    ParticleSystem compressor_SteamEffect;
+
     // Start is called before the first frame update
     void Start()
     {
+
+        if (instance == null)
+        {
+            // 自身をインスタンスとする
+            instance = this;
+        }
+        else
+        {
+            // インスタンスが既に存在していたら自身を消去する
+            Destroy(gameObject);
+        }
+
         //自分自身のRigidbodyを取得
         myRigidbody = GetComponent<Rigidbody>();
 
@@ -125,6 +143,16 @@ public class PlayerController : MonoBehaviour
             if (heldSteam < 0.0f)
             {
                 heldSteam = 0.0f;
+
+                //蒸気エフェクト
+                var emission = compressor_SteamEffect.emission;
+                emission.rateOverTime = 0.0f;
+            }
+            else
+            {
+                //蒸気エフェクト
+                var emission = compressor_SteamEffect.emission;
+                emission.rateOverTime = 50.0f * outSteamValue;
             }
         }
         else
@@ -260,16 +288,12 @@ public class PlayerController : MonoBehaviour
 
             //頭を飛んでいくほうに向ける
             attackShaft.transform.LookAt(attackShaft.transform.position + mainPlayerCamera_Obj.transform.forward);      //前方ベクトルを向ける
-            attackShaft.transform.localRotation = Quaternion.Euler(90.0f, 0.0f, 0.0f);
+            attackShaft.transform.Rotate(90.0f, 0.0f, 0.0f);
 
             //地面に着地すると終了
             if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.On)
             {
-                attackState = ATTACK_STATE.Idle;
-                //突撃アニメーション終了
-                characterAnimation.SetBool("bAttack", false);
-                //姿勢を戻す
-                attackShaft.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+                StopAttack();
             }
         }
 
@@ -286,5 +310,14 @@ public class PlayerController : MonoBehaviour
                 characterAnimation.SetBool("bAttack", true);
             }
         }
+    }
+
+    public void StopAttack()
+    {
+        attackState = ATTACK_STATE.Idle;
+        //突撃アニメーション終了
+        characterAnimation.SetBool("bAttack", false);
+        //姿勢を戻す
+        attackShaft.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
     }
 }
