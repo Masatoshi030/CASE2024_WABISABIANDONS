@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,7 +11,7 @@ public class TitleSelect : MonoBehaviour
     Animator animController;
 
     [SerializeField, Header("変更するシーン")]
-    public char sceneName;
+    public string sceneName;
 
     private enum title_State
     {
@@ -24,6 +25,7 @@ public class TitleSelect : MonoBehaviour
     void Start()
     {
         scene_now =title_State.Start;  //最初の設定
+        animController = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -35,13 +37,33 @@ public class TitleSelect : MonoBehaviour
                 titleStart();
                 break;
             case title_State.Menu:
+                titleMenu();
                 break;
         }
     }
 
     void titleStart()
     {
-        SceneManager.LoadScene(sceneName);
+        if(Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            scene_now = title_State.Menu;
+            animController.SetTrigger("Menu_Trigger");
+        }
+
+        if(Input.GetKeyDown(KeyCode.Return))
+        {
+            SceneManager.LoadScene(sceneName);
+        }
+    }
+
+    void titleMenu()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            scene_now = title_State.Start;
+            animController.SetTrigger("Start_Trigger");
+        }
+
     }
 
 
