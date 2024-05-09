@@ -18,6 +18,7 @@ public abstract class Enemy_Mob : Enemy_Parent
         [InspectorName("破壊")] Death,
     }
 
+    [Space(padA), Header("--視認パラメータ--")]
     [SerializeField, Header("敵視認距離")]
     protected float viewingDistance = 20.0f;
 
@@ -27,7 +28,7 @@ public abstract class Enemy_Mob : Enemy_Parent
     [SerializeField, Header("視点位置")]
     protected Transform eyeTransform;
 
-    [SerializeField, Header("状態"), Toolbar(typeof(State))]
+    [Space(padB), SerializeField, Header("状態"), Toolbar(typeof(State))]
     protected State state = State.Idle;
     
     protected void Start()
@@ -66,7 +67,7 @@ public abstract class Enemy_Mob : Enemy_Parent
      * <return>
      * なし
      */
-    protected abstract void IdleFunc();
+    protected virtual void IdleFunc() { }
 
     /*
      * <summary>
@@ -76,7 +77,7 @@ public abstract class Enemy_Mob : Enemy_Parent
      * <return>
      * なし
      */
-    protected abstract void MoveFunc();
+    protected virtual void MoveFunc() { }
 
     /*
      * <summary>
@@ -86,7 +87,7 @@ public abstract class Enemy_Mob : Enemy_Parent
      * <return>
      * なし
      */
-    protected abstract void TrackingFunc();
+    protected virtual void TrackingFunc() { }
 
     /*
      * <summary>
@@ -96,7 +97,7 @@ public abstract class Enemy_Mob : Enemy_Parent
      * <return>
      * なし
      */
-    protected abstract void EscapeFunc();
+    protected virtual void EscapeFunc() { }
 
     /*
      * <summary>
@@ -106,7 +107,7 @@ public abstract class Enemy_Mob : Enemy_Parent
      * <return>
      * なし
      */
-    protected abstract void AttackFuncA();
+    protected virtual void AttackFuncA() { }
 
     /*
      * <summary>
@@ -116,27 +117,27 @@ public abstract class Enemy_Mob : Enemy_Parent
      * <return>
      * なし
      */
-    protected abstract void AttackFuncB();
+    protected virtual void AttackFuncB() { }
 
     /*
      * <summary>
-     * 攻撃関数パターンB
+     * 特殊関数パターンA
      * <param>
      * なし
      * <return>
      * なし
      */
-    protected abstract void SpecialFuncA();
+    protected virtual void SpecialFuncA() { }
 
     /*
      * <summary>
-     * 攻撃関数パターンB
+     * 特殊関数パターンB
      * <param>
      * なし
      * <return>
      * なし
      */
-    protected abstract void SpecialFuncB();
+    protected virtual void SpecialFuncB() { }
 
     /*
      * <summary>
@@ -146,7 +147,7 @@ public abstract class Enemy_Mob : Enemy_Parent
      * <return>
      * なし
      */
-    protected abstract void HealFunc();
+    protected virtual void HealFunc() { }
 
     /*
      * <summary>
@@ -156,7 +157,7 @@ public abstract class Enemy_Mob : Enemy_Parent
      * <return>
      * なし
      */
-    protected abstract void DeathFunc();
+    protected virtual void DeathFunc() { }
 
     protected override void DestroyFunc()
     {
@@ -174,30 +175,29 @@ public abstract class Enemy_Mob : Enemy_Parent
     protected (bool isFind, float distance) FindPlayerAtFOV()
     {
         // 距離を測る
-        float distance = Vector3.Distance(target.transform.position, transform.position);
+        Vector3 Diff = target.transform.position - eyeTransform.position;
+        float distance = Diff.x * Diff.x + Diff.y * Diff.y + Diff.z * Diff.z;
 
-        if (distance < viewingDistance)
+        if (distance < viewingDistance * viewingDistance)
         {
-            // 自分からターゲットに向かうベクトル
-            Vector3 MetoTarget = target.transform.position - transform.position;
-            // ターゲットから自分に向かうベクトル
-            Vector3 TargettoMe = -MetoTarget;
             // 外積でy軸から正面の左右どちらにあるか求める
-            Vector3 axis = Vector3.Cross(transform.forward, MetoTarget);
+            Vector3 axis = Vector3.Cross(eyeTransform.forward, Diff);
 
             // 角度が+なら正面より右にいる-なら左にいる
-            float angle = Vector3.Angle(transform.forward, MetoTarget) * (axis.y < 0 ? -1.0f : 1.0f);
+            float angle = Vector3.Angle(eyeTransform.forward, Diff) * (axis.y < 0 ? -1.0f : 1.0f);
 
             if (Mathf.Abs(angle) < viewingAngle / 2)
             {
-                Vector3 Direction = MetoTarget.normalized;
+                Vector3 Direction = Diff.normalized;
                 // レイの作成と表示
                 Ray ray = new Ray(eyeTransform.position, Direction);
                 Debug.DrawRay(eyeTransform.position, Direction, Color.red);
-                RaycastHit[] hits = Physics.RaycastAll(eyeTransform.position, Direction, viewingDistance);
-                if (hits.Length > 0)
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, viewingDistance))
                 {
-                    if (hits[0].transform.tag == "Player")
+                    Debug.Log(hit.transform.name);
+
+                    if (hit.transform.root.name == "Player")
                     {
                         return (true, distance);
                     }
@@ -218,23 +218,20 @@ public abstract class Enemy_Mob : Enemy_Parent
     protected (bool isFind, float distance, GameObject findObject) FindObjectAtFOV(GameObject[] objects)
     {
         // 距離を測る
-        float distance = Vector3.Distance(target.transform.position, transform.position);
+        Vector3 Diff = target.transform.position - eyeTransform.position;
+        float distance = Diff.x * Diff.x + Diff.y * Diff.y + Diff.z * Diff.z;
 
         if (distance < viewingDistance)
         {
-            // 自分からターゲットに向かうベクトル
-            Vector3 MetoTarget = target.transform.position - transform.position;
-            // ターゲットから自分に向かうベクトル
-            Vector3 TargettoMe = -MetoTarget;
             // 外積でy軸から正面の左右どちらにあるか求める
-            Vector3 axis = Vector3.Cross(transform.forward, MetoTarget);
+            Vector3 axis = Vector3.Cross(eyeTransform.forward, Diff);
 
             // 角度が+なら正面より右にいる-なら左にいる
-            float angle = Vector3.Angle(transform.forward, MetoTarget) * (axis.y < 0 ? -1.0f : 1.0f);
+            float angle = Vector3.Angle(eyeTransform.forward, Diff) * (axis.y < 0 ? -1.0f : 1.0f);
 
             if (Mathf.Abs(angle) < viewingAngle / 2)
             {
-                Vector3 Direction = MetoTarget.normalized;
+                Vector3 Direction = Diff.normalized;
                 // レイの作成と表示
                 Ray ray = new Ray(eyeTransform.position, Direction);
                 Debug.DrawRay(eyeTransform.position, Direction, Color.red);
@@ -265,23 +262,20 @@ public abstract class Enemy_Mob : Enemy_Parent
     protected (bool isFind, float distance, string findTag) FindObjectAtFOV(string[] tags)
     {
         // 距離を測る
-        float distance = Vector3.Distance(target.transform.position, transform.position);
+        Vector3 Diff = target.transform.position - eyeTransform.position;
+        float distance = Diff.x * Diff.x + Diff.y * Diff.y + Diff.z * Diff.z;
 
         if (distance < viewingDistance)
         {
-            // 自分からターゲットに向かうベクトル
-            Vector3 MetoTarget = target.transform.position - transform.position;
-            // ターゲットから自分に向かうベクトル
-            Vector3 TargettoMe = -MetoTarget;
             // 外積でy軸から正面の左右どちらにあるか求める
-            Vector3 axis = Vector3.Cross(transform.forward, MetoTarget);
+            Vector3 axis = Vector3.Cross(eyeTransform.forward, Diff);
 
             // 角度が+なら正面より右にいる-なら左にいる
-            float angle = Vector3.Angle(transform.forward, MetoTarget) * (axis.y < 0 ? -1.0f : 1.0f);
+            float angle = Vector3.Angle(eyeTransform.forward, Diff) * (axis.y < 0 ? -1.0f : 1.0f);
 
             if (Mathf.Abs(angle) < viewingAngle / 2)
             {
-                Vector3 Direction = MetoTarget.normalized;
+                Vector3 Direction = Diff.normalized;
                 // レイの作成と表示
                 Ray ray = new Ray(eyeTransform.position, Direction);
                 Debug.DrawRay(eyeTransform.position, Direction, Color.red);

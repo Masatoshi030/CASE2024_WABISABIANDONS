@@ -21,12 +21,12 @@ public class Patrol : MonoBehaviour
     [SerializeField, Header("Œo‰ßŽžŠÔ"), ReadOnly]
     float cnt = 0.0f;
 
-    private void Start()
+    private void Awake()
     {
-        if(targetParent)
+        if (targetParent)
         {
             patrols = new Transform[targetParent.childCount];
-            for(int i = 0; i < targetParent.childCount; i++)
+            for (int i = 0; i < targetParent.childCount; i++)
             {
                 Transform trs = targetParent.GetChild(i);
                 patrols[i] = trs;
@@ -51,7 +51,7 @@ public class Patrol : MonoBehaviour
         }
 
         transform.localPosition = pos;
-        if(t == 1.0f)
+        if(t >= 1.0f)
         {
             return true;
         }
