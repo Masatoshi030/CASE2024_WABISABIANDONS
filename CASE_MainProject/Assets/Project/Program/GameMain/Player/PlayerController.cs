@@ -108,6 +108,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("VolumesAnimation"), ReadOnly]
     Animator volumeAnimation;
 
+    [SerializeField, Header("GoldValveカウント")]
+    int heldGoldValve = 0;
+
+    [SerializeField, Header("GoldValveAudioSource")]
+    AudioSource goldValveAudioSouce;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -305,13 +311,15 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //if (other.gameObject.tag == "Enemy")
-        //{
-        //    if (attackState != ATTACK_STATE.Attack)
-        //    {
-        //        Damage(5.0f);
-        //    }
-        //}
+        if(other.tag == "GoldValve")
+        {
+            //アイテムカウントを増やす
+            heldGoldValve++;
+            //取得音再生
+            goldValveAudioSouce.PlayOneShot(goldValveAudioSouce.clip);
+            //アイテムを消す
+            Destroy(other.gameObject);
+        }
     }
 
     public void Damage(float _damage)
