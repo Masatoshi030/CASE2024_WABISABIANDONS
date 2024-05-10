@@ -32,10 +32,15 @@ public class GetImagesInCanvas : MonoBehaviour
     [SerializeField, Header("ボタンのクールタイム")]
     float buttonCoolTime;
 
-    
+    AudioSource myAudioSource;
+
+    [SerializeField, Header("効果音クリップリスト")]
+    AudioClip[] SoundClips;
 
     void Start()
     {
+        myAudioSource = GetComponent<AudioSource>();
+
         selectButton = 0;
         timeOut = 0.2f;
         buttonCoolTime = 0.1f;
@@ -48,7 +53,7 @@ public class GetImagesInCanvas : MonoBehaviour
 
     void Update()
     {
-        noTouchTime += Time.deltaTime;
+        noTouchTime += Time.unscaledDeltaTime;
 
         //下ボタン処理
         if (DualSense_Manager.instance.GetInputState().DPadDownButton == DualSenseUnity.ButtonState.Down)
@@ -56,18 +61,14 @@ public class GetImagesInCanvas : MonoBehaviour
             //クールタイムが上がっていたらボタン入力処理
             if (noTouchTime > buttonCoolTime)
             {
-                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
-                selectButton++;
-                timeElapsed = 0.0f;
+                ChangeButton(1);
             }
-            timeElapsed += Time.deltaTime;
+            timeElapsed += Time.unscaledDeltaTime;
             
             //一定時間押していると実行される処理
             if (timeElapsed > timeOut)
             {
-                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
-                selectButton++;
-                timeElapsed = 0.0f;
+                ChangeButton(1);
             }
 
             if (selectButton > 2)
@@ -85,20 +86,15 @@ public class GetImagesInCanvas : MonoBehaviour
             //クールタイムが上がっていたらボタン入力処理
             if (noTouchTime > buttonCoolTime)
             {
-                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
-                selectButton--;
-                timeElapsed = 0.0f;
+                ChangeButton(-1);
             }
 
-            timeElapsed += Time.deltaTime;
+            timeElapsed += Time.unscaledDeltaTime;
 
             //一定時間押していると実行される処理
             if (timeElapsed > timeOut)
             {
-                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
-
-                selectButton--;
-                timeElapsed = 0.0f;
+                ChangeButton(-1);
             }
 
             if (selectButton < 0)
@@ -116,20 +112,15 @@ public class GetImagesInCanvas : MonoBehaviour
             //クールタイムが上がっていたらボタン入力処理
             if (noTouchTime > buttonCoolTime)
             {
-                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
-                selectButton--;
-                timeElapsed = 0.0f;
+                ChangeButton(-1);
             }
 
-            timeElapsed += Time.deltaTime;
+            timeElapsed += Time.unscaledDeltaTime;
 
             //一定時間押していると実行される処理
             if (timeElapsed > timeOut)
             {
-                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
-
-                selectButton--;
-                timeElapsed = 0.0f;
+                ChangeButton(-1);
             }
 
             if (selectButton < 0)
@@ -147,20 +138,15 @@ public class GetImagesInCanvas : MonoBehaviour
             //クールタイムが上がっていたらボタン入力処理
             if (noTouchTime > buttonCoolTime)
             {
-                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
-                selectButton++;
-                timeElapsed = 0.0f;
+                ChangeButton(1);
             }
 
-            timeElapsed += Time.deltaTime;
+            timeElapsed += Time.unscaledDeltaTime;
 
             //一定時間押していると実行される処理
             if (timeElapsed > timeOut)
             {
-                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
-
-                selectButton++;
-                timeElapsed = 0.0f;
+                ChangeButton(1);
             }
 
             if (selectButton > 2)
@@ -174,7 +160,22 @@ public class GetImagesInCanvas : MonoBehaviour
 
         if(DualSense_Manager.instance.GetInputState().CircleButton== DualSenseUnity.ButtonState.NewDown)
         {
-            Debug.Log("〇ボタンが押された");
+            switch (selectButton)
+            {
+                case 0:
+
+                    GameUIManager.instance.SetPause(false);
+
+                    break;
+
+                case 1:
+
+                    break;
+
+                case 2:
+
+                    break;
+            }
         }
 
         if (selectButton ==0)
@@ -221,5 +222,14 @@ public class GetImagesInCanvas : MonoBehaviour
             // SelectObjectToDeactivateをアクティブにする
             SelectObjectToDeactivate.SetActive(true);
         }
+    }
+
+    void ChangeButton(int _plusCount)
+    {
+        //DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
+        selectButton += _plusCount;
+        timeElapsed = 0.0f;
+
+        myAudioSource.PlayOneShot(SoundClips[0]);
     }
 }

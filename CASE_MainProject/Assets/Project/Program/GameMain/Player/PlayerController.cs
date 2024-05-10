@@ -105,6 +105,9 @@ public class PlayerController : MonoBehaviour
 
     float fixedIntervalTimer = 0.0f;
 
+    [SerializeField, Header("VolumesAnimation"), ReadOnly]
+    Animator volumeAnimation;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -125,6 +128,9 @@ public class PlayerController : MonoBehaviour
 
         //メインプレイヤーカメラオブジェクトの参照
         mainPlayerCamera_Obj = GameObject.Find("PlayerCamera_Brain");
+
+        //VolumeAnimation参照
+        volumeAnimation = GameObject.Find("Volumes").GetComponent<Animator>();
 
         //スチーム貯蔵量を最大にする
         heldSteam = maxHeldSteam;
@@ -329,6 +335,9 @@ public class PlayerController : MonoBehaviour
             //頭を飛んでいくほうに向ける
             attackShaft.transform.LookAt(attackShaft.transform.position + mainPlayerCamera_Obj.transform.forward);      //前方ベクトルを向ける
             attackShaft.transform.Rotate(90.0f, 0.0f, 0.0f);
+
+            //突撃ポストエフェクト有効
+            volumeAnimation.SetBool("bAttack", true);
         }
 
         if (attackState == ATTACK_STATE.Attack || attackState == ATTACK_STATE.KnockBack)
@@ -362,6 +371,8 @@ public class PlayerController : MonoBehaviour
         characterAnimation.SetBool("bAttack", false);
         //姿勢を戻す
         attackShaft.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+        //突撃ポストエフェクト無効
+        volumeAnimation.SetBool("bAttack", false);
     }
 
     public void KnockBack()
