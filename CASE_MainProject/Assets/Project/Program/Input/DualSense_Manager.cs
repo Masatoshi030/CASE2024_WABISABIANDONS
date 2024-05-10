@@ -264,6 +264,16 @@ public class DualSense_Manager : MonoBehaviour
     }
 
     /// <summary>
+    /// 右トリガーの抵抗を設定する（抵抗力と開始地点）
+    /// </summary>
+    /// <param name="_startPosition">抵抗の開始地点[0 ~ 1]</param>
+    /// <param name="_force">抵抗の大きさ[0 ~ 1]</param>
+    public void SetRightTriggerContinuousResistanceEffect(float _startPosition, float _force)
+    {
+        output.RightTriggerEffect.InitializeContinuousResistanceEffect(_startPosition, _force);
+    }
+
+    /// <summary>
     /// 左トリガーの抵抗を設定する（連打感触）
     /// </summary>
     /// <param name="_startPosition">抵抗の開始地点[0 ~ 1]</param>
@@ -283,7 +293,17 @@ public class DualSense_Manager : MonoBehaviour
     /// <param name="_force">抵抗の大きさ[0 ~ 1]</param>
     public void SetLeftTriggerEffect_Position(float _startPosition, float _endPosition, float _force)
     {
-        output.RightTriggerEffect.InitializeSectionResistanceEffect(_startPosition, _endPosition, _force);
+        output.LeftTriggerEffect.InitializeSectionResistanceEffect(_startPosition, _endPosition, _force);
+    }
+
+    /// <summary>
+    /// 右トリガーの抵抗を設定する（抵抗力と開始地点）
+    /// </summary>
+    /// <param name="_startPosition">抵抗の開始地点[0 ~ 1]</param>
+    /// <param name="_force">抵抗の大きさ[0 ~ 1]</param>
+    public void SetLeftTriggerContinuousResistanceEffect(float _startPosition, float _force)
+    {
+        output.LeftTriggerEffect.InitializeContinuousResistanceEffect(_startPosition, _force);
     }
 
     /// <summary>
@@ -291,7 +311,7 @@ public class DualSense_Manager : MonoBehaviour
     /// </summary>
     public void SetRightTriggerNoEffect()
     {
-        output.RightTriggerEffect.InitializeNoResistanceEffect();
+        output.LeftTriggerEffect.InitializeNoResistanceEffect();
     }
 
     /// <summary>

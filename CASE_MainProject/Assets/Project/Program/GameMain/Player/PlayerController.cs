@@ -50,6 +50,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("蒸気貯蔵量")]
     float heldSteam = 100.0f;
 
+    [SerializeField, Header("最大蒸気貯蔵量")]
+    float maxHeldSteam = 100.0f;
+
     [SerializeField, Header("瞬間出力蒸気量"), ReadOnly]
     float outSteamValue = 0.0f;
 
@@ -69,7 +72,7 @@ public class PlayerController : MonoBehaviour
     Vector2 runInput;
 
     public enum ATTACK_STATE
-    { Idle, Attack};
+    { Idle, Attack, KnockBack};
     [SerializeField, Header("突撃状態（ステート）"), Toolbar(typeof(ATTACK_STATE), "AttackState")]
     public ATTACK_STATE attackState = ATTACK_STATE.Idle;
 
@@ -97,6 +100,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("ノックバック力")]
     float knockBackPower = 5.0f;
 
+    [SerializeField, Header("一定間隔で一回処理する処理の間隔")]
+    float fixedIntervalTime = 1.0f;
+
+    float fixedIntervalTimer = 0.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -117,6 +125,9 @@ public class PlayerController : MonoBehaviour
 
         //メインプレイヤーカメラオブジェクトの参照
         mainPlayerCamera_Obj = GameObject.Find("PlayerCamera_Brain");
+
+        //スチーム貯蔵量を最大にする
+        heldSteam = maxHeldSteam;
     }
 
     // Update is called once per frame
@@ -135,7 +146,10 @@ public class PlayerController : MonoBehaviour
         if (heldSteam > 0.0f)
         {
             //瞬間出力蒸気量
-            outSteamValue = (float)DualSense_Manager.instance.GetInputState().RightTrigger.TriggerValue;
+            outSteamValue = (float)DualSense_Manager.instance.GetInputState().LeftTrigger.TriggerValue;
+
+            //噴出蒸気の振動
+            DualSense_Manager.instance.SetRightRumble(outSteamValue, 0.05f);
 
             //貯蔵圧力から減らす
             heldSteam -= outSteamValue * outMaxSteamValue;
@@ -170,6 +184,10 @@ public class PlayerController : MonoBehaviour
         //=== 突撃 ===//
 
         OnAttack();
+
+        //=== 一定間隔処理 ===//
+
+        OnFixedInterval();
     }
 
     private void FixedUpdate()
@@ -279,6 +297,25 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        //if (other.gameObject.tag == "Enemy")
+        //{
+        //    if (attackState != ATTACK_STATE.Attack)
+        //    {
+        //        Damage(5.0f);
+        //    }
+        //}
+    }
+
+    public void Damage(float _damage)
+    {
+        characterAnimation.SetTrigger("tDamage");
+
+        //突撃方向の反対ベクトルの斜め上にノックバックする
+        myRigidbody.velocity = (Vector3.up - moveRotationShaft.transform.forward) * knockBackPower;
+    }
+
     void OnAttack()
     {
 
@@ -292,7 +329,10 @@ public class PlayerController : MonoBehaviour
             //頭を飛んでいくほうに向ける
             attackShaft.transform.LookAt(attackShaft.transform.position + mainPlayerCamera_Obj.transform.forward);      //前方ベクトルを向ける
             attackShaft.transform.Rotate(90.0f, 0.0f, 0.0f);
+        }
 
+        if (attackState == ATTACK_STATE.Attack || attackState == ATTACK_STATE.KnockBack)
+        {
             //地面に着地すると終了
             if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.On)
             {
@@ -329,7 +369,37 @@ public class PlayerController : MonoBehaviour
         //ノックバックアニメーション終了
         characterAnimation.SetTrigger("tHit");
 
+        Debug.Log("Knock");
+
         //突撃方向の反対ベクトルの斜め上にノックバックする
         myRigidbody.velocity = Vector3.up * knockBackPower;
+
+        //ノックバック状態にする
+        attackState = ATTACK_STATE.KnockBack;
+    }
+
+    void OnFixedInterval()
+    {
+        //カウント
+        fixedIntervalTimer += Time.deltaTime;
+        //一定時間が経つと
+        if(fixedIntervalTimer > fixedIntervalTime)
+        {
+            //=== 処理 ===//
+
+            if (heldSteam > 0.0f)
+            {
+                //トリガー抵抗力
+                DualSense_Manager.instance.SetLeftTriggerContinuousResistanceEffect(0.0f, heldSteam / maxHeldSteam);
+            }
+            else
+            {
+                //トリガー抵抗を無効にする
+                DualSense_Manager.instance.SetLeftTriggerNoEffect();
+            }
+
+            //タイマーをリセット
+            fixedIntervalTimer = 0.0f;
+        }
     }
 }

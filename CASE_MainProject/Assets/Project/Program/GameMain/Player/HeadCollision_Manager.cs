@@ -43,6 +43,9 @@ public class HeadCollision_Manager : MonoBehaviour
                 //火花を生成する
                 Instantiate(hibana_ParticleEffect, transform.position, Quaternion.identity);
 
+                //小振動
+                DualSense_Manager.instance.SetLeftRumble(0.25f, 0.1f);
+
                 //敵に突撃した時の処理
                 if (other.tag == "Enemy")
                 {
@@ -60,12 +63,18 @@ public class HeadCollision_Manager : MonoBehaviour
 
                         //ヒットストップ
                         HitStopManager.instance.HitStopEffect(0.5f, 0.25f);
+
+                        //小振動
+                        DualSense_Manager.instance.SetRumble_Type1();
                     }
                     //倒してない
                     else
                     {
                         //ヒットストップ
                         HitStopManager.instance.HitStopEffect(0.2f, 0.25f);
+
+                        //小振動
+                        DualSense_Manager.instance.SetLeftRumble(0.75f, 0.1f);
                     }
                 }
             }
