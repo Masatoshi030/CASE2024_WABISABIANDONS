@@ -53,8 +53,7 @@ public class NavMeshPatrol : MonoBehaviour
     {
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
-            agent.ResetPath();
-            state = PatrolState.Idle;
+            Stop();
         }
     }
 
@@ -62,7 +61,7 @@ public class NavMeshPatrol : MonoBehaviour
     {
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
-            agent.ResetPath();
+            Stop();
         }
     }
 
@@ -81,6 +80,15 @@ public class NavMeshPatrol : MonoBehaviour
         agent.autoBraking = autoBrake;
     }
 
+    public void SetAgentParam(Enemy_Mob.EnemyAgentParam param, bool autoBrake = false)
+    {
+        agent.speed = param.moveSpeed > 0.1f ? param.moveSpeed : 0.1f;
+        agent.acceleration = param.moveAcceleration > 0.1f ? param.moveAcceleration : 0.1f;
+        agent.angularSpeed = param.angularSpeed;
+        agent.stoppingDistance = param.stoppingDistance;
+        agent.autoBraking = autoBrake;
+    }
+
     /*
      * <summary>
      * ó‘Ô‚ğ„‰ñ‚É‚·‚é
@@ -96,13 +104,13 @@ public class NavMeshPatrol : MonoBehaviour
             index = 0;
         }
         state = PatrolState.Patrol;
-        agent.SetDestination(patrols[index].position);
+        agent.destination = patrols[index].position;
     }
 
     public void ExcuteCustom(Vector3 target)
     {
         state = PatrolState.Custom;
-        agent.SetDestination(target);
+        agent.destination = target; ;
     }
 
     /*
@@ -121,5 +129,17 @@ public class NavMeshPatrol : MonoBehaviour
     public Transform[] GetTargets()
     {
         return patrols;
+    }
+
+    public void Stop()
+    {
+        agent.ResetPath();
+        agent.velocity = Vector3.zero;
+        state = PatrolState.Idle;
+    }
+
+    public float GetRemaingDistance()
+    {
+        return agent.remainingDistance;
     }
 }

@@ -12,7 +12,7 @@ public class Enemy_TypeA : Enemy_Mob
     [SerializeField, Header("Å‘åˆÚ“®‘¬“x")]
     float moveSpeed = 5.0f;
     [SerializeField, Header("‰Á‘¬“x")]
-    float moveAcceleration = 1.5f;
+    float moveAcceleration = 2.0f;
     [Space(padB), Header("-’Ç”ö-")]
     [SerializeField, Header("’Ç”ö‚Ì‘¬“x")]
     float trackingSpeed = 8.0f;
@@ -77,6 +77,7 @@ public class Enemy_TypeA : Enemy_Mob
             cnt = 0.0f;
             patrol.SetAgentParam(moveSpeed, moveAcceleration);
             patrol.ExcutePatrol(targetIndex);
+            Debug.Log("ˆÚ“®" + patrol.GetRemaingDistance());
             state = State.Move;
         }
     }
@@ -122,7 +123,7 @@ public class Enemy_TypeA : Enemy_Mob
         targetVector.Normalize();
         Vector3 Position = target.transform.position + targetVector * trackingKeepDistance;
         patrol.ExcuteCustom(Position);
-
+        Debug.Log("’Ç”ö" + patrol.GetRemaingDistance());
     }
 
     protected override void EscapeFunc()
