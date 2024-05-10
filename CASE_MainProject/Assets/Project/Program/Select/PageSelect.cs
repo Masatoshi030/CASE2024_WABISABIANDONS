@@ -54,7 +54,7 @@ public class PageSelect : MonoBehaviour
             1.0f <= DualSense_Manager.instance.GetInputState().RightTrigger.TriggerValue)
         {
             //クールタイムが上がっていたらボタン入力処理
-            if (noTouchTime > buttonCoolTime && serectPage <= 4)
+            if (noTouchTime > buttonCoolTime && serectPage < 4)
             {
                 //Bool型のパラメーターであるbPageMoveをTrueにする
                 anim.SetTrigger("tPageMove");
@@ -72,7 +72,7 @@ public class PageSelect : MonoBehaviour
            1.0f <= DualSense_Manager.instance.GetInputState().LeftTrigger.TriggerValue)
         {
             //クールタイムが上がっていたらボタン入力処理
-            if (noTouchTime > buttonCoolTime && serectPage >= 1)
+            if (noTouchTime > buttonCoolTime && serectPage > 1)
             {
                 //Bool型のパラメーターであるbPageMoveをTrueにする
                 anim.SetTrigger("tPageMove");
