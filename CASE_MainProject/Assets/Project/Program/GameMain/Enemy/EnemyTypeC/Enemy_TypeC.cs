@@ -4,55 +4,56 @@ using UnityEngine;
 
 public class Enemy_TypeC : Enemy_Mob
 {
+    [System.Serializable]
+    public struct AttackParam
+    {
+        [SerializeField, Header("遷移距離")]
+        public float distance;
+        [SerializeField, Header("消費圧力")]
+        public float consumePressure;
+        [SerializeField, Header("必要最低限の圧力量")]
+        public float requiredPressure;
+        [SerializeField, Header("攻撃の弾")]
+        public GameObject bullet;
+        [SerializeField, Header("弾の速度")]
+        public float bulletSpeed;
+        [SerializeField, Header("インターバル")]
+        public float interval;
+    }
+
     [Space(padA), Header("--メインパラメータ--")]
     [SerializeField, Header("汎用カウント"), ReadOnly]
     float cnt;
-    [SerializeField, Header("移動パラメータ")]
-    EnemyAgentParam moveParam;
-    [SerializeField, Header("追尾パラメータ")]
-    EnemyAgentParam trackingParam;
-    [SerializeField, Header("逃亡パラメータ")]
-    EnemyAgentParam escapeParam;
-    [SerializeField, Header("逃亡準備時間"), Range(0.0f, 5.0f)]
-    float escapePrepareTime = 1.0f;
-    [SerializeField, Header("逃亡時間"), Range(0.0f, 20.0f)]
-    float timeToEscape = 2.0f;
-    float angle = 0.0f;
-
-    [SerializeField, Header("1秒当たりの圧力回復量")]
-    float pressurePerHeal = 5.0f;
-    
-
-    [Space(padA), Header("--インターバル--")]
+    [Space(padB), Header("-待機パラメータ-")]
     [SerializeField, Header("待機インターバル")]
     float waitInterval;
-    [SerializeField, Header("遠距離攻撃インターバル")]
-    float rangedInterval;
-
-    [Space(padA), Header("--状態遷移パラメータ--")]
-    [SerializeField, Header("逃亡に移行する圧力量")]
+    [Space(padB), SerializeField, Header("移動パラメータ")]
+    EnemyAgentParam moveParam;
+    [Space(padB), SerializeField, Header("追尾パラメータ")]
+    EnemyAgentParam trackingParam;
+    [SerializeField, Header("近すぎて逃げる距離")]
+    float distanceTooClose = 6.0f;
+    [Space(padB), SerializeField, Header("逃亡パラメータ")]
+    EnemyAgentParam escapeParam;
+    [Space(padB), SerializeField, Header("逃亡準備時間"), Range(0.0f, 5.0f)]
+    float escapePrepareTime = 1.0f;
+    [Space(padB), SerializeField, Header("逃亡時間"), Range(0.0f, 20.0f)]
+    float timeToEscape = 2.0f;
+    float angle = 0.0f;
+    [SerializeField, Header("逃亡に移行ライン")]
     float pressureForEscapeMode = 12.0f;
-    [SerializeField, Header("回復に移行する圧力量")]
-    float pressureForHealMode = 15.0f;
-    [SerializeField, Header("回復から復帰する圧力量")]
-    float pressureForStoppedHeal = 50.0f;
     [SerializeField, Header("逃亡後攻撃するか"), ReadOnly]
     bool bAttackAfterEscape = false;
-
-    [Space(padA), Header("--攻撃関連--")]
-
-    [SerializeField, Header("遷移距離")]
-    float distanceForAttack = 12.0f;
-    [SerializeField, Header("逃亡後攻撃遷移距離")]
-    float distanceForEscapeAfterAttack = 6.0f;
-    [SerializeField, Header("消費圧力")]
-    float pressureForAttack = 5.0f;
-    [SerializeField, Header("最低必要圧力")]
-    float lineForAttack = 10.0f;
-    [SerializeField, Header("遠距離攻撃の弾")]
-    GameObject objectForAttack;
-    [SerializeField, Header("遠距離攻撃の速度")]
-    float rangedAttackSpeed;
+    [Space(padB), SerializeField, Header("-攻撃パラメータ-")]
+    AttackParam attackParam;
+    
+    
+    [Space(padB), SerializeField, Header("-回復パラメータ-")]
+    HealParam healParam;
+    
+    
+    
+    
     [SerializeField, Header("プレイヤーの方にどれだけ向くか")]
     float attackLookRate = 0.85f;
     [SerializeField, Header("回転速度")]
@@ -139,7 +140,7 @@ public class Enemy_TypeC : Enemy_Mob
         currentPressure -= moveParam.consumePressure * Time.deltaTime;
 
         // 圧力回復モードに遷移
-        if (currentPressure < pressureForHealMode)
+        if (currentPressure < healParam.startHealLine)
         {
             state = State.Heal;
             return;
@@ -191,7 +192,7 @@ public class Enemy_TypeC : Enemy_Mob
         else
         {
             // 逃亡後攻撃
-            if (distance < distanceForEscapeAfterAttack * distanceForEscapeAfterAttack && currentPressure > lineForAttack + trackingParam.consumePressure * timeToEscape)
+            if (distance < distanceTooClose * distanceTooClose && currentPressure > attackParam.requiredPressure + trackingParam.consumePressure * timeToEscape)
             {
                 cnt = 0.0f;
                 bAttackAfterEscape = true;
@@ -204,13 +205,14 @@ public class Enemy_TypeC : Enemy_Mob
                 return;
             }
             // 攻撃
-            else if (distance < distanceForAttack * distanceForAttack && currentPressure > lineForAttack)
+            else if (distance < attackParam.distance * attackParam.distance && currentPressure > attackParam.requiredPressure)
             {
                 cnt = 0.0f;
-                currentPressure -= pressureForAttack;
+                currentPressure -= attackParam.consumePressure;
                 bPrepareAttack = true;
-                //animator.SetBool("bRanged", bPrepareAttack);
-                state = State.AttackB;
+                animator.SetBool("bAttack", bPrepareAttack);
+                patrol.Stop();
+                state = State.AttackA;
                 return;
             }
             // 逃亡準備に移行
@@ -259,10 +261,10 @@ public class Enemy_TypeC : Enemy_Mob
             if (bAttackAfterEscape)
             {
                 cnt = 0.0f;
-                currentPressure -= pressureForAttack;
+                currentPressure -= attackParam.consumePressure;
                 bPrepareAttack = true;
-                //animator.SetBool("bRanged", bPrepareAttack);
-                state = State.AttackB;
+                animator.SetBool("bAttack", bPrepareAttack);
+                state = State.AttackA;
                 bAttackAfterEscape = false;
                 return;
             }
@@ -282,7 +284,7 @@ public class Enemy_TypeC : Enemy_Mob
     * <return>
     * void
     */
-    protected override void AttackFuncB()
+    protected override void AttackFuncA()
     {
         cnt += Time.deltaTime;
 
@@ -296,7 +298,7 @@ public class Enemy_TypeC : Enemy_Mob
             transform.Rotate(0.0f, angle * Time.deltaTime * rotationSpeed, 0.0f);
         }
 
-        if (cnt > rangedInterval)
+        if (cnt > attackParam.interval)
         {
             cnt = 0.0f;
             JudgeState();
@@ -334,9 +336,9 @@ public class Enemy_TypeC : Enemy_Mob
     protected override void HealFunc()
     {
         cnt += Time.deltaTime;
-        currentPressure += pressurePerHeal * Time.deltaTime;
+        currentPressure += healPressureVal * Time.deltaTime;
         // 待機モードに移行
-        if (currentPressure > pressureForStoppedHeal)
+        if (currentPressure > healParam.endHealLine)
         {
             cnt = 0.0f;
             state = State.Idle;
@@ -368,7 +370,9 @@ public class Enemy_TypeC : Enemy_Mob
     protected override void DestroyFunc()
     {
         //animator.SetBool("bDeath", true);
-        state = State.DeathWait;
+        //state = State.DeathWait;
+        state = State.Death;
+
     }
 
     /*
@@ -396,11 +400,11 @@ public class Enemy_TypeC : Enemy_Mob
     {
         Vector3 AttackVector = target.transform.position - attackTransform.position;
         AttackVector.Normalize();
-        GameObject bullet = Instantiate(objectForAttack, attackTransform.position, Quaternion.identity);
-        bullet.GetComponent<Rigidbody>().AddForce(AttackVector * rangedAttackSpeed, ForceMode.Impulse);
+        GameObject bullet = Instantiate(attackParam.bullet, attackTransform.position, Quaternion.identity);
+        bullet.GetComponent<Rigidbody>().AddForce(AttackVector * attackParam.bulletSpeed, ForceMode.Impulse);
         // 遠距離攻撃boolをfalseに
         bPrepareAttack = false;
-        //animator.SetBool("bRanged", bPrepareAttack);
+        animator.SetBool("bAttack", bPrepareAttack);
     }
 
     /*

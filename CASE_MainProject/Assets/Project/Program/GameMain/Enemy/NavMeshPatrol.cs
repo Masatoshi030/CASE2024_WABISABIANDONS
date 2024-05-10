@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -51,7 +52,7 @@ public class NavMeshPatrol : MonoBehaviour
 
     void PatrolFunc()
     {
-        if (agent.remainingDistance <= agent.stoppingDistance)
+        if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
         {
             Stop();
         }
@@ -59,7 +60,7 @@ public class NavMeshPatrol : MonoBehaviour
 
     void CustomFunc()
     {
-        if (agent.remainingDistance <= agent.stoppingDistance)
+        if (agent.remainingDistance <= agent.stoppingDistance &&!agent.pathPending)
         {
             Stop();
         }
@@ -97,20 +98,20 @@ public class NavMeshPatrol : MonoBehaviour
      * <return>
      * void
      */
-    public void ExcutePatrol(int index)
+    public bool ExcutePatrol(int index)
     {
         if(index >= patrols.Length)
         {
             index = 0;
         }
         state = PatrolState.Patrol;
-        agent.destination = patrols[index].position;
+        return agent.SetDestination(patrols[index].position);
     }
 
-    public void ExcuteCustom(Vector3 target)
+    public bool ExcuteCustom(Vector3 target)
     {
         state = PatrolState.Custom;
-        agent.destination = target; ;
+        return agent.SetDestination(target);
     }
 
     /*
@@ -138,7 +139,7 @@ public class NavMeshPatrol : MonoBehaviour
         state = PatrolState.Idle;
     }
 
-    public float GetRemaingDistance()
+    public float GetRemainingDistance()
     {
         return agent.remainingDistance;
     }

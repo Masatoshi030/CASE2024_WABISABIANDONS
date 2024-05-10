@@ -8,51 +8,44 @@ public class Enemy_TypeA : Enemy_Mob
     [Space(padA), Header("--メインパラメータ--")]
     [SerializeField, Header("汎用カウント"), ReadOnly]
     float cnt = 0.0f;
-    [Space(padB), Header("-移動-")]
-    [SerializeField, Header("最大移動速度")]
-    float moveSpeed = 5.0f;
-    [SerializeField, Header("加速度")]
-    float moveAcceleration = 2.0f;
-    [Space(padB), Header("-追尾-")]
-    [SerializeField, Header("追尾時の速度")]
-    float trackingSpeed = 8.0f;
-    [SerializeField, Header("追尾時加速度")]
-    float trackingAcceleration = 2.0f;
-    [SerializeField, Header("維持する距離")]
-    float trackingKeepDistance = 3.0f;
-    [Space(padB), Header("-逃亡-")]
-    [SerializeField, Header("逃亡時の速度")]
-    float escapeSpeed = 8.0f;
-    [SerializeField, Header("逃亡時加速度")]
-    float escapeAcceleration = 2.0f;
-    [SerializeField, Header("逃亡時間")]
-    float escapeTime = 1.2f;
-    [SerializeField, Header("逃亡距離")]
-    float escapeDistance = 3.0f;
-    
-
-    [Space(padA), Header("--インターバル--")]
+    [Space(padB), Header("-待機パラメータ-")]
     [SerializeField, Header("待機インターバル")]
     float waitInterval = 3.0f;
+    [Space(padB),SerializeField, Header("-移動パラメータ-")]
+    EnemyAgentParam moveParam;
+    [Space(padB), SerializeField, Header("-追尾パラメータ-")]
+    EnemyAgentParam trackingParam;
+    [SerializeField, Header("追尾時に維持する距離")]
+    float trackingKeepDistance;
+    [Space(padB), SerializeField, Header("-逃亡パラメータ-")]
+    EnemyAgentParam escapeParam;
+    [SerializeField, Header("逃亡時間")]
+    float escapeTime;
+    [SerializeField, Header("逃亡距離")]
+    float escapeDistance;
+    [Space(padB), SerializeField, Header("-回復パラメータ-")]
+    HealParam healParam;
+
+    
 
     [Space(padA), Header("--パトロール関連--")]
-    [SerializeField, Header("コンポーネント")]
     NavMeshPatrol patrol;
     [SerializeField, Header("目的地数"), ReadOnly]
     int targetNum;
     [SerializeField, Header("次の目的地の添え字"), ReadOnly]
     int targetIndex = 0;
 
-    [SerializeField, Header("アニメーター")]
+    // アニメーター
     Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
         base.Start();
+        // 各種コンポーネント取得
         patrol = GetComponent<NavMeshPatrol>();
         animator = GetComponent<Animator>();
-        targetNum = patrol.GetTargets().Length;
+        targetNum = patrol.GetTargets().Length; // 目的地数の取得
     }
 
     // Update is called once per frame
@@ -67,7 +60,7 @@ public class Enemy_TypeA : Enemy_Mob
         if (FindPlayerAtFOV().isFind)
         {
             cnt = 0.0f;
-            patrol.SetAgentParam(trackingSpeed, trackingAcceleration, true);
+            patrol.SetAgentParam(trackingParam, true);
             state = State.Tracking;
             return;
         }
@@ -75,19 +68,26 @@ public class Enemy_TypeA : Enemy_Mob
         if (cnt > waitInterval)
         {
             cnt = 0.0f;
-            patrol.SetAgentParam(moveSpeed, moveAcceleration);
+            patrol.SetAgentParam(moveParam);
             patrol.ExcutePatrol(targetIndex);
-            Debug.Log("移動" + patrol.GetRemaingDistance());
             state = State.Move;
         }
     }
 
     protected override void MoveFunc()
     {
+        SubPressure(moveParam.consumePressure * Time.deltaTime);
+        if(currentPressure <= healParam.startHealLine)
+        {
+            state = State.Heal;
+            patrol.Stop();
+            return;
+        }
+
         if (FindPlayerAtFOV().isFind)
         {
             state = State.Tracking;
-            patrol.SetAgentParam(trackingSpeed, trackingAcceleration, true);
+            patrol.SetAgentParam(trackingParam, true);
             return;
         }
 
@@ -104,6 +104,16 @@ public class Enemy_TypeA : Enemy_Mob
 
     protected override void TrackingFunc()
     {
+        // 移動距離がまだ残っているなら圧力を減少
+        if(patrol.GetRemainingDistance() > 0.0f) SubPressure(trackingParam.consumePressure * Time.deltaTime);
+
+        if (currentPressure <= healParam.startHealLine)
+        {
+            state = State.Heal;
+            patrol.Stop();
+            return;
+        }
+
         (bool isFind, float distance) = FindPlayerAtFOV();
         if (!isFind)
         {
@@ -111,10 +121,12 @@ public class Enemy_TypeA : Enemy_Mob
             return;
         }
 
+        // プレイヤーがこちらを向いていた場合、逃亡に移行する
         if(Vector3.Dot(eyeTransform.forward, PlayerController.instance.transform.Find("HorizontalRotationShaft").Find("MoveShaft").transform.forward) < -0.75f)
         {
             state = State.Escape;
-            patrol.SetAgentParam(escapeSpeed, escapeAcceleration);
+            patrol.Stop();
+            patrol.SetAgentParam(escapeParam);
             return;
         }
 
@@ -123,11 +135,11 @@ public class Enemy_TypeA : Enemy_Mob
         targetVector.Normalize();
         Vector3 Position = target.transform.position + targetVector * trackingKeepDistance;
         patrol.ExcuteCustom(Position);
-        Debug.Log("追尾" + patrol.GetRemaingDistance());
     }
 
     protected override void EscapeFunc()
     {
+        SubPressure(escapeParam.consumePressure * Time.deltaTime);
         cnt += Time.deltaTime;
         if(cnt > escapeTime)
         {
@@ -140,6 +152,15 @@ public class Enemy_TypeA : Enemy_Mob
         targetVector.Normalize();
         Vector3 Position = transform.position + targetVector * escapeDistance;
         patrol.ExcuteCustom(Position);
+    }
+
+    protected override void HealFunc()
+    {
+        base.HealFunc();
+        if(currentPressure >= healParam.endHealLine)
+        {
+            state = State.Idle;
+        }
     }
 
     protected override void DeathFunc()
