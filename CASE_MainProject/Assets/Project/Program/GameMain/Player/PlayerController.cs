@@ -114,6 +114,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("GoldValveAudioSource")]
     AudioSource goldValveAudioSouce;
 
+    [SerializeField, Header("動作ロック")]
+    bool bLock = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -145,6 +148,12 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //ロックがかかったら早期リターン
+        if (bLock)
+        {
+            return;
+        }
+
         //=== 重力 ===//
         moveVelocity.y = myRigidbody.velocity.y;
 
@@ -204,6 +213,13 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+
+        //ロックがかかったら早期リターン
+        if (bLock)
+        {
+            return;
+        }
+
         //=== 移動 ===//
 
         //移動量入力
@@ -420,5 +436,17 @@ public class PlayerController : MonoBehaviour
             //タイマーをリセット
             fixedIntervalTimer = 0.0f;
         }
+    }
+
+    public void OnGoal()
+    {
+        //プレイヤーのカメラを無効にする
+        mainPlayerCamera_Obj.GetComponent<Camera>().enabled = false;
+
+        //プレイヤーの動きを止める
+        bLock = true;
+
+        //チュートリアルのガイドを削除
+        GameObject.Find("TutorialCanvas").SetActive(false);
     }
 }
