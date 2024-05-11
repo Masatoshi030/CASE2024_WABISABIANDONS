@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
 using UnityEngine;
 
 public abstract class Enemy_Parent : MonoBehaviour
@@ -101,42 +100,4 @@ public abstract class Enemy_Parent : MonoBehaviour
      * ‚È‚µ
      */
     protected virtual void DestroyFunc() { }
-
-    /*
-     * <summary>
-     * ˆ³—Í‚Ì‰ÁZŠÖ”
-     * <param>
-     * float pressure
-     * <return>
-     * void
-     */
-    public virtual void AddPressure(float pressure)
-    {
-        currentPressure += pressure;
-        if (currentPressure > maxPressure) currentPressure = maxPressure;
-    }
-
-    /*
-     * <summary>
-     * ˆ³—Í‚ÌŒ¸ZŠÖ”
-     * <param>
-     * float pressure
-     * <return>
-     * void
-     */
-    public virtual void SubPressure(float pressure)
-    {
-        currentPressure -= pressure;
-        if(currentPressure < 0.0f) currentPressure = 0.0f;
-    }
-
-    /*
-     * <summary>
-     * ˆ³—Í‚Ìæ“¾ŠÖ”
-     * <param>
-     * void
-     * <return>
-     * float
-     */
-    public float GetPressure() { return currentPressure; }
 }
