@@ -59,7 +59,7 @@ public class PageSelect : MonoBehaviour
                 //Bool型のパラメーターであるbPageMoveをTrueにする
                 anim.SetTrigger("tPageMove");
 
-                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
                 serectPage++;
                 timeElapsed = 0.0f;
             }
@@ -77,7 +77,7 @@ public class PageSelect : MonoBehaviour
                 //Bool型のパラメーターであるbPageMoveをTrueにする
                 anim.SetTrigger("tPageMove");
 
-                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
                 serectPage--;
                 timeElapsed = 0.0f;
             }
