@@ -4,6 +4,23 @@ using UnityEngine;
 
 public abstract class Enemy_Mob : Enemy_Parent
 {
+    [System.Serializable]
+    public struct EnemyAgentParam
+    {
+        [SerializeField, Header("移動速度")]public float moveSpeed;
+        [SerializeField, Header("加速度")] public float moveAcceleration;
+        [SerializeField, Header("回転速度")] public float angularSpeed;
+        [SerializeField, Header("停止距離")] public float stoppingDistance;
+        [SerializeField, Header("消費圧力")] public float consumePressure;
+    }
+
+    [System.Serializable]
+    public struct HealParam
+    {
+        [SerializeField, Header("回復移行ライン")] public float startHealLine;
+        [SerializeField, Header("回復終了ライン")] public float endHealLine;
+    }
+
     public enum State
     {
         [InspectorName("待機")] Idle,
@@ -22,14 +39,16 @@ public abstract class Enemy_Mob : Enemy_Parent
         [InspectorName("死亡")] Death,
     }
 
-    [Space(padA), Header("--視認パラメータ--")]
+    [SerializeField, Header("圧力回復量")]
+    public float healPressureVal = 5.0f;
+
+    [Space(padA), Header("--視覚パラメータ--")]
     [SerializeField, Header("敵視認距離")]
     protected float viewingDistance = 20.0f;
 
     [SerializeField, Header("視野角")]
     protected float viewingAngle = 80.0f;
 
-    [SerializeField, Header("視点位置")]
     protected Transform eyeTransform;
 
     [Space(padB), SerializeField, Header("状態"), Toolbar(typeof(State))]
@@ -185,7 +204,7 @@ public abstract class Enemy_Mob : Enemy_Parent
      * <return>
      * なし
      */
-    protected virtual void HealFunc() { }
+    protected virtual void HealFunc() { AddPressure(healPressureVal * Time.deltaTime); }
 
     /*
      * <summary>
@@ -239,8 +258,6 @@ public abstract class Enemy_Mob : Enemy_Parent
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, viewingDistance))
                 {
-                    Debug.Log(hit.transform.name);
-
                     if (hit.transform.root.name == "Player")
                     {
                         return (true, distance);
