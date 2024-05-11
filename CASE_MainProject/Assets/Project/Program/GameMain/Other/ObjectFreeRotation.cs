@@ -5,7 +5,7 @@ using UnityEngine;
 public class ObjectFreeRotation : MonoBehaviour
 {
     [SerializeField]
-    private float ObjectSpeed;
+    private int ObjectSpeed;
 
     [SerializeField]
     private int RotationX;
