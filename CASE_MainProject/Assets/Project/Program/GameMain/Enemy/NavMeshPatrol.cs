@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -52,17 +51,18 @@ public class NavMeshPatrol : MonoBehaviour
 
     void PatrolFunc()
     {
-        if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
+        if (agent.remainingDistance <= agent.stoppingDistance)
         {
-            Stop();
+            agent.ResetPath();
+            state = PatrolState.Idle;
         }
     }
 
     void CustomFunc()
     {
-        if (agent.remainingDistance <= agent.stoppingDistance &&!agent.pathPending)
+        if (agent.remainingDistance <= agent.stoppingDistance)
         {
-            Stop();
+            agent.ResetPath();
         }
     }
 
@@ -81,15 +81,6 @@ public class NavMeshPatrol : MonoBehaviour
         agent.autoBraking = autoBrake;
     }
 
-    public void SetAgentParam(Enemy_Mob.EnemyAgentParam param, bool autoBrake = false)
-    {
-        agent.speed = param.moveSpeed > 0.1f ? param.moveSpeed : 0.1f;
-        agent.acceleration = param.moveAcceleration > 0.1f ? param.moveAcceleration : 0.1f;
-        agent.angularSpeed = param.angularSpeed;
-        agent.stoppingDistance = param.stoppingDistance;
-        agent.autoBraking = autoBrake;
-    }
-
     /*
      * <summary>
      * èÛë‘ÇèÑâÒÇ…Ç∑ÇÈ
@@ -98,20 +89,20 @@ public class NavMeshPatrol : MonoBehaviour
      * <return>
      * void
      */
-    public bool ExcutePatrol(int index)
+    public void ExcutePatrol(int index)
     {
         if(index >= patrols.Length)
         {
             index = 0;
         }
         state = PatrolState.Patrol;
-        return agent.SetDestination(patrols[index].position);
+        agent.SetDestination(patrols[index].position);
     }
 
-    public bool ExcuteCustom(Vector3 target)
+    public void ExcuteCustom(Vector3 target)
     {
         state = PatrolState.Custom;
-        return agent.SetDestination(target);
+        agent.SetDestination(target);
     }
 
     /*
@@ -130,17 +121,5 @@ public class NavMeshPatrol : MonoBehaviour
     public Transform[] GetTargets()
     {
         return patrols;
-    }
-
-    public void Stop()
-    {
-        agent.ResetPath();
-        agent.velocity = Vector3.zero;
-        state = PatrolState.Idle;
-    }
-
-    public float GetRemainingDistance()
-    {
-        return agent.remainingDistance;
     }
 }

@@ -227,7 +227,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!195 &2402538174806300611
 NavMeshAgent:
@@ -284,36 +284,22 @@ MonoBehaviour:
   currentHp: 0
   maxPressure: 100
   currentPressure: 0
-  healPressureVal: 10
   viewingDistance: 10
   viewingAngle: 80
+  eyeTransform: {fileID: 0}
   state: 0
   cnt: 0
-  waitInterval: 3
-  moveParam:
-    moveSpeed: 6
-    moveAcceleration: 2
-    angularSpeed: 280
-    stoppingDistance: 0.3
-    consumePressure: 1
-  trackingParam:
-    moveSpeed: 7
-    moveAcceleration: 3
-    angularSpeed: 360
-    stoppingDistance: 0.5
-    consumePressure: 2
+  moveSpeed: 5
+  moveAcceleration: 1.5
+  trackingSpeed: 8
+  trackingAcceleration: 2
   trackingKeepDistance: 3
-  escapeParam:
-    moveSpeed: 10
-    moveAcceleration: 4
-    angularSpeed: 360
-    stoppingDistance: 0.1
-    consumePressure: 3.5
-  escapeTime: 2
-  escapeDistance: 10
-  healParam:
-    startHealLine: 0
-    endHealLine: 60
+  escapeSpeed: 8
+  escapeAcceleration: 2
+  escapeTime: 1.2
+  escapeDistance: 5
+  waitInterval: 3
+  patrol: {fileID: 0}
   targetNum: 0
   targetIndex: 0
 --- !u!95 &6267518420404115181
