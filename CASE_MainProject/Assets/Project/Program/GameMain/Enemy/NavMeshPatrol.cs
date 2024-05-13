@@ -24,6 +24,7 @@ public class NavMeshPatrol : MonoBehaviour
 
     private void Awake()
     {
+        agent = GetComponent<NavMeshAgent>();
         if (targetParent)
         {
             patrols = new Transform[targetParent.childCount];
@@ -37,7 +38,7 @@ public class NavMeshPatrol : MonoBehaviour
 
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        
     }
 
     private void Update()
@@ -78,6 +79,14 @@ public class NavMeshPatrol : MonoBehaviour
     {
         agent.speed = speed > 0.1f ? speed : 0.1f;
         agent.acceleration = acceleration > 0.1f ? acceleration : 0.1f;
+        agent.autoBraking = autoBrake;
+    }
+
+    public void SetAgentParam(float speed, float acceleration, float angularSpeed, bool autoBrake = false)
+    {
+        agent.speed = speed > 0.1f ? speed : 0.1f;
+        agent.acceleration = acceleration > 0.1f ? acceleration : 0.1f;
+        agent.angularSpeed = angularSpeed;
         agent.autoBraking = autoBrake;
     }
 

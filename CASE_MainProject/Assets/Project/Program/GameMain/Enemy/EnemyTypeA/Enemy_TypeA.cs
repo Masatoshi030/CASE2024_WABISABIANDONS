@@ -15,8 +15,6 @@ public class Enemy_TypeA : Enemy_Mob
     EnemyAgentParam moveParam;
     [Space(padB), SerializeField, Header("-追尾パラメータ-")]
     EnemyAgentParam trackingParam;
-    [SerializeField, Header("追尾時に維持する距離")]
-    float trackingKeepDistance;
     [Space(padB), SerializeField, Header("-逃亡パラメータ-")]
     EnemyAgentParam escapeParam;
     [SerializeField, Header("逃亡時間")]
@@ -129,12 +127,7 @@ public class Enemy_TypeA : Enemy_Mob
             patrol.SetAgentParam(escapeParam);
             return;
         }
-
-        // 目的地の算出
-        Vector3 targetVector = transform.position - target.transform.position;
-        targetVector.Normalize();
-        Vector3 Position = target.transform.position + targetVector * trackingKeepDistance;
-        patrol.ExcuteCustom(Position);
+        patrol.ExcuteCustom(target.transform.position);
     }
 
     protected override void EscapeFunc()
