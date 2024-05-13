@@ -56,26 +56,26 @@ public class HeadCollision_Manager : MonoBehaviour
                     PlayerController.instance.KnockBack();
                     
                     //倒したら
-                    if (other.GetComponent<Enemy_Mob>().Damage(20.0f, transform.up))
-                    {
-                        //パーツ散開エフェクトを生成する
-                        Instantiate(partsSplit_ParticleEffect, transform.position, Quaternion.identity);
-
-                        //ヒットストップ
-                        HitStopManager.instance.HitStopEffect(0.5f, 0.25f);
-
-                        //小振動
-                        DualSense_Manager.instance.SetRumble_Type1();
-                    }
+                   //if (other.GetComponent<Enemy_Mob>().Damage(20.0f, transform.up))
+                   //{
+                   //    //パーツ散開エフェクトを生成する
+                   //    Instantiate(partsSplit_ParticleEffect, transform.position, Quaternion.identity);
+                   //
+                   //    //ヒットストップ
+                   //    HitStopManager.instance.HitStopEffect(0.5f, 0.25f);
+                   //
+                   //    //小振動
+                   //    DualSense_Manager.instance.SetRumble_Type1();
+                   //}
                     //倒してない
-                    else
-                    {
-                        //ヒットストップ
-                        HitStopManager.instance.HitStopEffect(0.2f, 0.25f);
-
-                        //小振動
-                        DualSense_Manager.instance.SetLeftRumble(0.75f, 0.1f);
-                    }
+                    //else
+                    //{
+                    //    //ヒットストップ
+                    //    HitStopManager.instance.HitStopEffect(0.2f, 0.25f);
+                    //
+                    //    //小振動
+                    //    DualSense_Manager.instance.SetLeftRumble(0.75f, 0.1f);
+                    //}
                 }
             }
         }
