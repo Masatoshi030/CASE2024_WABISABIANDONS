@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 5141085019325749502}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.081, z: 0.591}
+  m_LocalPosition: {x: 0, y: 0.081, z: 0.845}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -92,17 +92,17 @@ PrefabInstance:
     - target: {fileID: -4783191715686035192, guid: 17ae9637a74dd734798a9fa4457f8cbc,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 100
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: -4783191715686035192, guid: 17ae9637a74dd734798a9fa4457f8cbc,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 100
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: -4783191715686035192, guid: 17ae9637a74dd734798a9fa4457f8cbc,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 100
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: -4783191715686035192, guid: 17ae9637a74dd734798a9fa4457f8cbc,
         type: 3}
@@ -200,7 +200,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1.6, z: 1.2}
+  m_Size: {x: 1.5, y: 2.4, z: 1.8}
   m_Center: {x: 0, y: 0, z: 0.1}
 --- !u!54 &8200605581572825844
 Rigidbody:
@@ -227,7 +227,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!195 &2402538174806300611
 NavMeshAgent:
@@ -238,7 +238,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 2226390444181454274}
   m_Enabled: 1
   m_AgentTypeID: -1372625422
-  m_Radius: 0.6
+  m_Radius: 0.9
   m_Speed: 3.5
   m_Acceleration: 2
   avoidancePriority: 1
@@ -247,8 +247,8 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 1.6
-  m_BaseOffset: 0.8
+  m_Height: 2.4
+  m_BaseOffset: 1.2
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 0
 --- !u!114 &2761560873083925127
@@ -284,22 +284,35 @@ MonoBehaviour:
   currentHp: 0
   maxPressure: 100
   currentPressure: 0
+  healPressureVal: 10
   viewingDistance: 10
   viewingAngle: 80
-  eyeTransform: {fileID: 0}
   state: 0
   cnt: 0
-  moveSpeed: 5
-  moveAcceleration: 1.5
-  trackingSpeed: 8
-  trackingAcceleration: 2
-  trackingKeepDistance: 3
-  escapeSpeed: 8
-  escapeAcceleration: 2
-  escapeTime: 1.2
-  escapeDistance: 5
   waitInterval: 3
-  patrol: {fileID: 0}
+  moveParam:
+    moveSpeed: 5
+    moveAcceleration: 2
+    angularSpeed: 280
+    stoppingDistance: 0.3
+    consumePressure: 1
+  trackingParam:
+    moveSpeed: 6
+    moveAcceleration: 2
+    angularSpeed: 360
+    stoppingDistance: 0
+    consumePressure: 2
+  escapeParam:
+    moveSpeed: 10
+    moveAcceleration: 4
+    angularSpeed: 360
+    stoppingDistance: 0.1
+    consumePressure: 3.5
+  escapeTime: 2
+  escapeDistance: 10
+  healParam:
+    startHealLine: 0
+    endHealLine: 60
   targetNum: 0
   targetIndex: 0
 --- !u!95 &6267518420404115181

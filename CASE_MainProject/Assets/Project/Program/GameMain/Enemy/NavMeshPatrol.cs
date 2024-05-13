@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -23,6 +24,7 @@ public class NavMeshPatrol : MonoBehaviour
 
     private void Awake()
     {
+        agent = GetComponent<NavMeshAgent>();
         if (targetParent)
         {
             patrols = new Transform[targetParent.childCount];
@@ -36,7 +38,7 @@ public class NavMeshPatrol : MonoBehaviour
 
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        
     }
 
     private void Update()
@@ -51,18 +53,17 @@ public class NavMeshPatrol : MonoBehaviour
 
     void PatrolFunc()
     {
-        if (agent.remainingDistance <= agent.stoppingDistance)
+        if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
         {
-            agent.ResetPath();
-            state = PatrolState.Idle;
+            Stop();
         }
     }
 
     void CustomFunc()
     {
-        if (agent.remainingDistance <= agent.stoppingDistance)
+        if (agent.remainingDistance <= agent.stoppingDistance &&!agent.pathPending)
         {
-            agent.ResetPath();
+            Stop();
         }
     }
 
@@ -81,6 +82,23 @@ public class NavMeshPatrol : MonoBehaviour
         agent.autoBraking = autoBrake;
     }
 
+    public void SetAgentParam(float speed, float acceleration, float angularSpeed, bool autoBrake = false)
+    {
+        agent.speed = speed > 0.1f ? speed : 0.1f;
+        agent.acceleration = acceleration > 0.1f ? acceleration : 0.1f;
+        agent.angularSpeed = angularSpeed;
+        agent.autoBraking = autoBrake;
+    }
+
+    public void SetAgentParam(Enemy_Mob.EnemyAgentParam param, bool autoBrake = false)
+    {
+        agent.speed = param.moveSpeed > 0.1f ? param.moveSpeed : 0.1f;
+        agent.acceleration = param.moveAcceleration > 0.1f ? param.moveAcceleration : 0.1f;
+        agent.angularSpeed = param.angularSpeed;
+        agent.stoppingDistance = param.stoppingDistance;
+        agent.autoBraking = autoBrake;
+    }
+
     /*
      * <summary>
      * èÛë‘ÇèÑâÒÇ…Ç∑ÇÈ
@@ -89,20 +107,20 @@ public class NavMeshPatrol : MonoBehaviour
      * <return>
      * void
      */
-    public void ExcutePatrol(int index)
+    public bool ExcutePatrol(int index)
     {
         if(index >= patrols.Length)
         {
             index = 0;
         }
         state = PatrolState.Patrol;
-        agent.SetDestination(patrols[index].position);
+        return agent.SetDestination(patrols[index].position);
     }
 
-    public void ExcuteCustom(Vector3 target)
+    public bool ExcuteCustom(Vector3 target)
     {
         state = PatrolState.Custom;
-        agent.SetDestination(target);
+        return agent.SetDestination(target);
     }
 
     /*
@@ -121,5 +139,17 @@ public class NavMeshPatrol : MonoBehaviour
     public Transform[] GetTargets()
     {
         return patrols;
+    }
+
+    public void Stop()
+    {
+        agent.ResetPath();
+        agent.velocity = Vector3.zero;
+        state = PatrolState.Idle;
+    }
+
+    public float GetRemainingDistance()
+    {
+        return agent.remainingDistance;
     }
 }

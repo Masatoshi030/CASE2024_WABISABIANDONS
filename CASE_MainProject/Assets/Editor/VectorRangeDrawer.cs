@@ -1,7 +1,5 @@
 using System;
 using UnityEngine;
-using Unity.VisualScripting;
-using Codice.CM.Common;
 
 #if UNITY_EDITOR
 using UnityEditor;
