@@ -377,7 +377,7 @@ public class PlayerController : MonoBehaviour
         if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.Off)
         {
             //ジャンプボタンを押すと
-            if(DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.NewDown)
+            if (DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState == DualSenseUnity.ButtonState.NewDown)
             {
                 //攻撃状態へ移行
                 attackState = ATTACK_STATE.Attack;
