@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
     Vector2 runInput;
 
     public enum ATTACK_STATE
-    { Idle, Attack, KnockBack};
+    { Idle, Aim, Attack, KnockBack};
     [SerializeField, Header("突撃状態（ステート）"), Toolbar(typeof(ATTACK_STATE), "AttackState")]
     public ATTACK_STATE attackState = ATTACK_STATE.Idle;
 
@@ -206,13 +206,7 @@ public class PlayerController : MonoBehaviour
 
         OnAttack();
 
-        //=== 一定間隔処理 ===//
-
-        OnFixedInterval();
-    }
-
-    private void FixedUpdate()
-    {
+        //== 移動 ==//
 
         //ロックがかかったら早期リターン
         if (bLock)
@@ -257,6 +251,15 @@ public class PlayerController : MonoBehaviour
                 Quaternion.LookRotation(new Vector3(runInput.x, 0.0f, runInput.y)),
                 rotationLerpSpeed * Time.deltaTime);
         }
+
+        //=== 一定間隔処理 ===//
+
+        OnFixedInterval();
+    }
+
+    private void FixedUpdate()
+    {
+
     }
 
     /// <summary>
@@ -268,7 +271,7 @@ public class PlayerController : MonoBehaviour
         if (jumpState == JUMP_STATE.Idle)
         {
             //最初の初速とジャンプ開始命令
-            if (DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.NewDown)
+            if (DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState == DualSenseUnity.ButtonState.NewDown)
             {
                 //ジャンプ上昇状態へ移行
                 jumpState = JUMP_STATE.Rising;
@@ -284,7 +287,7 @@ public class PlayerController : MonoBehaviour
         else if (jumpState == JUMP_STATE.Rising)
         {
             //上昇中に×ボタンを押していたら
-            if (DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.Down)
+            if (DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState == DualSenseUnity.ButtonState.Down)
             {
                 jumpTime += Time.deltaTime;
 
@@ -296,7 +299,7 @@ public class PlayerController : MonoBehaviour
             }
 
             //ジャンプ最大時間を過ぎるか×ボタンを押すのをやめたらと降下に移行
-            if (jumpTime > jumpMaxTime || DualSense_Manager.instance.GetInputState().CrossButton != DualSenseUnity.ButtonState.Down)
+            if (jumpTime > jumpMaxTime || DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState != DualSenseUnity.ButtonState.Down)
             {
                 jumpState = JUMP_STATE.Descending;
             }
@@ -380,10 +383,23 @@ public class PlayerController : MonoBehaviour
             if (DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState == DualSenseUnity.ButtonState.NewDown)
             {
                 //攻撃状態へ移行
-                attackState = ATTACK_STATE.Attack;
+                attackState = ATTACK_STATE.Aim;
 
                 //突撃アニメーション開始
                 characterAnimation.SetBool("bAttack", true);
+
+                //スロー
+                Time.timeScale = 0.1f;
+            }
+
+            //ジャンプボタンを押すと
+            if (DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState == DualSenseUnity.ButtonState.NewUp)
+            {
+                //攻撃状態へ移行
+                attackState = ATTACK_STATE.Attack;
+
+                //スロー終了
+                Time.timeScale = 1.0f;
             }
         }
     }
