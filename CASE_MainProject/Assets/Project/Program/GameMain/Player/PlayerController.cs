@@ -50,6 +50,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("蒸気貯蔵量")]
     float heldSteam = 100.0f;
 
+    [SerializeField, Header("最大蒸気貯蔵量")]
+    float maxHeldSteam = 100.0f;
+
     [SerializeField, Header("瞬間出力蒸気量"), ReadOnly]
     float outSteamValue = 0.0f;
 
@@ -69,7 +72,7 @@ public class PlayerController : MonoBehaviour
     Vector2 runInput;
 
     public enum ATTACK_STATE
-    { Idle, Attack};
+    { Idle, Attack, KnockBack};
     [SerializeField, Header("突撃状態（ステート）"), Toolbar(typeof(ATTACK_STATE), "AttackState")]
     public ATTACK_STATE attackState = ATTACK_STATE.Idle;
 
@@ -94,6 +97,26 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("噴出蒸気")]
     ParticleSystem compressor_SteamEffect;
 
+    [SerializeField, Header("ノックバック力")]
+    float knockBackPower = 5.0f;
+
+    [SerializeField, Header("一定間隔で一回処理する処理の間隔")]
+    float fixedIntervalTime = 1.0f;
+
+    float fixedIntervalTimer = 0.0f;
+
+    [SerializeField, Header("VolumesAnimation"), ReadOnly]
+    Animator volumeAnimation;
+
+    [SerializeField, Header("GoldValveカウント")]
+    int heldGoldValve = 0;
+
+    [SerializeField, Header("GoldValveAudioSource")]
+    AudioSource goldValveAudioSouce;
+
+    [SerializeField, Header("動作ロック")]
+    bool bLock = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -114,11 +137,23 @@ public class PlayerController : MonoBehaviour
 
         //メインプレイヤーカメラオブジェクトの参照
         mainPlayerCamera_Obj = GameObject.Find("PlayerCamera_Brain");
+
+        //VolumeAnimation参照
+        volumeAnimation = GameObject.Find("Volumes").GetComponent<Animator>();
+
+        //スチーム貯蔵量を最大にする
+        heldSteam = maxHeldSteam;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //ロックがかかったら早期リターン
+        if (bLock)
+        {
+            return;
+        }
+
         //=== 重力 ===//
         moveVelocity.y = myRigidbody.velocity.y;
 
@@ -132,7 +167,10 @@ public class PlayerController : MonoBehaviour
         if (heldSteam > 0.0f)
         {
             //瞬間出力蒸気量
-            outSteamValue = (float)DualSense_Manager.instance.GetInputState().RightTrigger.TriggerValue;
+            outSteamValue = (float)DualSense_Manager.instance.GetInputState().LeftTrigger.TriggerValue;
+
+            //噴出蒸気の振動
+            DualSense_Manager.instance.SetRightRumble(outSteamValue, 0.05f);
 
             //貯蔵圧力から減らす
             heldSteam -= outSteamValue * outMaxSteamValue;
@@ -167,10 +205,21 @@ public class PlayerController : MonoBehaviour
         //=== 突撃 ===//
 
         OnAttack();
+
+        //=== 一定間隔処理 ===//
+
+        OnFixedInterval();
     }
 
     private void FixedUpdate()
     {
+
+        //ロックがかかったら早期リターン
+        if (bLock)
+        {
+            return;
+        }
+
         //=== 移動 ===//
 
         //移動量入力
@@ -276,6 +325,27 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "GoldValve")
+        {
+            //アイテムカウントを増やす
+            heldGoldValve++;
+            //取得音再生
+            goldValveAudioSouce.PlayOneShot(goldValveAudioSouce.clip);
+            //アイテムを消す
+            Destroy(other.gameObject);
+        }
+    }
+
+    public void Damage(float _damage)
+    {
+        characterAnimation.SetTrigger("tDamage");
+
+        //突撃方向の反対ベクトルの斜め上にノックバックする
+        myRigidbody.velocity = (Vector3.up - moveRotationShaft.transform.forward) * knockBackPower;
+    }
+
     void OnAttack()
     {
 
@@ -290,6 +360,12 @@ public class PlayerController : MonoBehaviour
             attackShaft.transform.LookAt(attackShaft.transform.position + mainPlayerCamera_Obj.transform.forward);      //前方ベクトルを向ける
             attackShaft.transform.Rotate(90.0f, 0.0f, 0.0f);
 
+            //突撃ポストエフェクト有効
+            volumeAnimation.SetBool("bAttack", true);
+        }
+
+        if (attackState == ATTACK_STATE.Attack || attackState == ATTACK_STATE.KnockBack)
+        {
             //地面に着地すると終了
             if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.On)
             {
@@ -319,5 +395,58 @@ public class PlayerController : MonoBehaviour
         characterAnimation.SetBool("bAttack", false);
         //姿勢を戻す
         attackShaft.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+        //突撃ポストエフェクト無効
+        volumeAnimation.SetBool("bAttack", false);
+    }
+
+    public void KnockBack()
+    {
+        //ノックバックアニメーション終了
+        characterAnimation.SetTrigger("tHit");
+
+        Debug.Log("Knock");
+
+        //突撃方向の反対ベクトルの斜め上にノックバックする
+        myRigidbody.velocity = Vector3.up * knockBackPower;
+
+        //ノックバック状態にする
+        attackState = ATTACK_STATE.KnockBack;
+    }
+
+    void OnFixedInterval()
+    {
+        //カウント
+        fixedIntervalTimer += Time.deltaTime;
+        //一定時間が経つと
+        if(fixedIntervalTimer > fixedIntervalTime)
+        {
+            //=== 処理 ===//
+
+            if (heldSteam > 0.0f)
+            {
+                //トリガー抵抗力
+                DualSense_Manager.instance.SetLeftTriggerContinuousResistanceEffect(0.0f, heldSteam / maxHeldSteam);
+            }
+            else
+            {
+                //トリガー抵抗を無効にする
+                DualSense_Manager.instance.SetLeftTriggerNoEffect();
+            }
+
+            //タイマーをリセット
+            fixedIntervalTimer = 0.0f;
+        }
+    }
+
+    public void OnGoal()
+    {
+        //プレイヤーのカメラを無効にする
+        mainPlayerCamera_Obj.GetComponent<Camera>().enabled = false;
+
+        //プレイヤーの動きを止める
+        bLock = true;
+
+        //チュートリアルのガイドを削除
+        GameObject.Find("TutorialCanvas").SetActive(false);
     }
 }
