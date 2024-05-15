@@ -79,6 +79,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("突撃初速")]
     float attackSpeed = 5.0f;
 
+    [SerializeField, Header("突進上方向修正")]
+    float attackUpCorrectionPower = 1.0f;
+
     [SerializeField, Header("キャラクターアニメーション")]
     Animator characterAnimation;
 
@@ -206,7 +209,13 @@ public class PlayerController : MonoBehaviour
 
         OnAttack();
 
-        //== 移動 ==//
+        //=== 一定間隔処理 ===//
+
+        OnFixedInterval();
+    }
+
+    private void FixedUpdate()
+    {
 
         //ロックがかかったら早期リターン
         if (bLock)
@@ -251,15 +260,6 @@ public class PlayerController : MonoBehaviour
                 Quaternion.LookRotation(new Vector3(runInput.x, 0.0f, runInput.y)),
                 rotationLerpSpeed * Time.deltaTime);
         }
-
-        //=== 一定間隔処理 ===//
-
-        OnFixedInterval();
-    }
-
-    private void FixedUpdate()
-    {
-
     }
 
     /// <summary>
@@ -356,15 +356,26 @@ public class PlayerController : MonoBehaviour
         if (attackState == ATTACK_STATE.Attack)
         {
 
-            //突撃速度
-            transform.position += mainPlayerCamera_Obj.transform.forward * attackSpeed * Time.deltaTime;
+            //スクリーンの中心（カーソルを合わせたオブジェクト）に向かうベクトルを計算する
+
+            //カメラの前方ベクトルを初期値とする　※もしターゲットが検出されなくても前方に飛べるようにする。
+            Vector3 targetPosition = mainPlayerCamera_Obj.transform.forward;
+
+            Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+            RaycastHit hit;
+
+            // Rayが何かに当たったかどうかを確認
+            if (Physics.Raycast(ray, out hit, 1000.0f))
+            {
+                targetPosition = hit.point;
+            }
+
+            //突撃速度　計算したターゲットへのベクトルを正規化し、速度を乗算する
+            transform.position += (targetPosition - transform.position).normalized * attackSpeed * Time.deltaTime;
 
             //頭を飛んでいくほうに向ける
-            attackShaft.transform.LookAt(attackShaft.transform.position + mainPlayerCamera_Obj.transform.forward);      //前方ベクトルを向ける
+            attackShaft.transform.LookAt(targetPosition);      //前方ベクトルを向ける
             attackShaft.transform.Rotate(90.0f, 0.0f, 0.0f);
-
-            //突撃ポストエフェクト有効
-            volumeAnimation.SetBool("bAttack", true);
         }
 
         if (attackState == ATTACK_STATE.Attack || attackState == ATTACK_STATE.KnockBack)
@@ -388,6 +399,12 @@ public class PlayerController : MonoBehaviour
                 //突撃アニメーション開始
                 characterAnimation.SetBool("bAttack", true);
 
+                //突撃ポストエフェクト有効
+                volumeAnimation.SetBool("bAttack", true);
+
+                //全ての方向の力を０にする
+                myRigidbody.velocity = Vector3.zero;
+
                 //スロー
                 Time.timeScale = 0.1f;
             }
@@ -395,11 +412,14 @@ public class PlayerController : MonoBehaviour
             //ジャンプボタンを押すと
             if (DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState == DualSenseUnity.ButtonState.NewUp)
             {
-                //攻撃状態へ移行
-                attackState = ATTACK_STATE.Attack;
+                if (attackState == ATTACK_STATE.Aim)
+                {
+                    //攻撃状態へ移行
+                    attackState = ATTACK_STATE.Attack;
 
-                //スロー終了
-                Time.timeScale = 1.0f;
+                    //スロー終了
+                    Time.timeScale = 1.0f;
+                }
             }
         }
     }
