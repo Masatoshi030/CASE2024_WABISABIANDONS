@@ -48,10 +48,10 @@ public class PlayerController : MonoBehaviour
     GroundJudgeController myGroundJudgeController;
 
     [SerializeField, Header("蒸気貯蔵量")]
-    float heldSteam = 100.0f;
+    public float heldSteam = 100.0f;
 
     [SerializeField, Header("最大蒸気貯蔵量")]
-    float maxHeldSteam = 100.0f;
+    public float maxHeldSteam = 100.0f;
 
     [SerializeField, Header("瞬間出力蒸気量"), ReadOnly]
     float outSteamValue = 0.0f;
@@ -120,6 +120,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("動作ロック")]
     bool bLock = false;
 
+    [SerializeField, Header("突撃ゲージ")]
+    AttackGaugeController attackGauge;
+
+    [SerializeField, Header("突撃ゲージが溜まる速度")]
+    float attackGauge_AddSpeed = 2.0f;
+
+    //突撃ゲージの溜めた値
+    float gaugeAttackValue = 0.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -144,8 +153,9 @@ public class PlayerController : MonoBehaviour
         //VolumeAnimation参照
         volumeAnimation = GameObject.Find("Volumes").GetComponent<Animator>();
 
-        //スチーム貯蔵量を最大にする
-        heldSteam = maxHeldSteam;
+        //突撃ゲージの参照
+        attackGauge = GameObject.Find("AttackGauge").GetComponent<AttackGaugeController>();
+        attackGauge.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -371,7 +381,7 @@ public class PlayerController : MonoBehaviour
             }
 
             //突撃速度　計算したターゲットへのベクトルを正規化し、速度を乗算する
-            transform.position += (targetPosition - transform.position).normalized * attackSpeed * Time.deltaTime;
+            transform.position += (targetPosition - transform.position).normalized * (attackSpeed * gaugeAttackValue) * Time.deltaTime;
 
             //頭を飛んでいくほうに向ける
             attackShaft.transform.LookAt(targetPosition);      //前方ベクトルを向ける
@@ -385,6 +395,12 @@ public class PlayerController : MonoBehaviour
             {
                 StopAttack();
             }
+        }
+
+        //狙っている時
+        if (attackState == ATTACK_STATE.Aim)
+        {
+            attackGauge.AddValue(outSteamValue * attackGauge_AddSpeed);
         }
 
         //空中にいる状態で
@@ -402,6 +418,9 @@ public class PlayerController : MonoBehaviour
                 //突撃ポストエフェクト有効
                 volumeAnimation.SetBool("bAttack", true);
 
+                //突撃ゲージを出現
+                attackGauge.gameObject.SetActive(true);
+
                 //全ての方向の力を０にする
                 myRigidbody.velocity = Vector3.zero;
 
@@ -416,6 +435,13 @@ public class PlayerController : MonoBehaviour
                 {
                     //攻撃状態へ移行
                     attackState = ATTACK_STATE.Attack;
+
+                    //突撃ゲージから溜めた結果を取得
+                    gaugeAttackValue = attackGauge.GetValue_Normalize();
+
+                    //突撃ゲージを隠す
+                    attackGauge.SetValue(0.0f);
+                    attackGauge.gameObject.SetActive(false);
 
                     //スロー終了
                     Time.timeScale = 1.0f;
