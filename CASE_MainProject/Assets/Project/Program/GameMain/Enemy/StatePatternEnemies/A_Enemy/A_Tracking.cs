@@ -14,11 +14,18 @@ public class A_Tracking : EnemyState
     float angularSpeed;
     [SerializeField, Header("’ÇÕŽžŠÔ")]
     float trackingInterval;
-    [SerializeField, Header("’ÇÕŽ¸”sŽž‚Ì‘JˆÚæ")]
-    public string failedTransition = "‘Ò‹@";
-    [SerializeField, Header("’ÇÕ¬Œ÷Žž‚Ì‘JˆÚæ")]
-    public string successfulTransition = "UŒ‚";
+    [SerializeField, Header("ˆÚ“®‹——£")]
+    float moveDistance;
 
+    [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
+    [SerializeField, Header("’ÇÕŽ¸”sŽž‚Ì‘JˆÚ")]
+    public string failedTransition = "‘Ò‹@";
+    [SerializeField, Header("’ÇÕ¬Œ÷Žž‚Ì‘JˆÚ")]
+    public string successfulTransition = "UŒ‚";
+    [SerializeField, Header("”í’eŽž‚Ì‘JˆÚ")]
+    public string damagedTransition = "”í’e";
+    [SerializeField, Header("Õ“ËŽž‚Ì‘JˆÚ")]
+    public string collisionTransition = "‘Ò‹@";
 
     public override void Initialize()
     {
@@ -27,13 +34,20 @@ public class A_Tracking : EnemyState
 
     public override void Enter()
     {
+        base.Enter();
         patrol.SetAgentParam(moveSpeed, acceleration, angularSpeed);
-        patrol.ExcuteCustom(Enemy.Target.transform.position);
+        Vector3 Direction = Enemy.Target.transform.position - enemy.gameObject.transform.position;
+        Direction.Normalize();
+        Direction *= moveDistance;
+        patrol.ExcuteCustom(enemy.gameObject.transform.position + Direction);
     }
 
     public override void MainFunc()
     {
-        patrol.ExcuteCustom(Enemy.Target.transform.position);
+        Vector3 Direction = Enemy.Target.transform.position - enemy.gameObject.transform.position;
+        Direction.Normalize();
+        Direction *= moveDistance;
+        patrol.ExcuteCustom(enemy.gameObject.transform.position + Direction);
         if (machine.Cnt >= trackingInterval)
         {
             Machine.TransitionTo(failedTransition);
@@ -42,6 +56,30 @@ public class A_Tracking : EnemyState
 
     public override void Exit()
     {
-        
+        patrol.Stop();
+    }
+
+    public override void TriggerEnter(Collider collider)
+    {
+        if(collider.transform.root.name == "Player")
+        {
+            patrol.Stop();
+            if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
+                machine.TransitionTo(damagedTransition);
+            else
+                machine.TransitionTo(collisionTransition);
+        }
+    }
+
+    public override void CollisionEnter(Collision collision)
+    {
+        if(collision.transform.root.name == "Player")
+        {
+            patrol.Stop();
+            if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
+                machine.TransitionTo(damagedTransition);
+            else
+                machine.TransitionTo(collisionTransition);
+        }
     }
 }

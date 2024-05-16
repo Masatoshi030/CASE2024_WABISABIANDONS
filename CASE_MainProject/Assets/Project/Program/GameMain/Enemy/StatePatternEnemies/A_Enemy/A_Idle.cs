@@ -6,14 +6,18 @@ public class A_Idle : EnemyState
 {
     [SerializeField, Header("‘Ò‹@ŠÔ")]
     float waitInterval = 3.0f;
-    [SerializeField, Header("Œo‰ßŒã‚Ì‘JˆÚæ")]
+    [SerializeField, Header("Œo‰ßŒã‚Ì‘JˆÚ")]
     public string elapsedTransition = "ˆÚ“®";
-    [SerializeField, Header("õ“G¬Œ÷‚Ì‘JˆÚæ")]
+    [SerializeField, Header("õ“G¬Œ÷‚Ì‘JˆÚ")]
     public string serchSuccessTransition = "’ÇÕ";
+    [SerializeField, Header("”í’e‚Ì‘JˆÚ")]
+    public string damagedTransition = "”í’e";
+    [SerializeField, Header("Õ“Ë‚Ì‘JˆÚ")]
+    public string collisionTransition = "’ÇÕ";
 
     public override void Enter()
     {
-        Debug.Log("‘Ò‹@ŠJn" + enemy.name);
+        base.Enter();
     }
 
     public override void MainFunc()
@@ -31,6 +35,22 @@ public class A_Idle : EnemyState
 
     public override void Exit()
     {
-        Debug.Log("‘Ò‹@I—¹" + enemy.name);
+        
+    }
+
+    public override void CollisionEnter(Collision collision)
+    {
+        if (collision.transform.root.name == "Player")
+        {
+            machine.TransitionTo(collisionTransition);
+        }
+    }
+
+    public override void TriggerEnter(Collider collider)
+    {
+        if (collider.transform.root.name == "Player")
+        {
+            machine.TransitionTo(collisionTransition);
+        }
     }
 }

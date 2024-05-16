@@ -11,13 +11,18 @@ public class Enemy : MonoBehaviour
     string stateName;
     public string StateName { get => stateName; set => stateName = value; }
 
-    StateMachine enemyStateMachine;
-    public StateMachine Machine { get => enemyStateMachine; }
+    // 敵ステートマシン
+    EnemyStateMachine enemyStateMachine;
+    public EnemyStateMachine Machine { get => enemyStateMachine; }
 
-    [SerializeField, Header("HP")]
+    [SerializeField, Header("最大HP")]
+    float maxHp;
+    [SerializeField, Header("HP"), ReadOnly]
     float enemyHp;
     public float Hp { get => enemyHp; }
-    [SerializeField, Header("圧力")]
+    [SerializeField, Header("最大圧力")]
+    float maxPressure;
+    [SerializeField, Header("圧力"), ReadOnly]
     float enemyPressure;
     public float Pressre { get => enemyPressure; }
     [SerializeField, Header("視点")]
@@ -31,14 +36,32 @@ public class Enemy : MonoBehaviour
     float viewAngle;
     public float ViewAngle { get => viewAngle; }
 
+    // 索敵処理の有無
+    bool isSearchPlayer = true;
+    public bool IsSearchPlayer {set=> isSearchPlayer = value; }
+
+    // プレイヤー発見の有無
     bool isFindPlayer = false;
     public bool IsFindPlayer { get => isFindPlayer; }
+
+    // プレイヤーとの距離^2
     float toPlayerDistance = 0.0f;
     public float ToPlayerDistace { get => toPlayerDistance; }
 
     [SerializeField, Header("攻撃可能か"), ReadOnly]
     bool isAttackEnable = false;
     public bool IsAttackEnable { get => isAttackEnable; set => isAttackEnable = value; }
+
+    Vector3 damageVector;
+    public Vector3 DamageVector { get => damageVector; }
+
+    // 無敵状態
+    bool isInvincible = false;
+    public bool IsInvincible { set => isInvincible = value; }
+
+    [SerializeField, Header("アニメーター")]
+    Animator animator;
+    public Animator EnemyAnimator { get => animator; }
 
     private void Awake()
     {
@@ -51,15 +74,52 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        enemyStateMachine = GetComponent<StateMachine>();
-        enemyStateMachine.Controller = this;
+        // パラメータの初期化
+        enemyHp = maxHp;
+        enemyPressure = maxPressure;
+        // ステートマシンの設定
+        enemyStateMachine = GetComponent<EnemyStateMachine>();
+        enemyStateMachine.EnemyComponent = this;
         enemyStateMachine.Initialize();
     }
 
     void Update()
     {
-        (isFindPlayer, toPlayerDistance) = FindPlayerAtFOV();
+        // 無敵をなくす
+        isInvincible = false;
+        if (isSearchPlayer) (isFindPlayer, toPlayerDistance) = FindPlayerAtFOV();
+        // ステートマシンのメイン処理を呼ぶ
         enemyStateMachine.MainFunc();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        enemyStateMachine.CollisionEnter(collision);
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        enemyStateMachine.CollisionStay(collision);
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        enemyStateMachine.CollisionExit(collision);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        enemyStateMachine.TriggerEnter(other);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        enemyStateMachine.TriggerStay(other);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        enemyStateMachine.TriggerExit(other);
     }
 
     /*
@@ -68,7 +128,7 @@ public class Enemy : MonoBehaviour
      * <param>
      * なし
      * <returns>
-     * bool isFind, float distance
+     * bool isFind, float distance^2
      */
     public (bool isFind, float distance) FindPlayerAtFOV()
     {
@@ -101,5 +161,17 @@ public class Enemy : MonoBehaviour
             }
         }
         return (false, distance);
+    }
+
+    public bool Damage(float damage, Vector3 direction)
+    {
+        damageVector = direction;
+        if(!isInvincible) enemyHp -= damage;
+        
+        if(enemyHp <= 0)
+        {
+            return true;
+        }
+        return false;
     }
 }

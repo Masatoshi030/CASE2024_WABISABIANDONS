@@ -12,10 +12,16 @@ public class A_MoveInterval : EnemyState
     float angularSpeed;
     [SerializeField, Header("ˆÚ“®ŽžŠÔ")]
     float moveInterval;
+
+    [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("Œo‰ßŒã‚Ì‘JˆÚæ")]
     string elapsedTransition = "‘Ò‹@";
     [SerializeField, Header("õ“G¬Œ÷Žž‚Ì‘JˆÚæ")]
     string serchSuccessTransition = "’ÇÕ";
+    [SerializeField, Header("”í’eŽž‚Ì‘JˆÚ")]
+    string damagedTransition = "”í’e";
+    [SerializeField, Header("Õ“ËŽž‚Ì‘JˆÚ")]
+    string collisionTransition = "’ÇÕ";
 
     [SerializeField, Header("ƒpƒgƒ[ƒ‹"), ReadOnly]
     NavMeshPatrol patrol;
@@ -33,6 +39,7 @@ public class A_MoveInterval : EnemyState
 
     public override void Enter()
     {
+        base.Enter();
         // ˆÚ“®ˆ—
         patrol.SetAgentParam(moveSpeed, acceleration, angularSpeed);
         patrol.ExcutePatrol(targetIdx);
@@ -58,6 +65,26 @@ public class A_MoveInterval : EnemyState
         if (targetIdx >= targetNum)
         {
             targetIdx = 0;
+        }
+    }
+
+    public override void CollisionEnter(Collision collision)
+    {
+        if (collision.transform.root.name == "Player")
+        {
+            patrol.Stop();
+            if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack) machine.TransitionTo(damagedTransition);
+            else machine.TransitionTo(collisionTransition);
+        }
+    }
+
+    public override void TriggerEnter(Collider collider)
+    {
+        if (collider.transform.root.name == "Player")
+        {
+            patrol.Stop();
+            if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack) machine.TransitionTo(damagedTransition);
+            else machine.TransitionTo(collisionTransition);
         }
     }
 }
