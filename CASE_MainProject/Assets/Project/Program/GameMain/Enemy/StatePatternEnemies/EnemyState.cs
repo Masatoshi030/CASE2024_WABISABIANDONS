@@ -2,37 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyState : MonoBehaviour
+public class EnemyState : State
 {
     // Enemyコンポーネント
     protected Enemy enemy;
-    public Enemy Controller { get => enemy; set => enemy = value; }
+    public Enemy EnemyObject { get => enemy; set => enemy = value; }
 
-    // ステートマシンコンポーネント
-    protected StateMachine machine;
-    public StateMachine Machine { get => machine; set => machine = value; }
+    [SerializeField, Header("アニメーション速度")]
+    protected float animSpeed = 1.0f;
+    [SerializeField, Header("開始時アニメーション")]
+    protected string enterAnimation;
 
-    [SerializeField, Header("状態名")]
-    string stateName;
-    public string StateName { get => stateName; }
-
-    public virtual void Initialize()
+    public override void Enter()
     {
-        // 初期化処理
+        enemy.EnemyAnimator.speed = animSpeed;
+        enemy.EnemyAnimator.Play(enterAnimation);
     }
 
-    public virtual void Enter()
-    {
-        // 開始処理
-    }
 
-    public virtual void MainFunc()
-    {
-        // 更新処理
-    }
-
-    public virtual void Exit()
-    {
-        // 終了時処理
-    }
 }
