@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class A_MoveTarget : EnemyState
+public class General_MoveTarget : EnemyState
 {
     [SerializeField, Header("ˆÚ“®‘¬“x")]
     float moveSpeed;
@@ -10,10 +10,18 @@ public class A_MoveTarget : EnemyState
     float acceleration;
     [SerializeField, Header("‰ñ“]‘¬“x")]
     float angularSpeed;
-    [SerializeField, Header("Œo‰ßŒã‚Ì‘JˆÚæ")]
+    
+
+    [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
+    [SerializeField, Header("Œo‰ßŒã‚Ì‘JˆÚ")]
     string elapsedTransition = "‘Ò‹@";
-    [SerializeField, Header("õ“G¬Œ÷Žž‚Ì‘JˆÚæ")]
+    [SerializeField, Header("õ“G¬Œ÷Žž‚Ì‘JˆÚ")]
     string serchSuccessTransition = "’ÇÕ";
+    [SerializeField, Header("”í’eŽž‚Ì‘JˆÚ")]
+    string damagedTransition = "”í’e";
+    [SerializeField, Header("Õ“ËŽž‚Ì‘JˆÚ")]
+    string collisionTransition = "’ÇÕ";
+    
 
     [SerializeField, Header("ƒpƒgƒ[ƒ‹"), ReadOnly]
     NavMeshPatrol patrol;
@@ -31,9 +39,11 @@ public class A_MoveTarget : EnemyState
 
     public override void Enter()
     {
+        base.Enter();
         // ˆÚ“®ˆ—
         patrol.SetAgentParam(moveSpeed, acceleration, angularSpeed);
         patrol.ExcutePatrol(targetIdx);
+        enemy.EnemyRigidbody.velocity = Vector3.zero;
     }
 
     public override void MainFunc()
@@ -50,10 +60,33 @@ public class A_MoveTarget : EnemyState
 
     public override void Exit()
     {
+        patrol.Stop();
         targetIdx++;
         if (targetIdx >= targetNum)
         {
             targetIdx = 0;
+        }
+    }
+
+    public override void CollisionEnter(Collision collision)
+    {
+        if(collision.transform.root.name == "Player")
+        {
+            if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
+                machine.TransitionTo(damagedTransition);
+            else
+                machine.TransitionTo(collisionTransition);
+        }
+    }
+
+    public override void TriggerEnter(Collider collider)
+    {
+        if (collider.transform.root.name == "Player")
+        {
+            if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
+                machine.TransitionTo(damagedTransition);
+            else
+                machine.TransitionTo(collisionTransition);
         }
     }
 }
