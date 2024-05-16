@@ -30,7 +30,7 @@ public class HeadCollision_Manager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Wall" || other.tag == "Ground" || other.tag == "Enemy")
+        if (other.tag == "Wall" || other.tag == "Ground" || other.tag == "Enemy" || other.tag == "Dummy")
         {
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
             {
@@ -47,26 +47,37 @@ public class HeadCollision_Manager : MonoBehaviour
                 DualSense_Manager.instance.SetLeftRumble(0.25f, 0.1f);
 
                 //敵に突撃した時の処理
-                if (other.tag == "Enemy")
+                if (other.tag == "Dummy")
                 {
                     //衝突金属音
                     audioSource.PlayOneShot(soundClips[0]);
 
                     //ノックバック
                     PlayerController.instance.KnockBack();
-                    
+
+                    //パーツ散開エフェクトを生成する
+                    Instantiate(partsSplit_ParticleEffect, transform.position, Quaternion.identity);
+
+                    //ヒットストップ
+                    HitStopManager.instance.HitStopEffect(0.5f, 0.25f);
+
+                    //小振動
+                    DualSense_Manager.instance.SetRumble_Type1();
+
+                    Destroy(other.gameObject);
+
                     //倒したら
-                   //if (other.GetComponent<Enemy_Mob>().Damage(20.0f, transform.up))
-                   //{
-                   //    //パーツ散開エフェクトを生成する
-                   //    Instantiate(partsSplit_ParticleEffect, transform.position, Quaternion.identity);
-                   //
-                   //    //ヒットストップ
-                   //    HitStopManager.instance.HitStopEffect(0.5f, 0.25f);
-                   //
-                   //    //小振動
-                   //    DualSense_Manager.instance.SetRumble_Type1();
-                   //}
+                    //if (other.GetComponent<Enemy_Mob>().Damage(20.0f, transform.up))
+                    //{
+                    //    //パーツ散開エフェクトを生成する
+                    //    Instantiate(partsSplit_ParticleEffect, transform.position, Quaternion.identity);
+                    //
+                    //    //ヒットストップ
+                    //    HitStopManager.instance.HitStopEffect(0.5f, 0.25f);
+                    //
+                    //    //小振動
+                    //    DualSense_Manager.instance.SetRumble_Type1();
+                    //}
                     //倒してない
                     //else
                     //{
