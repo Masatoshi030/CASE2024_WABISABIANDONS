@@ -2,47 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class A_Idle : EnemyState
+public class General_IdleNoSearch : EnemyState
 {
     [SerializeField, Header("‘Ò‹@ŽžŠÔ")]
-    float waitInterval = 3.0f;
+    float waitInterval;
     [SerializeField, Header("Œo‰ßŒã‚Ì‘JˆÚ")]
     public string elapsedTransition = "ˆÚ“®";
-    [SerializeField, Header("õ“G¬Œ÷Žž‚Ì‘JˆÚ")]
-    public string serchSuccessTransition = "’ÇÕ";
     [SerializeField, Header("”í’eŽž‚Ì‘JˆÚ")]
     public string damagedTransition = "”í’e";
-    [SerializeField, Header("Õ“ËŽž‚Ì‘JˆÚ")]
-    public string collisionTransition = "’ÇÕ";
 
     public override void Enter()
     {
         base.Enter();
+        enemy.IsSearchPlayer = false;
     }
 
     public override void MainFunc()
     {
-        if(enemy.IsFindPlayer)
-        {
-            Machine.TransitionTo(serchSuccessTransition);
-        }
-
-        if(machine.Cnt >= waitInterval)
-        {
-            Machine.TransitionTo(elapsedTransition);
-        }
+        if (machine.Cnt >= waitInterval) machine.TransitionTo(elapsedTransition);
     }
 
     public override void Exit()
     {
-        
+        enemy.IsSearchPlayer = true;
     }
 
     public override void CollisionEnter(Collision collision)
     {
         if (collision.transform.root.name == "Player")
         {
-            machine.TransitionTo(collisionTransition);
+            if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack) machine.TransitionTo(damagedTransition);
         }
     }
 
@@ -50,7 +39,7 @@ public class A_Idle : EnemyState
     {
         if (collider.transform.root.name == "Player")
         {
-            machine.TransitionTo(collisionTransition);
+            if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack) machine.TransitionTo(damagedTransition);
         }
     }
 }

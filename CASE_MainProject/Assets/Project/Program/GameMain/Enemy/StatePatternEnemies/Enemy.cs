@@ -46,6 +46,7 @@ public class Enemy : MonoBehaviour
 
     // プレイヤーとの距離^2
     float toPlayerDistance = 0.0f;
+    // プレイヤーとの2乗距離
     public float ToPlayerDistace { get => toPlayerDistance; }
 
     [SerializeField, Header("攻撃可能か"), ReadOnly]
@@ -58,6 +59,10 @@ public class Enemy : MonoBehaviour
     // 無敵状態
     bool isInvincible = false;
     public bool IsInvincible { set => isInvincible = value; }
+
+    [SerializeField, Header("RigidBody")]
+    Rigidbody rb;
+    public Rigidbody EnemyRigidbody { get => rb; }
 
     [SerializeField, Header("アニメーター")]
     Animator animator;
@@ -74,6 +79,7 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
         // パラメータの初期化
         enemyHp = maxHp;
         enemyPressure = maxPressure;

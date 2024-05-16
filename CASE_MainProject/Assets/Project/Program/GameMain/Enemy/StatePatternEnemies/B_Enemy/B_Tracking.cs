@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class A_Tracking : EnemyState
+public class B_Tracking : EnemyState
 {
     [SerializeField, Header("ƒpƒgƒ[ƒ‹"), ReadOnly]
     NavMeshPatrol patrol;
@@ -14,13 +14,13 @@ public class A_Tracking : EnemyState
     float angularSpeed;
     [SerializeField, Header("’ÇÕŽžŠÔ")]
     float trackingInterval;
-    [SerializeField, Header("ˆÚ“®‹——£")]
-    float moveDistance;
+    [SerializeField, Header("UŒ‚‘JˆÚ‹——£")]
+    float attackDistance;
 
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("’ÇÕŽ¸”sŽž‚Ì‘JˆÚ")]
     public string failedTransition = "‘Ò‹@";
-    [SerializeField, Header("’ÇÕ¬Œ÷Žž‚Ì‘JˆÚ")]
+    [SerializeField, Header("‹——£ˆê’èˆÈ“à‚Ì‘JˆÚ")]
     public string successfulTransition = "UŒ‚";
     [SerializeField, Header("”í’eŽž‚Ì‘JˆÚ")]
     public string damagedTransition = "”í’e";
@@ -35,22 +35,29 @@ public class A_Tracking : EnemyState
     public override void Enter()
     {
         base.Enter();
-        patrol.SetAgentParam(moveSpeed, acceleration, angularSpeed);
-        Vector3 Direction = Enemy.Target.transform.position - enemy.gameObject.transform.position;
-        Direction.Normalize();
-        Direction *= moveDistance;
-        patrol.ExcuteCustom(enemy.gameObject.transform.position + Direction);
+        patrol.ExcuteCustom(Enemy.Target.transform.position);
+        enemy.EnemyRigidbody.velocity = Vector3.zero;
     }
 
     public override void MainFunc()
     {
-        Vector3 Direction = Enemy.Target.transform.position - enemy.gameObject.transform.position;
-        Direction.Normalize();
-        Direction *= moveDistance;
-        patrol.ExcuteCustom(enemy.gameObject.transform.position + Direction);
-        if (machine.Cnt >= trackingInterval)
+        if(machine.Cnt>= trackingInterval)
         {
-            Machine.TransitionTo(failedTransition);
+            machine.TransitionTo(failedTransition);
+            return;
+        }
+        if(enemy.IsFindPlayer)
+        {
+            patrol.ExcuteCustom(Enemy.Target.transform.position);
+            if(enemy.ToPlayerDistace <= attackDistance * attackDistance)
+            {
+                machine.TransitionTo(successfulTransition);
+            }
+        }
+        else
+        {
+            // Ž¸”s‚Æ‚Ý‚È‚·
+            machine.TransitionTo(failedTransition);
         }
     }
 
@@ -59,11 +66,10 @@ public class A_Tracking : EnemyState
         patrol.Stop();
     }
 
-    public override void TriggerEnter(Collider collider)
+    public override void CollisionEnter(Collision collision)
     {
-        if(collider.transform.root.name == "Player")
+        if (collision.transform.root.name == "Player")
         {
-            patrol.Stop();
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
                 machine.TransitionTo(damagedTransition);
             else
@@ -71,11 +77,10 @@ public class A_Tracking : EnemyState
         }
     }
 
-    public override void CollisionEnter(Collision collision)
+    public override void TriggerEnter(Collider collider)
     {
-        if(collision.transform.root.name == "Player")
+        if (collider.transform.root.name == "Player")
         {
-            patrol.Stop();
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
                 machine.TransitionTo(damagedTransition);
             else

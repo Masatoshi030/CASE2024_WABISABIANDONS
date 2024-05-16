@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class A_MoveTarget : EnemyState
+public class General_MoveTarget : EnemyState
 {
     [SerializeField, Header("ˆÚ“®‘¬“x")]
     float moveSpeed;
@@ -43,6 +43,7 @@ public class A_MoveTarget : EnemyState
         // ˆÚ“®ˆ—
         patrol.SetAgentParam(moveSpeed, acceleration, angularSpeed);
         patrol.ExcutePatrol(targetIdx);
+        enemy.EnemyRigidbody.velocity = Vector3.zero;
     }
 
     public override void MainFunc()
@@ -59,6 +60,7 @@ public class A_MoveTarget : EnemyState
 
     public override void Exit()
     {
+        patrol.Stop();
         targetIdx++;
         if (targetIdx >= targetNum)
         {
@@ -70,7 +72,6 @@ public class A_MoveTarget : EnemyState
     {
         if(collision.transform.root.name == "Player")
         {
-            patrol.Stop();
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
                 machine.TransitionTo(damagedTransition);
             else
@@ -82,7 +83,6 @@ public class A_MoveTarget : EnemyState
     {
         if (collider.transform.root.name == "Player")
         {
-            patrol.Stop();
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
                 machine.TransitionTo(damagedTransition);
             else

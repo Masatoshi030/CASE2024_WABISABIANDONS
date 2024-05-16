@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class A_MoveInterval : EnemyState
+public class General_MoveInterval : EnemyState
 {
     [SerializeField, Header("ˆÚ“®‘¬“x")]
     float moveSpeed;
@@ -43,6 +43,7 @@ public class A_MoveInterval : EnemyState
         // ˆÚ“®ˆ—
         patrol.SetAgentParam(moveSpeed, acceleration, angularSpeed);
         patrol.ExcutePatrol(targetIdx);
+        enemy.EnemyRigidbody.velocity = Vector3.zero;
     }
 
     public override void MainFunc()

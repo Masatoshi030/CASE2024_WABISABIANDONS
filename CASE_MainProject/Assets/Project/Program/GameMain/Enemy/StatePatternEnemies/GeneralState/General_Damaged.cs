@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class A_Damaged : EnemyState
+public class General_Damaged : EnemyState
 {
     [SerializeField, Header("d’¼ŠÔ")]
     float stiffnessTime;
@@ -11,6 +11,8 @@ public class A_Damaged : EnemyState
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("Œo‰ßŒã‚Ì‘JˆÚ")]
     string elapsedTransition = "‘Ò‹@";
+    [SerializeField, Header("”í’e‚Ì‘JˆÚ")]
+    string damagedTransition = "”í’e";
     [SerializeField, Header("HP‚ª0‚Ì‘JˆÚ")]
     string noHitPointTransition = "€–S";
 
@@ -34,5 +36,23 @@ public class A_Damaged : EnemyState
     public override void Exit()
     {
         
+    }
+
+    public override void CollisionEnter(Collision collision)
+    {
+        if (collision.transform.root.name == "Player")
+        {
+            if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
+                machine.TransitionTo(damagedTransition);
+        }
+    }
+
+    public override void TriggerEnter(Collider collider)
+    {
+        if (collider.transform.root.name == "Player")
+        {
+            if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
+                machine.TransitionTo(damagedTransition);
+        }
     }
 }
