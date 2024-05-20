@@ -16,7 +16,7 @@ public class StageSelect : MonoBehaviour
     float buttonCoolTime;
 
 
-    [SerializeField, Header("ページ1")]
+    [SerializeField, Header("ページ設定")]
     GameObject[] papers;
 
     //定義
