@@ -346,8 +346,9 @@ public class PlayerController : MonoBehaviour
             heldGoldValve++;
             //取得音再生
             goldValveAudioSouce.PlayOneShot(goldValveAudioSouce.clip);
-            //アイテムを消す
-            Destroy(other.gameObject);
+
+            //取得フラグ
+            other.GetComponent<GoldValveController>().GetGoldValve();
         }
     }
 
