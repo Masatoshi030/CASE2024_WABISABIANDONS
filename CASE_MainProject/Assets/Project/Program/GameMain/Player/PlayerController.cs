@@ -129,10 +129,12 @@ public class PlayerController : MonoBehaviour
     //突撃ゲージの溜めた値
     float gaugeAttackValue = 0.0f;
 
+    [SerializeField, Header("プレイヤーのレイヤーマスク")]
+    int playerLayerMask = 6;
+
     // Start is called before the first frame update
     void Start()
     {
-
         if (instance == null)
         {
             // 自身をインスタンスとする
@@ -173,6 +175,10 @@ public class PlayerController : MonoBehaviour
         //=== ジャンプ ===//
 
         OnJump();
+
+        //=== 蒸気貯蔵 ===//
+        if (outSteamValue > 0.0f) { }
+        else heldSteam += 10.0f * Time.deltaTime;
 
         //=== 蒸気出力量 ===//
 
@@ -374,8 +380,10 @@ public class PlayerController : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
             RaycastHit hit;
 
+            int LayerMask = ~(1 << playerLayerMask);
+
             // Rayが何かに当たったかどうかを確認
-            if (Physics.Raycast(ray, out hit, 1000.0f))
+            if (Physics.Raycast(ray, out hit, 1000.0f, LayerMask))
             {
                 targetPosition = hit.point;
             }
@@ -470,6 +478,20 @@ public class PlayerController : MonoBehaviour
 
         //突撃方向の反対ベクトルの斜め上にノックバックする
         myRigidbody.velocity = Vector3.up * knockBackPower;
+
+        //ノックバック状態にする
+        attackState = ATTACK_STATE.KnockBack;
+    }
+
+    public void KnockBack(float power,  Vector3 direction)
+    {
+        //ノックバックアニメーション終了
+        characterAnimation.SetTrigger("tHit");
+
+        Debug.Log("Knock");
+
+        //突撃方向の反対ベクトルの斜め上にノックバックする
+        myRigidbody.velocity = direction * power;
 
         //ノックバック状態にする
         attackState = ATTACK_STATE.KnockBack;
