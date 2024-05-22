@@ -287,7 +287,7 @@ public class PlayerController : MonoBehaviour
         if (jumpState == JUMP_STATE.Idle)
         {
             //最初の初速とジャンプ開始命令
-            if (DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState == DualSenseUnity.ButtonState.NewDown)
+            if (DualSense_Manager.instance.GetInputState().LeftTrigger.TriggerValue > 0.9f)
             {
                 //ジャンプ上昇状態へ移行
                 jumpState = JUMP_STATE.Rising;
@@ -303,7 +303,7 @@ public class PlayerController : MonoBehaviour
         else if (jumpState == JUMP_STATE.Rising)
         {
             //上昇中に×ボタンを押していたら
-            if (DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState == DualSenseUnity.ButtonState.Down)
+            if (DualSense_Manager.instance.GetInputState().LeftTrigger.TriggerValue > 0.0f)
             {
                 jumpTime += Time.deltaTime;
 
@@ -314,8 +314,8 @@ public class PlayerController : MonoBehaviour
                     moveVelocity.z);
             }
 
-            //ジャンプ最大時間を過ぎるか×ボタンを押すのをやめたらと降下に移行
-            if (jumpTime > jumpMaxTime || DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState != DualSenseUnity.ButtonState.Down)
+            //ジャンプ最大時間を過ぎるか×ボタンを押すのをやめたら降下に移行
+            if (jumpTime > jumpMaxTime || DualSense_Manager.instance.GetInputState().LeftTrigger.TriggerValue == 0.0f)
             {
                 jumpState = JUMP_STATE.Descending;
             }
@@ -507,16 +507,19 @@ public class PlayerController : MonoBehaviour
         {
             //=== 処理 ===//
 
-            if (heldSteam > 0.0f)
-            {
-                //トリガー抵抗力
-                DualSense_Manager.instance.SetLeftTriggerContinuousResistanceEffect(0.0f, heldSteam / maxHeldSteam);
-            }
-            else
-            {
-                //トリガー抵抗を無効にする
-                DualSense_Manager.instance.SetLeftTriggerNoEffect();
-            }
+            //if (heldSteam > 0.0f)
+            //{
+            //    //トリガー抵抗力
+            //    DualSense_Manager.instance.SetLeftTriggerContinuousResistanceEffect(0.0f, heldSteam / maxHeldSteam);
+            //}
+            //else
+            //{
+            //    //トリガー抵抗を無効にする
+            //    DualSense_Manager.instance.SetLeftTriggerNoEffect();
+            //}
+
+            //左トリガーの抵抗設定
+            DualSense_Manager.instance.SetLeftTriggerEffect_Position(0.4f, 0.5f, 1.0f);
 
             //タイマーをリセット
             fixedIntervalTimer = 0.0f;

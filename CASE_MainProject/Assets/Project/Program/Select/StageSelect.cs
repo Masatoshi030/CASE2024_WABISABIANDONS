@@ -65,7 +65,7 @@ public class StageSelect : MonoBehaviour
             //クールタイムが上がっていたらボタン入力処理
             if (noTouchTime > buttonCoolTime)
             {
-                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
+                DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
                 nowSelect++;
                 timeElapsed = 0.0f;
             }
@@ -74,7 +74,7 @@ public class StageSelect : MonoBehaviour
             //一定時間押していると実行される処理
             if (timeElapsed > timeOut)
             {
-                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
+                DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
                 nowSelect++;
                 timeElapsed = 0.0f;
             }
@@ -95,7 +95,7 @@ public class StageSelect : MonoBehaviour
             //クールタイムが上がっていたらボタン入力処理
             if (noTouchTime > buttonCoolTime)
             {
-                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
+                DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
                 nowSelect--;
                 timeElapsed = 0.0f;
             }
@@ -105,7 +105,7 @@ public class StageSelect : MonoBehaviour
             //一定時間押していると実行される処理
             if (timeElapsed > timeOut)
             {
-                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.04f);
+                DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
 
                 nowSelect--;
                 timeElapsed = 0.0f;
@@ -170,6 +170,11 @@ public class StageSelect : MonoBehaviour
         else if (checkNum > 24)     //24ステージ以上を選択してしまった場合
         {
             checkNum = 24;
+        }
+
+        //決定ボタン
+        if (DualSense_Manager.instance.GetInputState().DPadDownButton == DualSenseUnity.ButtonState.Down)
+        {
         }
     }
 
