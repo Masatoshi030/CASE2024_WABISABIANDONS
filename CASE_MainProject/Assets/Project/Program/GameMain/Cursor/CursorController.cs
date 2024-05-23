@@ -36,6 +36,24 @@ public class CursorController : MonoBehaviour
         myCursorAnimator = this.GetComponent<Animator>();
     }
 
+    private void Update()
+    {
+        if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Aim)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                transform.GetChild(i).gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                transform.GetChild(i).gameObject.SetActive(false);
+            }
+        }
+    }
+
     public void ChangeCursorState(ON_CURSOR_STATE _state)
     {
         onCursorState = _state;

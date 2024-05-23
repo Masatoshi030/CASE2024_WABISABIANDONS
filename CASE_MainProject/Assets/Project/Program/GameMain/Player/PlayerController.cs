@@ -409,13 +409,13 @@ public class PlayerController : MonoBehaviour
         //狙っている時
         if (attackState == ATTACK_STATE.Aim)
         {
-            attackGauge.AddValue(outSteamValue * attackGauge_AddSpeed);
+            attackGauge.AddValue(Time.deltaTime * attackGauge_AddSpeed);
         }
 
         //空中にいる状態で
         if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.Off)
         {
-            //ジャンプボタンを押すと
+            //右トリガーを押すと
             if (DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState == DualSenseUnity.ButtonState.NewDown)
             {
                 //攻撃状態へ移行
@@ -437,7 +437,7 @@ public class PlayerController : MonoBehaviour
                 Time.timeScale = 0.1f;
             }
 
-            //ジャンプボタンを押すと
+            //右トリガーを離す
             if (DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState == DualSenseUnity.ButtonState.NewUp)
             {
                 if (attackState == ATTACK_STATE.Aim)
