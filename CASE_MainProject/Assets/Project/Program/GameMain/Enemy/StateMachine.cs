@@ -27,6 +27,16 @@ public class StateMachine : MonoBehaviour
     float cnt;
     public float Cnt { get => cnt; }
 
+    bool bTransition = false;
+
+    /*
+     * <summary>
+     * 初期化処理
+     * <param>
+     * void
+     * <return>
+     * void
+     */
     public virtual void Initialize()
     {
         // ステート数の取得
@@ -64,8 +74,25 @@ public class StateMachine : MonoBehaviour
         currentState.Enter();
     }
 
+    /*
+     * <summary>
+     * メイン処理
+     * <param>
+     * void
+     * <return>
+     * void
+     */
     public virtual void MainFunc()
     {
+        if(bTransition)
+        {
+            cnt = 0.0f;
+            currentState.Exit();
+            currentState = nextState;
+            nextState = null;
+            currentState.Enter();
+            bTransition = false;
+        }
         if (currentState != null)
         {
             cnt += Time.deltaTime;
@@ -74,45 +101,76 @@ public class StateMachine : MonoBehaviour
         }
     }
 
+    /*
+     * <summary>
+     * 遷移処理
+     * <param>
+     * string 遷移先名称
+     * <return>
+     * bool 遷移の成否
+     */
     public virtual bool TransitionTo(string key)
     {
-        // 辞書にキーが登録されているかチェック
-        if (stateList.ContainsKey(key))
+        if(!bTransition)
         {
-            nextState = stateList[key];
-            cnt = 0.0f;
-            currentState.Exit();
-            currentState = nextState;
-            nextState = null;
-            currentState.Enter();
-            return true;
+            // 辞書にキーが登録されているかチェック
+            if (stateList.ContainsKey(key))
+            {
+                nextState = stateList[key];
+                // 遷移予約
+                bTransition = true;
+                return true;
+            }
+            else
+            {
+                Debug.Log("ステート更新エラー : " + controller.name + "( stateName : " + key + " )");
+                return false;
+            }
         }
-        else
+        return false;
+    }
+
+    /*
+     * <summary>
+     * 遷移処理
+     * <param>
+     * int 遷移先のインデックス
+     * <return>
+     * bool 遷移の成否
+     */
+    public virtual bool TransitionTo(int index)
+    {
+        if (index >= states.Length || bTransition)
         {
-            Debug.Log("ステート更新エラー : " + controller.name + "( stateName : " + nextState.StateName + " )");
             return false;
         }
-    }
-
-    public virtual void TransitionTo(int index)
-    {
-        if (index >= states.Length)
-        {
-            index %= states.Length;
-        }
         nextState = states[index];
-        cnt = 0.0f;
-        currentState.Exit();
-        currentState = nextState;
-        currentState.Enter();
-        nextState = null;
+        // 遷移予約
+        bTransition = true;
+        return true;
     }
 
+    /*
+     * <summary>
+     * 衝突の処理(自身で呼び出し)
+     * <param>
+     * GameObject 衝突オブジェクト
+     * <return>
+     * void
+     */
     public virtual void CollisionEnterSelf(GameObject other)
     {
         if (currentState != null) currentState.CollisionEnterSelf(other);
     }
 
+    /*
+     * <summary>
+     * 衝突の処理(相手側呼び出し)
+     * <param>
+     * GameObject 衝突オブジェクト
+     * <return>
+     * void
+     */
     public virtual void CollisionEnterOpponent(GameObject other)
     {
         if (currentState != null) currentState.CollisionEnterOpponent(other);

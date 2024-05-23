@@ -7,6 +7,14 @@ public class EnemyStateMachine : StateMachine
     Enemy enemy;
     public Enemy EnemyComponent { get => enemy; set => enemy = value; }
 
+    /*
+     * <summary>
+     * ‰Šú‰»ˆ—
+     * <param>
+     * void
+     * <return>
+     * void
+     */
     public override void Initialize()
     {
         // ƒXƒe[ƒg”‚Ìæ“¾
@@ -46,8 +54,17 @@ public class EnemyStateMachine : StateMachine
         enemy.StateName = stateNames[0];
     }
 
+    /*
+     * <summary>
+     * ‘JˆÚˆ—
+     * <param>
+     * string ‘JˆÚæ–¼Ì
+     * <return>
+     * bool ‘JˆÚ‚Ì¬”Û
+     */
     public override bool TransitionTo(string key)
     {
+        // HP‚ª0ˆÈ‰º‚Ìê‡€–S‚É‘JˆÚ
         if(enemy.Hp <= 0.0f)
         {
             base.TransitionTo("€–S");

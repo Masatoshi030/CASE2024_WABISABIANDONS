@@ -13,8 +13,17 @@ public class EnemyState : State
     [SerializeField, Header("開始時アニメーション")]
     protected string enterAnimation;
 
+    /*
+     * <summary>
+     * 開始時処理
+     * <param>
+     * void
+     * <return>
+     * void
+     */
     public override void Enter()
     {
+        // アニメーションの速度と指定したアニメーションの開始
         enemy.EnemyAnimator.speed = animSpeed;
         enemy.EnemyAnimator.Play(enterAnimation);
     }

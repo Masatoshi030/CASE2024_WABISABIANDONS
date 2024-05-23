@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Subscriber
 {
     static GameObject target;
     public static GameObject Target { get => target; }
@@ -108,36 +108,6 @@ public class Enemy : MonoBehaviour
         enemyStateMachine.MainFunc();
     }
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    enemyStateMachine.CollisionEnterSelf(collision.gameObject);
-    //}
-
-    //private void OnCollisionStay(Collision collision)
-    //{
-    //    enemyStateMachine.CollisionStaySelf(collision.gameObject);
-    //}
-
-    //private void OnCollisionExit(Collision collision)
-    //{
-    //    enemyStateMachine.CollisionExitSelf(collision.gameObject);
-    //}
-
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    enemyStateMachine.TriggerEnterSelf(other.gameObject);
-    //}
-
-    //private void OnTriggerStay(Collider other)
-    //{
-    //    enemyStateMachine.TriggerStaySelf(other.gameObject);
-    //}
-
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    enemyStateMachine.TriggerExitSelf(other.gameObject);
-    //}
-
     /*
      * <summary>
      * プレイヤーを視野角を元に探す処理
@@ -178,6 +148,14 @@ public class Enemy : MonoBehaviour
         return (false, distance);
     }
 
+    /*
+     * <summary>
+     * ダメージ関数
+     * <param>
+     * float ダメージ量, Vector3 攻撃ベクトル
+     * <return>
+     * bool HPが0以下か
+     */
     public bool Damage(float damage, Vector3 direction)
     {
         if(!isDamaged)
