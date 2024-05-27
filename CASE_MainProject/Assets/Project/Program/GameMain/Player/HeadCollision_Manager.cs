@@ -37,6 +37,7 @@ public class HeadCollision_Manager : MonoBehaviour
                 //“G‚É“ËŒ‚‚µ‚½‚Ìˆ—
                 if (other.tag == "Enemy")
                 {
+                    Debug.Log("head");
                     Enemy enemy = other.GetComponent<Enemy>();
 
                     // €–Sƒtƒ‰ƒO‚Ì”»’è

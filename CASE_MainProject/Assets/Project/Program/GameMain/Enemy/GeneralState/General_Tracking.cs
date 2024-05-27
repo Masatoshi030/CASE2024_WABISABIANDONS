@@ -62,9 +62,10 @@ public class General_Tracking : EnemyState
     {
         patrol.Stop();
     }
+
     public override void CollisionEnterSelf(GameObject other)
     {
-        if (other.name == "Player")
+        if (other.name == "Player" && !enemy.IsDamaged)
         {
             Vector3 direction = other.transform.position - transform.position;
             direction.Normalize();
@@ -75,7 +76,7 @@ public class General_Tracking : EnemyState
     }
     public override void TriggerEnterSelf(GameObject other)
     {
-        if (other.name == "Player")
+        if (other.name == "Player" && !enemy.IsDamaged)
         {
             Vector3 direction = other.transform.position - transform.position;
             direction.Normalize();
