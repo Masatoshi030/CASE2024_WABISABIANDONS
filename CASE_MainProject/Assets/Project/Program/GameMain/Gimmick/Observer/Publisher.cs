@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
-public class Publisher : MonoBehaviour
+public class Publisher : Connection
 {
     [SerializeField, Header("通知先リスト")]
     protected List<Subscriber> subscribers;
@@ -36,12 +38,20 @@ public class Publisher : MonoBehaviour
         subscribers.Remove(subscriber);
     }
 
-    public virtual void NortifyToSubscribers<T>(int MsgType, T value)
+    public override void SendMsg<T>(int msgType, T msg)
     {
         // 通知を行う
         for (int i = 0; i < subscribers.Count; i++)
         {
-            subscribers[i].ReceiveMsg<T>(this, MsgType, value);
+            subscribers[i].ReceiveMsg<T>(this, msgType, msg);
+        }
+    }
+
+    public virtual void SendMsg<T>(int msgType, T msg, int address)
+    {
+        if (subscribers.Count > address)
+        {
+            subscribers[address].ReceiveMsg<T>(this, msgType, msg);
         }
     }
 }

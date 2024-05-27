@@ -48,7 +48,7 @@ public class Subscriber_MoveFloor : Subscriber
         transform.position = position;
     }
 
-    public override void ReceiveMsg<T>(Publisher observer,int MsgType, T value)
+    public override void ReceiveMsg<T>(Connection observer,int MsgType, T value)
     {
         switch (MsgType)
         {

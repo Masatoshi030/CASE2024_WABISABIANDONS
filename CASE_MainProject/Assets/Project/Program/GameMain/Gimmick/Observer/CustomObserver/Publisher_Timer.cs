@@ -42,7 +42,7 @@ public class Publisher_Timer : Publisher
             state = State.Interval;
             elapsedTime = maxCountTime;
             // 移動の終了通知
-            NortifyToSubscribers<bool>(1, true);
+            SendMsg<bool>(1, true);
         }
         else if (elapsedTime < 0.0f)
         {
@@ -50,11 +50,11 @@ public class Publisher_Timer : Publisher
             state = State.Interval;
             elapsedTime = 0.0f;
             // 移動の終了通知
-            NortifyToSubscribers<bool>(1, false);
+            SendMsg<bool>(1, false);
         }
 
         // 経過時間を通知
-        NortifyToSubscribers<float>(0, elapsedTime);
+        SendMsg<float>(0, elapsedTime);
     }
     void IntervalFunc()
     {
