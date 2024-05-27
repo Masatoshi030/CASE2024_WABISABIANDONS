@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
-public class Subscriber_MoveFloor : Subscriber
+public class MoveObj : Subscriber
 {
     enum State
     {
@@ -26,19 +25,23 @@ public class Subscriber_MoveFloor : Subscriber
     float maxMoveValue = 1.0f;
 
     Vector3 initPosition;
+    Vector3 velocity = Vector3.zero;
 
-    private void Start()
+    void Start()
     {
         initPosition = transform.position;
     }
 
-    private void Update()
+    // Update is called once per frame
+    void Update()
     {
         Vector3 position = transform.position;
-        Vector3 velocity = Vector3.zero;
+
+
+
         switch (axis)
         {
-            case Direction.Forward: velocity = transform.forward * moveValue;position =  initPosition + velocity; break;
+            case Direction.Forward: velocity = transform.forward * moveValue; position = initPosition + velocity; break;
             case Direction.Back: velocity = -transform.forward * moveValue; position = initPosition + velocity; break;
             case Direction.Right: velocity = transform.right * moveValue; position = initPosition + velocity; break;
             case Direction.Left: velocity = -transform.right * moveValue; position = initPosition + velocity; break;
@@ -48,22 +51,14 @@ public class Subscriber_MoveFloor : Subscriber
         transform.position = position;
     }
 
-    public override void ReceiveMsg<T>(Connection observer,int MsgType, T value)
-    {
-        switch (MsgType)
+    public override void ReceiveMsg<T>(Connection observer, int MsgType, T value)
+    { 
+    switch(MsgType)
         {
             case 0:
-                // Œo‰ßŽžŠÔ‚Ì’Ê’m
-                float val = GetValue<T, float>(value);
-                moveValue = val * moveMagnification > maxMoveValue ? maxMoveValue : val * moveMagnification;
+                state = GetValue<T, State>(value);
                 break;
-            case 1:
-                bool msg = GetValue<T, bool>(value);
-                break;
-            case 2:
-                int ms = GetValue<T, int>(value);
-                break;
-
         }
+    
     }
 }
