@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class HeadCollision_Manager : MonoBehaviour
 {
+    [SerializeField,Header("オーディオソース参照先")]
     AudioSource audioSource;
 
     [SerializeField, Header("音声クリップリスト")]
@@ -19,7 +21,7 @@ public class HeadCollision_Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        
     }
 
     // Update is called once per frame
