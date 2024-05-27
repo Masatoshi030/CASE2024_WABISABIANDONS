@@ -158,14 +158,14 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2635369200069514376}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: d8bb4c092ccdca74d80518b5df998b28, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -259,7 +259,6 @@ GameObject:
   - component: {fileID: 1048573535081326023}
   - component: {fileID: 6949533950168865745}
   - component: {fileID: 2352207666614677452}
-  - component: {fileID: 162878815128167732}
   m_Layer: 6
   m_Name: AttackShaft
   m_TagString: Untagged
@@ -275,7 +274,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3569741398895891170}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -325,8 +324,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.3
-  m_Center: {x: 0, y: 0.4, z: 0}
+  m_Radius: 0.45
+  m_Center: {x: 0, y: 0.55, z: 0}
 --- !u!82 &2352207666614677452
 AudioSource:
   m_ObjectHideFlags: 0
@@ -423,25 +422,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &162878815128167732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3569741398895891170}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a524a710dd82aa34c8efa292c9845b40, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  soundClips:
-  - {fileID: 8300000, guid: 250e86e4660929f409c1f30b17e22172, type: 3}
-  - {fileID: 8300000, guid: afcc3f5cadc92ea40b8038d1fc1e1ed1, type: 3}
-  hibana_ParticleEffect: {fileID: 2977903860043195035, guid: 23e09a88e9623034c944773e0b0aca3f,
-    type: 3}
-  partsSplit_ParticleEffect: {fileID: 2662798393433424169, guid: 67a75510c4adef44694d95c14e605700,
-    type: 3}
 --- !u!1 &3848011922192884463
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,7 +465,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: d8bb4c092ccdca74d80518b5df998b28, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -810,6 +790,7 @@ GameObject:
   - component: {fileID: 1919619981793175472}
   - component: {fileID: 6324669931794937287}
   - component: {fileID: 6380851179128401316}
+  - component: {fileID: 5249567584725752381}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -981,6 +962,26 @@ MonoBehaviour:
   attackGauge: {fileID: 0}
   attackGauge_AddSpeed: 2500
   playerLayerMask: 6
+--- !u!114 &5249567584725752381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8879622227388247387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a524a710dd82aa34c8efa292c9845b40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSource: {fileID: 5376581650705656585}
+  soundClips:
+  - {fileID: 8300000, guid: 250e86e4660929f409c1f30b17e22172, type: 3}
+  - {fileID: 8300000, guid: afcc3f5cadc92ea40b8038d1fc1e1ed1, type: 3}
+  hibana_ParticleEffect: {fileID: 2977903860043195035, guid: 23e09a88e9623034c944773e0b0aca3f,
+    type: 3}
+  partsSplit_ParticleEffect: {fileID: 2662798393433424169, guid: 67a75510c4adef44694d95c14e605700,
+    type: 3}
 --- !u!1001 &8284758405488211059
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -346,6 +346,10 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if(other.tag == "Enemy")
+        {
+            Debug.Log("player");
+        }
         if(other.tag == "GoldValve")
         {
             //アイテムカウントを増やす
@@ -489,7 +493,7 @@ public class PlayerController : MonoBehaviour
         //ノックバックアニメーション終了
         characterAnimation.SetTrigger("tHit");
 
-        Debug.Log("Knock");
+        //Debug.Log("Knock");
 
         //突撃方向の反対ベクトルの斜め上にノックバックする
         myRigidbody.velocity = direction * power;

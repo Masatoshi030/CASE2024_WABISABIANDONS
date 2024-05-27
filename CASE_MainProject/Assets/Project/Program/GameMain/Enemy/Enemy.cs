@@ -108,6 +108,37 @@ public class Enemy : Subscriber
         enemyStateMachine.MainFunc();
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        enemyStateMachine.TriggerEnterSelf(other.gameObject);
+        Debug.Log("enemy");
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        //enemyStateMachine.CollisionEnterSelf(collision.gameObject);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        enemyStateMachine.TriggerStaySelf(other.gameObject);
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        //enemyStateMachine.CollisionStaySelf(collision.gameObject);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        enemyStateMachine.TriggerExitSelf(other.gameObject);
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        //enemyStateMachine.CollisionExitSelf(collision.gameObject);
+    }
+
     /*
      * <summary>
      * ƒvƒŒƒCƒ„[‚ğ‹–ìŠp‚ğŒ³‚É’T‚·ˆ—

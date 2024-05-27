@@ -39,4 +39,19 @@ public class Circuit_ActiveOperation : Circuit
             }
         }
     }
+
+    public void Operate(bool value)
+    {
+        Debug.Log("Operate");
+        result = value;
+        target.SetActive(value);
+        if (result && operateParticle != null)
+        {
+            Instantiate(operateParticle, effectPos.position, Quaternion.identity);
+            if (audioSource != null)
+            {
+                audioSource.Play();
+            }
+        }
+    }
 }
