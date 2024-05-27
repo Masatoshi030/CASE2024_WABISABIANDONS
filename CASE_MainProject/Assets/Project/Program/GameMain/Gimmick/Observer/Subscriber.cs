@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class Subscriber : MonoBehaviour
+public class Subscriber : Connection
 {
     [SerializeField, Header("í ímå≥ÉäÉXÉg")]
     protected List<Publisher> observers;
@@ -25,15 +25,11 @@ public class Subscriber : MonoBehaviour
         observers.Remove(observer);
     }
 
-    public virtual void ReceiveMsg<T>(Publisher observer, int MsgType,  T value)
+    public override void SendMsg<T>(int msgType, T msg)
     {
-        Debug.Log(value);
-    }
-
-    protected U GetValue<T, U>(T value)
-    {
-        if (typeof(T) == typeof(U))
-            return (U)Convert.ChangeType(value, typeof(U));
-        else return default(U);
+        for(int i = 0; i < observers.Count; i++)
+        {
+            observers[i].ReceiveMsg<T>(this, msgType, msg);
+        }
     }
 }
