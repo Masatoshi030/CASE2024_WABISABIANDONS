@@ -23,7 +23,8 @@ public class Valve_Base : Publisher
     {
         if(collision.gameObject==player)
         {
-            SendMsg<int>(msgTypeNunber, 1);
+            SendMsg<bool>(msgTypeNunber, true);
+            Debug.Log("ì“®");
         }
     }
 

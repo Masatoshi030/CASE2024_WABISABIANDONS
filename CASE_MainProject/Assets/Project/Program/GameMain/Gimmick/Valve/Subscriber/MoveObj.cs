@@ -26,6 +26,7 @@ public class MoveObj : Subscriber
 
     Vector3 initPosition;
     Vector3 velocity = Vector3.zero;
+    bool On = false;
 
     void Start()
     {
@@ -38,15 +39,19 @@ public class MoveObj : Subscriber
         Vector3 position = transform.position;
 
 
+        if (On)
+        {
+            moveValue = moveMagnification;
+        }
 
         switch (axis)
         {
-            case Direction.Forward: velocity = transform.forward * moveValue; position = initPosition + velocity; break;
-            case Direction.Back: velocity = -transform.forward * moveValue; position = initPosition + velocity; break;
-            case Direction.Right: velocity = transform.right * moveValue; position = initPosition + velocity; break;
-            case Direction.Left: velocity = -transform.right * moveValue; position = initPosition + velocity; break;
-            case Direction.Up: velocity = transform.up * moveValue; position = initPosition + velocity; break;
-            case Direction.Down: velocity = -transform.up * moveValue; position = initPosition + velocity; break;
+            case Direction.Forward: velocity = transform.forward * moveValue; position = position + velocity; break;
+            case Direction.Back: velocity = -transform.forward * moveValue; position = position + velocity; break;
+            case Direction.Right: velocity = transform.right * moveValue; position = position + velocity; break;
+            case Direction.Left: velocity = -transform.right * moveValue; position = position + velocity; break;
+            case Direction.Up: velocity = transform.up * moveValue; position = position + velocity; break;
+            case Direction.Down: velocity = -transform.up * moveValue; position = position + velocity; break;
         }
         transform.position = position;
     }
@@ -56,9 +61,10 @@ public class MoveObj : Subscriber
     switch(MsgType)
         {
             case 0:
-                state = GetValue<T, State>(value);
+                On = GetValue<T, bool>(value);
+
                 break;
         }
-    
+        Debug.Log("boolçÏìÆ");
     }
 }
