@@ -7,11 +7,13 @@ public class EnemyState : State
     // Enemyコンポーネント
     protected Enemy enemy;
     public Enemy EnemyObject { get => enemy; set => enemy = value; }
-
+    [SerializeField, Header("アニメーションをするか")]
+    bool isAnimation = true;
     [SerializeField, Header("アニメーション速度")]
     protected float animSpeed = 1.0f;
     [SerializeField, Header("開始時アニメーション")]
     protected string enterAnimation;
+    
 
     /*
      * <summary>
@@ -24,7 +26,10 @@ public class EnemyState : State
     public override void Enter()
     {
         // アニメーションの速度と指定したアニメーションの開始
-        enemy.EnemyAnimator.speed = animSpeed;
-        enemy.EnemyAnimator.Play(enterAnimation);
+        if(isAnimation)
+        {
+            enemy.EnemyAnimator.speed = animSpeed;
+            enemy.EnemyAnimator.Play(enterAnimation);
+        }
     }
 }

@@ -1276,6 +1276,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u6B7B\u4EA1"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
 --- !u!114 &118681120
@@ -1291,6 +1292,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u88AB\u5F3E"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   stiffnessTime: 1
@@ -1310,6 +1312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F2"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -1328,6 +1331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1"
+  isAnimation: 1
   animSpeed: 3
   enterAnimation: Walk
   patrol: {fileID: 0}
@@ -1352,6 +1356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u79FB\u52D5"
+  isAnimation: 1
   animSpeed: 2
   enterAnimation: Walk
   moveSpeed: 5
@@ -1377,6 +1382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -1397,6 +1403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1\u524D\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 0.5
@@ -1536,7 +1543,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1969676104}
   m_Father: {fileID: 1144225714}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &135623376 stripped
@@ -4112,6 +4120,131 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 417221689}
   m_CullTransparentMesh: 1
+--- !u!1001 &433804013
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 574306707}
+    m_Modifications:
+    - target: {fileID: 3043954551734395548, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_Name
+      value: Enemy_B1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3957317119389956693, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -29.903942
+      objectReference: {fileID: 0}
+    - target: {fileID: 3957317119389956693, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3957317119389956693, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4553929993165079082, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 13.376806
+      objectReference: {fileID: 0}
+    - target: {fileID: 5689706892247339690, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: stateObject
+      value: 
+      objectReference: {fileID: 1969676103}
+    - target: {fileID: 6234215840463879789, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6967402344521770629, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6967402344521770629, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6967402344521770629, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7406444730321608901, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 17.451544
+      objectReference: {fileID: 0}
+    - target: {fileID: 7406444730321608901, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 7406444730321608901, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -12.073617
+      objectReference: {fileID: 0}
+    - target: {fileID: 7406444730321608901, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.430686
+      objectReference: {fileID: 0}
+    - target: {fileID: 7406444730321608901, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7406444730321608901, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.9025019
+      objectReference: {fileID: 0}
+    - target: {fileID: 7406444730321608901, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7406444730321608901, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7406444730321608901, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -128.978
+      objectReference: {fileID: 0}
+    - target: {fileID: 7406444730321608901, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8191723595945716851, guid: f84e767d043074f4db226c41f0743205,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 133.16164
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 8878697136287039853, guid: f84e767d043074f4db226c41f0743205, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f84e767d043074f4db226c41f0743205, type: 3}
+--- !u!4 &433804014 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7406444730321608901, guid: f84e767d043074f4db226c41f0743205,
+    type: 3}
+  m_PrefabInstance: {fileID: 433804013}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &435333867
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5421,7 +5554,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 433804014}
   m_Father: {fileID: 2108297058}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &583119250
@@ -6679,6 +6813,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u6B7B\u4EA1"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
 --- !u!114 &777290678
@@ -6694,6 +6829,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u88AB\u5F3E"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   stiffnessTime: 1
@@ -6713,6 +6849,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F2"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -6731,6 +6868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1"
+  isAnimation: 1
   animSpeed: 3
   enterAnimation: Walk
   patrol: {fileID: 0}
@@ -6755,6 +6893,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u79FB\u52D5"
+  isAnimation: 1
   animSpeed: 2
   enterAnimation: Walk
   moveSpeed: 5
@@ -6780,6 +6919,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -6800,6 +6940,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1\u524D\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 0.5
@@ -8203,6 +8344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u6B7B\u4EA1"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
 --- !u!114 &1042535944
@@ -8218,6 +8360,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u88AB\u5F3E"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   stiffnessTime: 1
@@ -8237,6 +8380,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F2"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -8255,6 +8399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1"
+  isAnimation: 1
   animSpeed: 3
   enterAnimation: Walk
   patrol: {fileID: 0}
@@ -8279,6 +8424,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u79FB\u52D5"
+  isAnimation: 1
   animSpeed: 2
   enterAnimation: Walk
   moveSpeed: 5
@@ -8304,6 +8450,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -8324,6 +8471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1\u524D\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 0.5
@@ -8815,6 +8963,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u6B7B\u4EA1"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
 --- !u!114 &1159361176
@@ -8830,6 +8979,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u88AB\u5F3E"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   stiffnessTime: 1
@@ -8849,6 +8999,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F2"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -8867,6 +9018,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1"
+  isAnimation: 1
   animSpeed: 3
   enterAnimation: Walk
   patrol: {fileID: 0}
@@ -8891,6 +9043,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u79FB\u52D5"
+  isAnimation: 1
   animSpeed: 2
   enterAnimation: Walk
   moveSpeed: 5
@@ -8916,6 +9069,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -8936,6 +9090,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1\u524D\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 0.5
@@ -10609,6 +10764,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u6B7B\u4EA1"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
 --- !u!114 &1373074070
@@ -10624,6 +10780,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u88AB\u5F3E"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   stiffnessTime: 1
@@ -10643,6 +10800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F2"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -10661,6 +10819,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1"
+  isAnimation: 1
   animSpeed: 3
   enterAnimation: Walk
   patrol: {fileID: 0}
@@ -10685,6 +10844,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u79FB\u52D5"
+  isAnimation: 1
   animSpeed: 2
   enterAnimation: Walk
   moveSpeed: 5
@@ -10710,6 +10870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -10730,6 +10891,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1\u524D\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 0.5
@@ -12690,6 +12852,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u6B7B\u4EA1"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
 --- !u!114 &1527893506
@@ -12705,6 +12868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u88AB\u5F3E"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   stiffnessTime: 1
@@ -12724,6 +12888,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F2"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -12742,6 +12907,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1"
+  isAnimation: 1
   animSpeed: 3
   enterAnimation: Walk
   patrol: {fileID: 0}
@@ -12766,6 +12932,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u79FB\u52D5"
+  isAnimation: 1
   animSpeed: 2
   enterAnimation: Walk
   moveSpeed: 5
@@ -12791,6 +12958,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -12811,6 +12979,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1\u524D\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 0.5
@@ -14140,6 +14309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u6B7B\u4EA1"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
 --- !u!114 &1750818964
@@ -14155,6 +14325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u88AB\u5F3E"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   stiffnessTime: 1
@@ -14174,6 +14345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F2"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -14192,6 +14364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1"
+  isAnimation: 1
   animSpeed: 3
   enterAnimation: Walk
   patrol: {fileID: 0}
@@ -14216,6 +14389,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u79FB\u52D5"
+  isAnimation: 1
   animSpeed: 2
   enterAnimation: Walk
   moveSpeed: 5
@@ -14241,6 +14415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -14261,6 +14436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1\u524D\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 0.5
@@ -16292,6 +16468,83 @@ Transform:
   - {fileID: 1463872063}
   m_Father: {fileID: 1689924254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1969676103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1969676104}
+  - component: {fileID: 1969676105}
+  - component: {fileID: 1969676106}
+  m_Layer: 0
+  m_Name: Enemy_B1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1969676104
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969676103}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 135618830}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1969676105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969676103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5132a2661a6a3184d89c42dc29126d3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stateName: "\u5F85\u6A5F"
+  isAnimation: 1
+  animSpeed: 1
+  enterAnimation: Idle
+  waitInterval: 3
+  elapsedTransition: "\u79FB\u52D5"
+  searchSuccessTransition: "\u79FB\u52D5"
+  damagedTransition: "\u88AB\u5F3E"
+  collisionTransition: "\u79FB\u52D5"
+--- !u!114 &1969676106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969676103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7655e1299328f6d4cb05bb2a1a973628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stateName: "\u79FB\u52D5"
+  isAnimation: 0
+  animSpeed: 1
+  enterAnimation: 
+  initPos: {x: 0, y: 0, z: 0}
+  moveTime: 2
+  moveSpeed: 3
+  initIsUp: 1
+  searchSuccessTransiton: "\u79FB\u52D5"
+  elapsedTransition: "\u5F85\u6A5F"
+  damagedTransition: "\u88AB\u5F3E"
 --- !u!1001 &1970253584
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16559,6 +16812,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u88AB\u5F3E"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   stiffnessTime: 1
@@ -16578,6 +16832,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F2"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -16596,6 +16851,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1"
+  isAnimation: 1
   animSpeed: 3
   enterAnimation: Walk
   patrol: {fileID: 0}
@@ -16620,6 +16876,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u79FB\u52D5"
+  isAnimation: 1
   animSpeed: 2
   enterAnimation: Walk
   moveSpeed: 5
@@ -16645,6 +16902,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -16665,6 +16923,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u6B7B\u4EA1"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
 --- !u!114 &1978715445
@@ -16680,6 +16939,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1\u524D\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 0.5
