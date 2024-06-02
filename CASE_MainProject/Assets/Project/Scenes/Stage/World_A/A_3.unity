@@ -277,6 +277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u79FB\u52D5"
+  isAnimation: 1
   animSpeed: 2
   enterAnimation: Walk
   moveSpeed: 8
@@ -303,6 +304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u653B\u6483"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   attackPower: 5
@@ -322,6 +324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u88AB\u5F3E"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   stiffnessTime: 2
@@ -341,6 +344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F2"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 2
@@ -359,6 +363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1"
+  isAnimation: 1
   animSpeed: 3
   enterAnimation: Walk
   patrol: {fileID: 0}
@@ -383,6 +388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 1
@@ -403,6 +409,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u6B7B\u4EA1"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: 
   spawnObj: {fileID: 1285095186388536885, guid: a2360dda4c9cf844491cd1c27cd7cbcb,
@@ -1442,6 +1449,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 759247709}
+  - {fileID: 1315723238}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &277470457
@@ -1965,6 +1973,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u6B7B\u4EA1"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
 --- !u!114 &376093044
@@ -1980,6 +1989,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u88AB\u5F3E"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   stiffnessTime: 2
@@ -1999,6 +2009,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F2"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 2
@@ -2017,6 +2028,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1"
+  isAnimation: 1
   animSpeed: 3
   enterAnimation: Walk
   patrol: {fileID: 0}
@@ -2041,6 +2053,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 3
@@ -2061,6 +2074,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u79FB\u52D5"
+  isAnimation: 1
   animSpeed: 2
   enterAnimation: Walk
   moveSpeed: 8
@@ -2087,6 +2101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u653B\u6483"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   attackPower: 5
@@ -3348,6 +3363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u79FB\u52D5"
+  isAnimation: 1
   animSpeed: 2
   enterAnimation: Walk
   moveSpeed: 8
@@ -3374,6 +3390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u653B\u6483"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   attackPower: 5
@@ -3393,6 +3410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u88AB\u5F3E"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   stiffnessTime: 2
@@ -3412,6 +3430,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F2"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 2
@@ -3430,6 +3449,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1"
+  isAnimation: 1
   animSpeed: 3
   enterAnimation: Walk
   patrol: {fileID: 0}
@@ -3454,6 +3474,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 1
@@ -3474,6 +3495,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u6B7B\u4EA1"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: 
   spawnObj: {fileID: 1285095186388536885, guid: a2360dda4c9cf844491cd1c27cd7cbcb,
@@ -5542,6 +5564,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dce94a9662cb13c4cb45f1a298ee282f, type: 3}
+--- !u!1 &1315723237
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1315723238}
+  m_Layer: 0
+  m_Name: EnemyB
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1315723238
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1315723237}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 277470456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1316845478
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6062,6 +6115,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u653B\u6483"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   attackPower: 5
@@ -6081,6 +6135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u6B7B\u4EA1"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
 --- !u!114 &1524003252
@@ -6096,6 +6151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u88AB\u5F3E"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   stiffnessTime: 2
@@ -6115,6 +6171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F2"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 2
@@ -6133,6 +6190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1"
+  isAnimation: 1
   animSpeed: 3
   enterAnimation: Walk
   patrol: {fileID: 0}
@@ -6157,6 +6215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 1
@@ -6177,6 +6236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u79FB\u52D5"
+  isAnimation: 1
   animSpeed: 2
   enterAnimation: Walk
   moveSpeed: 8
@@ -6411,6 +6471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u6B7B\u4EA1"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
 --- !u!114 &1590881645
@@ -6426,6 +6487,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u88AB\u5F3E"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   stiffnessTime: 2
@@ -6445,6 +6507,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F2"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 2
@@ -6463,6 +6526,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1"
+  isAnimation: 1
   animSpeed: 3
   enterAnimation: Walk
   patrol: {fileID: 0}
@@ -6487,6 +6551,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u5F85\u6A5F"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   waitInterval: 2
@@ -6507,6 +6572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u79FB\u52D5"
+  isAnimation: 1
   animSpeed: 2
   enterAnimation: Walk
   moveSpeed: 8
@@ -6533,6 +6599,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u653B\u6483"
+  isAnimation: 1
   animSpeed: 1
   enterAnimation: Idle
   attackPower: 5

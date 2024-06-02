@@ -13,9 +13,9 @@ public class G_GeneralCollision : GimmickState
         base.Enter();
     }
 
-    public override void CollisionEnterSelf(GameObject other)
+    public override void CollisionEnterSelf(Collision collison)
     {
-        if (other.transform.root.name == "Player")
+        if (collison.transform.root.name == "Player")
         {
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
             {
@@ -24,7 +24,7 @@ public class G_GeneralCollision : GimmickState
         }
     }
 
-    public override void TriggerEnterSelf(GameObject other)
+    public override void TriggerEnterSelf(Collider other)
     {
         if (other.transform.root.name == "Player")
         {

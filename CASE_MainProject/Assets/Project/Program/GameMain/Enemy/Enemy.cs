@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Enemy : Subscriber
 {
-    static GameObject target;
+    static protected GameObject target;
     public static GameObject Target { get => target; }
 
     [SerializeField, Header("状態"), ReadOnly]
-    string stateName;
+    protected string stateName;
     public string StateName { get => stateName; set => stateName = value; }
 
     // 敵ステートマシン
-    EnemyStateMachine enemyStateMachine;
+    protected EnemyStateMachine enemyStateMachine;
     public EnemyStateMachine Machine { get => enemyStateMachine; }
 
     [SerializeField, Header("最大HP")]
@@ -26,42 +26,42 @@ public class Enemy : Subscriber
     float enemyPressure;
     public float Pressre { get => enemyPressure; }
     [SerializeField, Header("視点")]
-    Transform eyeTransform;
+    protected Transform eyeTransform;
     public Transform EyeTransform { get => eyeTransform; }
 
     [SerializeField, Header("視認距離")]
-    float viewDistance;
+    protected float viewDistance;
     public float ViewDistance { get => viewDistance; }
     [SerializeField, Header("視野角")]
-    float viewAngle;
+    protected float viewAngle;
     public float ViewAngle { get => viewAngle; }
 
     // 索敵処理の有無
-    bool isSearchPlayer = true;
+    protected bool isSearchPlayer = true;
     public bool IsSearchPlayer {set=> isSearchPlayer = value; }
 
     // プレイヤー発見の有無
     [SerializeField, Header("発見した"), ReadOnly]
-    bool isFindPlayer = false;
+    protected bool isFindPlayer = false;
     public bool IsFindPlayer { get => isFindPlayer; }
 
     // プレイヤーとの距離^2
-    float toPlayerDistance = 0.0f;
+    protected float toPlayerDistance = 0.0f;
     // プレイヤーとの2乗距離
     public float ToPlayerDistace { get => toPlayerDistance; }
 
     [SerializeField, Header("攻撃可能か"), ReadOnly]
-    bool isAttackEnable = false;
+    protected bool isAttackEnable = false;
     public bool IsAttackEnable { get => isAttackEnable; set => isAttackEnable = value; }
 
-    Vector3 damageVector;
+    protected Vector3 damageVector;
     public Vector3 DamageVector { get => damageVector; }
 
-    bool isDamaged = false;
+    protected bool isDamaged = false;
     public bool IsDamaged { get => isDamaged; set => isDamaged = value; }
 
     // 無敵状態
-    bool isInvincible = false;
+    protected bool isInvincible = false;
     public bool IsInvincible { set => isInvincible = value; }
 
     [SerializeField, Header("RigidBody")]
@@ -69,10 +69,10 @@ public class Enemy : Subscriber
     public Rigidbody EnemyRigidbody { get => rb; }
 
     [SerializeField, Header("アニメーター")]
-    Animator animator;
+    protected Animator animator;
     public Animator EnemyAnimator { get => animator; }
 
-    private void Awake()
+    protected void Awake()
     {
         if(target == null)
         {
@@ -81,7 +81,7 @@ public class Enemy : Subscriber
         eyeTransform = transform.Find("EyeTransform");
     }
 
-    void Start()
+    protected void Start()
     {
         rb = GetComponent<Rigidbody>();
         // パラメータの初期化
@@ -93,7 +93,7 @@ public class Enemy : Subscriber
         enemyStateMachine.Initialize();
     }
 
-    void Update()
+    protected void Update()
     {
         // 無敵をなくす
         isInvincible = false;
@@ -108,37 +108,35 @@ public class Enemy : Subscriber
         enemyStateMachine.MainFunc();
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
-        enemyStateMachine.TriggerEnterSelf(other.gameObject);
-        Debug.Log("enemy");
+        enemyStateMachine.TriggerEnterSelf(other);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected virtual void OnCollisionEnter(Collision collision)
     {
-        //enemyStateMachine.CollisionEnterSelf(collision.gameObject);
+        enemyStateMachine.CollisionEnterSelf(collision);
     }
 
-    private void OnTriggerStay(Collider other)
+    protected virtual void OnTriggerStay(Collider other)
     {
-        enemyStateMachine.TriggerStaySelf(other.gameObject);
+        enemyStateMachine.TriggerStaySelf(other);
     }
 
-    private void OnCollisionStay(Collision collision)
+    protected virtual void OnCollisionStay(Collision collision)
     {
-        //enemyStateMachine.CollisionStaySelf(collision.gameObject);
+        enemyStateMachine.CollisionStaySelf(collision);
     }
 
-    private void OnTriggerExit(Collider other)
+    protected virtual void OnTriggerExit(Collider other)
     {
-        enemyStateMachine.TriggerExitSelf(other.gameObject);
+        enemyStateMachine.TriggerExitSelf(other);
     }
 
-    private void OnCollisionExit(Collision collision)
+    protected virtual void OnCollisionExit(Collision collision)
     {
-        //enemyStateMachine.CollisionExitSelf(collision.gameObject);
+        enemyStateMachine.CollisionExitSelf(collision);
     }
-
     /*
      * <summary>
      * プレイヤーを視野角を元に探す処理
@@ -187,7 +185,7 @@ public class Enemy : Subscriber
      * <return>
      * bool HPが0以下か
      */
-    public bool Damage(float damage, Vector3 direction)
+    public virtual bool Damage(float damage, Vector3 direction)
     {
         if(!isDamaged)
         {

@@ -36,62 +36,62 @@ public class State : MonoBehaviour
         // 終了時処理
     }
 
-    public virtual void CollisionEnterSelf(GameObject other)
+    public virtual void CollisionEnterSelf(Collision collision)
     {
         // 衝突開始処理(セルフ呼び出し)
     }
 
-    public virtual void CollisionEnterOpponent(GameObject other)
+    public virtual void CollisionEnterOpponent(Collision collision)
     {
         // 衝突開始処理(相手呼び出し)
     }
 
-    public virtual void CollisionStaySelf(GameObject other)
+    public virtual void CollisionStaySelf(Collision collision)
     {
         // 衝突中処理(セルフ呼び出し)
     }
 
-    public virtual void CollisionStayOpponent(GameObject other)
+    public virtual void CollisionStayOpponent(Collision collision)
     {
         // 衝突中処理(相手呼び出し)
     }
 
-    public virtual void CollisionExitSelf(GameObject other)
+    public virtual void CollisionExitSelf(Collision collision)
     {
         // 衝突終了処理(セルフ呼び出し)
     }
 
-    public virtual void CollisionExitOpponent(GameObject other)
+    public virtual void CollisionExitOpponent(Collision collision)
     {
         // 衝突終了処理(相手呼び出し)
     }
 
-    public virtual void TriggerEnterSelf(GameObject other)
+    public virtual void TriggerEnterSelf(Collider other)
     {
         // 衝突開始処理(セルフ呼び出し)
     }
 
-    public virtual void TriggerEnterOpponent(GameObject other)
+    public virtual void TriggerEnterOpponent(Collider other)
     {
         // 衝突開始処理(相手呼び出し)
     }
 
-    public virtual void TriggerStaySelf(GameObject other)
+    public virtual void TriggerStaySelf(Collider other)
     {
         // 衝突中処理(セルフ呼び出し)
     }
 
-    public virtual void TriggerStayOpponent(GameObject other)
+    public virtual void TriggerStayOpponent(Collider other)
     {
         // 衝突中処理(相手呼び出し)
     }
 
-    public virtual void TriggerExitSelf(GameObject other)
+    public virtual void TriggerExitSelf(Collider other)
     {
         // 衝突終了処理(セルフ呼び出し)
     }
 
-    public virtual void TriggerExitOpponent(GameObject other)
+    public virtual void TriggerExitOpponent(Collider other)
     {
         // 衝突終了処理(相手呼び出し)
     }

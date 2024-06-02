@@ -64,13 +64,6 @@ public class EnemyStateMachine : StateMachine
      */
     public override bool TransitionTo(string key)
     {
-        // HP‚ª0ˆÈ‰º‚Ìê‡€–S‚É‘JˆÚ
-        if(enemy.Hp <= 0.0f)
-        {
-            base.TransitionTo("€–S");
-            return false;
-        }
-
         bool b = base.TransitionTo(key);
         // «‘‚ÉƒL[‚ª“o˜^‚³‚ê‚Ä‚¢‚é‚©ƒ`ƒFƒbƒN
         if (b) { enemy.StateName = key; return true; }

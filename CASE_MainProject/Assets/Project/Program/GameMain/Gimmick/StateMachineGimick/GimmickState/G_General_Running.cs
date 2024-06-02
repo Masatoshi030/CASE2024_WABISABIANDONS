@@ -20,13 +20,13 @@ public class G_General_Running : GimmickState
         if (machine.Cnt >= runningTime) machine.TransitionTo(elapsedTransition);
     }
 
-    public override void CollisionEnterSelf(GameObject other)
+    public override void CollisionEnterSelf(Collision collision)
     {
-        if (other.transform.root.name == "Player")
+        if (collision.transform.root.name == "Player")
         {
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
             {
-                Vector3 direction = other.transform.position - gimmick.transform.position;
+                Vector3 direction = collision.transform.position - gimmick.transform.position;
                 direction.Normalize();
                 direction.y = 0.9f;
                 // âºà¯êî
@@ -35,7 +35,7 @@ public class G_General_Running : GimmickState
         }
     }
 
-    public override void TriggerEnterSelf(GameObject other)
+    public override void TriggerEnterSelf(Collider other)
     {
         if (other.transform.root.name == "Player")
         {

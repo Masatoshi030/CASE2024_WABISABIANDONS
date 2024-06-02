@@ -158,9 +158,9 @@ public class StateMachine : MonoBehaviour
      * <return>
      * void
      */
-    public virtual void CollisionEnterSelf(GameObject other)
+    public virtual void CollisionEnterSelf(Collision collision)
     {
-        if (currentState != null) currentState.CollisionEnterSelf(other);
+        if (currentState != null) currentState.CollisionEnterSelf(collision);
     }
 
     /*
@@ -171,57 +171,57 @@ public class StateMachine : MonoBehaviour
      * <return>
      * void
      */
-    public virtual void CollisionEnterOpponent(GameObject other)
+    public virtual void CollisionEnterOpponent(Collision collision)
     {
-        if (currentState != null) currentState.CollisionEnterOpponent(other);
+        if (currentState != null) currentState.CollisionEnterOpponent(collision);
     }
 
-    public virtual void CollisionStaySelf(GameObject other)
+    public virtual void CollisionStaySelf(Collision collision)
     {
-        if (currentState != null) currentState.CollisionStaySelf(other);
+        if (currentState != null) currentState.CollisionStaySelf(collision);
     }
 
-    public virtual void CollisionStayOpponent(GameObject other)
+    public virtual void CollisionStayOpponent(Collision collision)
     {
-        if (currentState != null) currentState.CollisionStayOpponent(other);
+        if (currentState != null) currentState.CollisionStayOpponent(collision);
     }
 
-    public virtual void CollisionExitSelf(GameObject other)
+    public virtual void CollisionExitSelf(Collision collision)
     {
-        if (currentState != null) currentState.CollisionExitSelf(other);
+        if (currentState != null) currentState.CollisionExitSelf(collision);
     }
 
-    public virtual void CollisionExitOpponent(GameObject other)
+    public virtual void CollisionExitOpponent(Collision collision)
     {
-        if (currentState != null) currentState.CollisionExitOpponent(other);
+        if (currentState != null) currentState.CollisionExitOpponent(collision);
     }
 
-    public virtual void TriggerEnterSelf(GameObject other)
+    public virtual void TriggerEnterSelf(Collider other)
     {
         if (currentState != null) currentState.TriggerEnterSelf(other);
     }
 
-    public virtual void TriggerEnterOpponent(GameObject other)
+    public virtual void TriggerEnterOpponent(Collider other)
     {
         if (currentState != null) currentState.TriggerEnterOpponent(other);
     }
 
-    public virtual void TriggerStaySelf(GameObject other)
+    public virtual void TriggerStaySelf(Collider other)
     {
         if (currentState != null) currentState.TriggerStaySelf(other);
     }
 
-    public virtual void TriggerStayOpponent(GameObject other)
+    public virtual void TriggerStayOpponent(Collider other)
     {
         if (currentState != null) currentState.TriggerStayOpponent(other);
     }
 
-    public virtual void TriggerExitSelf(GameObject other)
+    public virtual void TriggerExitSelf(Collider other)
     {
         if (currentState != null) currentState.TriggerExitSelf(other);
     }
 
-    public virtual void TriggerExitOpponent(GameObject other)
+    public virtual void TriggerExitOpponent(Collider other)
     {
         if (currentState != null) currentState.TriggerExitOpponent(other);
     }

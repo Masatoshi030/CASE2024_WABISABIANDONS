@@ -37,16 +37,16 @@ public class General_Damaged : EnemyState
         
     }
 
-    public override void CollisionEnterOpponent(GameObject other)
+    public override void CollisionEnterOpponent(Collision collision)
     {
-        if (other.transform.root.name == "Player")
+        if (collision.transform.root.name == "Player")
         {
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
                 machine.TransitionTo(damagedTransition);
         }
     }
 
-    public override void TriggerEnterOpponent(GameObject other)
+    public override void TriggerEnterOpponent(Collider other)
     {
         if (other.transform.root.name == "Player")
         {
