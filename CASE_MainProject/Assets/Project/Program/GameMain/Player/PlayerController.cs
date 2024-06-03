@@ -31,12 +31,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("ジャンプ継続最大時間")]
     float jumpMaxTime = 1.0f;
 
-    [SerializeField, Header("蒸気最大ジャンプ力")]
-    float jumpPower_Steam = 8.0f;
-
-    [SerializeField, Header("蒸気最大長押し加算ジャンプ力")]
-    float jumpContinuationPower_Steam = 0.02f;
-
     float jumpTime = 0.0f;
 
     enum JUMP_STATE
@@ -287,7 +281,7 @@ public class PlayerController : MonoBehaviour
         if (jumpState == JUMP_STATE.Idle)
         {
             //最初の初速とジャンプ開始命令
-            if (DualSense_Manager.instance.GetInputState().LeftTrigger.TriggerValue > 0.9f)
+            if (DualSense_Manager.instance.GetInputState().LeftTrigger.TriggerValue >= 1.0f)
             {
                 //ジャンプ上昇状態へ移行
                 jumpState = JUMP_STATE.Rising;
@@ -296,7 +290,7 @@ public class PlayerController : MonoBehaviour
                 characterAnimation.SetTrigger("tJump");
 
                 //初速をつける
-                moveVelocity = new Vector3(moveVelocity.x, Mathf.Lerp(jumpPower, jumpPower_Steam, outSteamValue), moveVelocity.z);
+                moveVelocity = new Vector3(moveVelocity.x, jumpPower, moveVelocity.z);
             }
         }
         //上昇中
@@ -310,7 +304,7 @@ public class PlayerController : MonoBehaviour
                 //追加速度をつける
                 moveVelocity = new Vector3(
                     moveVelocity.x,
-                    moveVelocity.y + Mathf.Lerp(jumpContinuationPower, jumpContinuationPower_Steam, outSteamValue) * (jumpMaxTime - jumpTime / jumpMaxTime) * Time.deltaTime,
+                    moveVelocity.y + jumpContinuationPower * (jumpMaxTime - jumpTime / jumpMaxTime) * Time.deltaTime,
                     moveVelocity.z);
             }
 
@@ -523,7 +517,7 @@ public class PlayerController : MonoBehaviour
             //}
 
             //左トリガーの抵抗設定
-            DualSense_Manager.instance.SetLeftTriggerEffect_Position(0.4f, 0.5f, 1.0f);
+            DualSense_Manager.instance.SetLeftTriggerEffect_Position(0.6f, 0.7f, 1.0f);
 
             //タイマーをリセット
             fixedIntervalTimer = 0.0f;
