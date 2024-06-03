@@ -44,15 +44,15 @@ public class General_Idle : EnemyState
         
     }
 
-    public override void CollisionEnterSelf(GameObject other)
+    public override void CollisionEnterSelf(Collision collision)
     {
-        if(other.name == "Player")
+        if(collision.transform.name == "Player")
         {
             machine.TransitionTo(collisionTransition);
         }
     }
 
-    public override void TriggerEnterSelf(GameObject other)
+    public override void TriggerEnterSelf(Collider other)
     {
         if (other.name == "Player")
         {
