@@ -14,7 +14,7 @@ public class State : MonoBehaviour
 
     [SerializeField, Header("ó‘Ô–¼")]
     string stateName;
-    public string StateName { get => stateName; }
+    public string StateName { get => stateName; set => stateName = value; }
 
     public virtual void Initialize()
     {

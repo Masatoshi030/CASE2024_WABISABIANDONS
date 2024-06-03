@@ -17,21 +17,7 @@ public class EnemyStateMachine : StateMachine
      */
     public override void Initialize()
     {
-        // ステート数の取得
         int num = 0;
-        for(int i = 0; i < stateObject.GetComponentCount(); i++)
-        {
-            // エネミーステートの継承ならカウントを増やす
-            if (stateObject.GetComponentAtIndex(i) is EnemyState)
-            {
-                num++;
-            }
-        }
-
-        // 取得に成功したステート分配列を作る
-        states = new EnemyState[num];
-        stateNames = new string[num];
-        num = 0;
         // 状態、状態名、辞書を作成
         for (int i = 0; i < stateObject.GetComponentCount(); i++)
         {
@@ -40,8 +26,8 @@ public class EnemyStateMachine : StateMachine
                 // ステートの格納
                 EnemyState state = (EnemyState)stateObject.GetComponentAtIndex(i);
                 state.EnemyObject = enemy;
-                states[num] = state;
-                stateNames[num] = states[num].StateName;
+                states.Add(state);
+                stateNames.Add(states[num].StateName);
                 states[num].Machine = this;
                 states[num].Initialize();
                 stateList.Add(stateNames[num], states[num]);
@@ -68,5 +54,22 @@ public class EnemyStateMachine : StateMachine
         // 辞書にキーが登録されているかチェック
         if (b) { enemy.StateName = key; return true; }
         else return false;
+    }
+
+    public override void AddState(State state)
+    {
+        if(!stateList.ContainsKey(state.StateName))
+        {
+            if (state is EnemyState)
+            {
+                EnemyState es = (EnemyState)state;
+                es.EnemyObject = enemy;
+                es.Machine = this;
+                es.Initialize();
+                states.Add(state);
+                stateNames.Add(state.StateName);
+                stateList.Add(es.StateName, es);
+            }
+        }
     }
 }

@@ -10,6 +10,7 @@ public class StateMachine : MonoBehaviour
 
     [SerializeField, Header("ステートの参照先オブジェクト")]
     protected GameObject stateObject;
+    public GameObject StateObject { get => stateObject; }
 
     [SerializeField, Header("現在の状態"), ReadOnly]
     protected State currentState;
@@ -17,11 +18,13 @@ public class StateMachine : MonoBehaviour
     protected State nextState;
 
     [SerializeField, Header("状態一覧")]
-    protected State[] states;
+    protected List<State> states;
     [SerializeField, Header("状態名一覧"), ReadOnly]
-    protected string[] stateNames;
+    protected List<string> stateNames;
 
+    [SerializeField, Header("状態")]
     protected Dictionary<string, State> stateList = new Dictionary<string, State>();
+    public Dictionary<string, State> StateList { get => stateList; }
 
     [SerializeField, Header("経過時間"), ReadOnly]
     float cnt;
@@ -39,29 +42,15 @@ public class StateMachine : MonoBehaviour
      */
     public virtual void Initialize()
     {
-        // ステート数の取得
         int num = 0;
-        for (int i = 0; i < stateObject.GetComponentCount(); i++)
-        {
-            // エネミーステートの継承ならカウントを増やす
-            if (stateObject.GetComponentAtIndex(i) is State)
-            {
-                num++;
-            }
-        }
-
-        // 取得に成功したステート分配列を作る
-        states = new State[num];
-        stateNames = new string[num];
-        num = 0;
         // 状態、状態名、辞書を作成
         for (int i = 0; i < stateObject.GetComponentCount(); i++)
         {
             if (stateObject.GetComponentAtIndex(i) is State)
             {
                 // ステートの格納
-                states[num] = (State)stateObject.GetComponentAtIndex(i);
-                stateNames[num] = states[num].StateName;
+                states.Add((State)stateObject.GetComponentAtIndex(i));
+                stateNames.Add(states[num].StateName);
                 states[num].Controller = controller;
                 states[num].Machine = this;
                 states[num].Initialize();
@@ -90,8 +79,8 @@ public class StateMachine : MonoBehaviour
             currentState.Exit();
             currentState = nextState;
             nextState = null;
-            currentState.Enter();
             bTransition = false;
+            currentState.Enter();
         }
         if (currentState != null)
         {
@@ -140,7 +129,7 @@ public class StateMachine : MonoBehaviour
      */
     public virtual bool TransitionTo(int index)
     {
-        if (index >= states.Length || bTransition)
+        if (index >= states.Count || bTransition)
         {
             return false;
         }
@@ -148,6 +137,15 @@ public class StateMachine : MonoBehaviour
         // 遷移予約
         bTransition = true;
         return true;
+    }
+
+    public virtual void AddState(State state)
+    {
+        state.Machine = this;
+        states.Add(state);
+        stateNames.Add(state.StateName);
+        stateList.Add(state.StateName, state);
+        state.Initialize();
     }
 
     /*

@@ -97,7 +97,6 @@ public class Enemy : Subscriber
     {
         // –³“G‚ð‚È‚­‚·
         isInvincible = false;
-        rb.velocity = Vector3.zero;
         if (isSearchPlayer)
         {
             (bool find, float dis) = FindPlayerAtFOV();

@@ -9,21 +9,7 @@ public class GimmickStateMachine : StateMachine
     public Gimmick GimmickTarget { get => gimmick; set => gimmick = value; }
     public override void Initialize()
     {
-        // ステート数の取得
         int num = 0;
-        for (int i = 0; i < stateObject.GetComponentCount(); i++)
-        {
-            // エネミーステートの継承ならカウントを増やす
-            if (stateObject.GetComponentAtIndex(i) is GimmickState)
-            {
-                num++;
-            }
-        }
-
-        // 取得に成功したステート分配列を作る
-        states = new GimmickState[num];
-        stateNames = new string[num];
-        num = 0;
         // 状態、状態名、辞書を作成
         for (int i = 0; i < stateObject.GetComponentCount(); i++)
         {
