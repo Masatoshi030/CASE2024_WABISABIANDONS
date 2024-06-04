@@ -104,7 +104,7 @@ public class EnemyC_Rolling : EnemyState_C
                                 velocity.y = 5.0f;
                                 Enemy enem = implicateObjects[i].GetComponent<Enemy>();
                                 enem.GetComponent<NavMeshAgent>().enabled = false;
-                                enem.EnemyRigidbody.AddForce(velocity * rollSpeed * 5.0f, ForceMode.Impulse);
+                                enem.EnemyRigidbody.AddForce(velocity * rollSpeed * 2.0f, ForceMode.Impulse);
                                 enem.Machine.TransitionTo("Ž€–S‘Ò‹@");
                             }
                             positions.Remove(implicateObjects[i]);
