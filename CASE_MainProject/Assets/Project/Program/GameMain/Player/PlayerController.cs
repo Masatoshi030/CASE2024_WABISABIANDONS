@@ -248,7 +248,7 @@ public class PlayerController : MonoBehaviour
         moveVelocity = horizontalRotation * new Vector3(runValue.x, moveVelocity.y, runValue.y);
 
         //地面にいるときは移動アニメーション
-        characterAnimation.SetFloat("fRun", runInput.magnitude);
+        characterAnimation.SetFloat("fRun", runInput.magnitude + outSteamValue);
 
         //=== 回転 ===//
 
@@ -338,6 +338,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OnValveJump(float _jumpPower)
+    {
+        //速度ゼロ
+        myRigidbody.velocity = Vector3.zero;
+
+        //突撃終了
+        StopAttack();
+
+        //初速をつける
+        myRigidbody.velocity += Vector3.up * _jumpPower;
+        Debug.Log("ばるぶ！");
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Enemy")
@@ -353,6 +366,11 @@ public class PlayerController : MonoBehaviour
 
             //取得フラグ
             other.GetComponent<GoldValveController>().GetGoldValve();
+        }
+
+        if(other.tag == "Valve")
+        {
+            OnValveJump(20.0f);
         }
     }
 
