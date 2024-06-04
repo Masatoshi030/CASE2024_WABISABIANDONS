@@ -63,18 +63,18 @@ public class General_Tracking : EnemyState
         patrol.Stop();
     }
 
-    public override void CollisionEnterSelf(GameObject other)
+    public override void CollisionEnterSelf(Collision collision)
     {
-        if (other.name == "Player" && !enemy.IsDamaged)
+        if (collision.transform.name == "Player" && !enemy.IsDamaged)
         {
-            Vector3 direction = other.transform.position - transform.position;
+            Vector3 direction = collision.transform.position - transform.position;
             direction.Normalize();
             direction.y = 0.5f;
             PlayerController.instance.KnockBack(moveSpeed, direction);
             machine.TransitionTo(collisionTransition);
         }
     }
-    public override void TriggerEnterSelf(GameObject other)
+    public override void TriggerEnterSelf(Collider other)
     {
         if (other.name == "Player" && !enemy.IsDamaged)
         {

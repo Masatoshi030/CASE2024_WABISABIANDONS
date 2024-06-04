@@ -32,31 +32,31 @@ public class Gimmick : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        gimmickStateMachine.CollisionEnterSelf(collision.gameObject);
+        gimmickStateMachine.CollisionEnterSelf(collision);
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        gimmickStateMachine.CollisionStaySelf(collision.gameObject);
+        gimmickStateMachine.CollisionStaySelf(collision);
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        gimmickStateMachine.CollisionExitSelf(collision.gameObject);
+        gimmickStateMachine.CollisionExitSelf(collision);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        gimmickStateMachine.TriggerEnterSelf(other.gameObject);
+        gimmickStateMachine.TriggerEnterSelf(other);
     }
 
     private void OnTriggerStay(Collider other)
     {
-        gimmickStateMachine.TriggerStaySelf(other.gameObject);
+        gimmickStateMachine.TriggerStaySelf(other);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        gimmickStateMachine.TriggerExitSelf(other.gameObject);
+        gimmickStateMachine.TriggerExitSelf(other);
     }
 }
