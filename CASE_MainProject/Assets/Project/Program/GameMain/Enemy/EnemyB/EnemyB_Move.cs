@@ -18,11 +18,11 @@ public class EnemyB_Move : EnemyState
 
     [Space(pad), Header("‘JˆÚæƒŠƒXƒg")]
     [SerializeField, Header("õ“G¬Œ÷Žž‚Ì‘JˆÚ")]
-    string searchSuccessTransiton = "UŒ‚";
+    public int searchSuccessID;
     [SerializeField, Header("ŽžŠÔŒo‰ßŒã‚Ì‘JˆÚ")]
-    string elapsedTransition = "‘Ò‹@";
+    public int elapsedID;
     [SerializeField, Header("”í’eŽž‚Ì‘JˆÚ")]
-    string damagedTransition = "”í’e";
+    public int damagedID;
 
     public override void Initialize()
     {
@@ -39,7 +39,7 @@ public class EnemyB_Move : EnemyState
     {
         if(enemy.IsDamaged)
         {
-            machine.TransitionTo(damagedTransition);
+            machine.TransitionTo(damagedID);
             return;
         }
 
@@ -65,12 +65,12 @@ public class EnemyB_Move : EnemyState
         if(machine.Cnt >= moveTime)
         {
             nowIsUp = !nowIsUp;
-            machine.TransitionTo(elapsedTransition);
+            machine.TransitionTo(elapsedID);
         }
 
         if(enemy.IsFindPlayer)
         {
-            machine.TransitionTo(searchSuccessTransiton);
+            machine.TransitionTo(searchSuccessID);
         }
     }
 }

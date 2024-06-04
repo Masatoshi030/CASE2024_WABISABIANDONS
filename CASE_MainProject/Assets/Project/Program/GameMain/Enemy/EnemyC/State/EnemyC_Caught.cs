@@ -10,14 +10,9 @@ public class EnemyC_Caught : EnemyState
 
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("ó‘ÔI—¹‚Ì‘JˆÚ")]
-    string elapesedTransition = "‘Ò‹@";
+    int elapesedID;
     [SerializeField, Header("”í’e‚Ì‘JˆÚ")]
-    string damagedTransition = "”í’e";
-
-    public override void Initialize()
-    {
-        StateName = "Šª‚«‚İ";
-    }
+    int damagedID;
 
     public override void Enter()
     {
@@ -28,13 +23,13 @@ public class EnemyC_Caught : EnemyState
     {
         if(enemy.IsDamaged)
         {
-            machine.TransitionTo(damagedTransition);
+            machine.TransitionTo(damagedID);
             return;
         }
 
         if(!bCaught)
         {
-            machine.TransitionTo(elapesedTransition);
+            machine.TransitionTo(elapesedID);
         }
     }
 

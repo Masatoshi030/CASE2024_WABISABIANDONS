@@ -8,13 +8,13 @@ public class General_Idle : EnemyState
     float waitInterval = 3.0f;
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("ŽžŠÔŒo‰ßŒã‚Ì‘JˆÚ")]
-    public string elapsedTransition = "ˆÚ“®";
+    public int elapsedID;
     [SerializeField, Header("õ“G¬Œ÷Žž‚Ì‘JˆÚ")]
-    public string searchSuccessTransition = "’ÇÕ";
+    public int searchSuccessID;
     [SerializeField, Header("”í’eŽž‚Ì‘JˆÚ")]
-    public string damagedTransition = "”í’e";
+    public int damagedID;
     [SerializeField, Header("Õ“ËŽž‚Ì‘JˆÚ")]
-    public string collisionTransition = "’ÇÕ";
+    public int collisionID;
 
     public override void Enter()
     {
@@ -26,16 +26,16 @@ public class General_Idle : EnemyState
     {
         if(enemy.IsFindPlayer)
         {
-            machine.TransitionTo(searchSuccessTransition);
+            machine.TransitionTo(searchSuccessID);
         }
         else if(enemy.IsDamaged)
         {
             enemy.IsDamaged = false;
-            machine.TransitionTo(damagedTransition);
+            machine.TransitionTo(damagedID);
         }
         else if(machine.Cnt >= waitInterval)
         {
-            machine.TransitionTo(elapsedTransition);
+            machine.TransitionTo(elapsedID);
         }
     }
 
@@ -48,7 +48,7 @@ public class General_Idle : EnemyState
     {
         if(collision.transform.name == "Player")
         {
-            machine.TransitionTo(collisionTransition);
+            machine.TransitionTo(collisionID);
         }
     }
 
@@ -56,7 +56,7 @@ public class General_Idle : EnemyState
     {
         if (other.name == "Player")
         {
-            machine.TransitionTo(collisionTransition);
+            machine.TransitionTo(collisionID);
         }
     }
 }

@@ -14,13 +14,13 @@ public class General_MoveTarget : EnemyState
 
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("Œo‰ßŒã‚Ì‘JˆÚ")]
-    string elapsedTransition = "‘Ò‹@";
+    public int elapsedID;
     [SerializeField, Header("õ“G¬Œ÷‚Ì‘JˆÚ")]
-    string searchSuccessTransition = "’ÇÕ";
+    public int searchSuccessID;
     [SerializeField, Header("”í’e‚Ì‘JˆÚ")]
-    string damagedTransition = "”í’e";
+    public int damagedID;
     [SerializeField, Header("Õ“Ë‚Ì‘JˆÚ")]
-    string collisionTransition = "’ÇÕ";
+    public int collisionID;
     
 
     [SerializeField, Header("ƒpƒgƒ[ƒ‹"), ReadOnly]
@@ -50,17 +50,17 @@ public class General_MoveTarget : EnemyState
     {
         if(enemy.IsFindPlayer)
         {
-            Machine.TransitionTo(searchSuccessTransition);
+            Machine.TransitionTo(searchSuccessID);
             return;
         }
         else if(enemy.IsDamaged)
         {
             enemy.IsDamaged = false;
-            machine.TransitionTo(damagedTransition);
+            machine.TransitionTo(damagedID);
         }
         if (patrol.GetPatrolState() == NavMeshPatrol.PatrolState.Idle)
         {          
-             Machine.TransitionTo(elapsedTransition);
+             Machine.TransitionTo(elapsedID);
         }
     }
 
@@ -78,14 +78,14 @@ public class General_MoveTarget : EnemyState
     {
         if (collision.transform.name == "Player")
         {
-            machine.TransitionTo(collisionTransition);
+            machine.TransitionTo(collisionID);
         }
     }
     public override void TriggerEnterSelf(Collider other)
     {
         if (other.name == "Player")
         {
-            machine.TransitionTo(collisionTransition);
+            machine.TransitionTo(collisionID);
         }
     }
 }

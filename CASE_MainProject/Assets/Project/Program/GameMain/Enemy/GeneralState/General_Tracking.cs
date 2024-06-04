@@ -19,11 +19,11 @@ public class General_Tracking : EnemyState
 
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("’ÇÕŽ¸”sŽž‚Ì‘JˆÚ")]
-    public string failedTransition = "‘Ò‹@";
+    public int failedID;
     [SerializeField, Header("”í’eŽž‚Ì‘JˆÚ")]
-    public string damagedTransition = "”í’e";
+    public int damagedID;
     [SerializeField, Header("Õ“ËŽž‚Ì‘JˆÚ")]
-    public string collisionTransition = "UŒ‚";
+    public int collisionID;
 
     public override void Initialize()
     {
@@ -44,12 +44,12 @@ public class General_Tracking : EnemyState
     {
         if (machine.Cnt >= trackingInterval)
         {
-            machine.TransitionTo(failedTransition);
+            machine.TransitionTo(failedID);
         }
         else if(enemy.IsDamaged)
         {
             enemy.IsDamaged = false;
-            machine.TransitionTo(damagedTransition);
+            machine.TransitionTo(damagedID);
         }
         Vector3 Direction = Enemy.Target.transform.position - enemy.gameObject.transform.position;
         Direction.Normalize();
@@ -71,7 +71,7 @@ public class General_Tracking : EnemyState
             direction.Normalize();
             direction.y = 0.5f;
             PlayerController.instance.KnockBack(moveSpeed, direction);
-            machine.TransitionTo(collisionTransition);
+            machine.TransitionTo(collisionID);
         }
     }
     public override void TriggerEnterSelf(Collider other)
@@ -82,7 +82,7 @@ public class General_Tracking : EnemyState
             direction.Normalize();
             direction.y = 0.5f;
             PlayerController.instance.KnockBack(moveSpeed, direction);
-            machine.TransitionTo(collisionTransition);
+            machine.TransitionTo(collisionID);
         }
     }
 }

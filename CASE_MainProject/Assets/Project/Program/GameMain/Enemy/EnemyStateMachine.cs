@@ -25,50 +25,40 @@ public class EnemyStateMachine : StateMachine
             {
                 // ステートの格納
                 EnemyState state = (EnemyState)stateObject.GetComponentAtIndex(i);
-                state.EnemyObject = enemy;
-                states.Add(state);
-                stateNames.Add(states[num].StateName);
-                states[num].Machine = this;
-                states[num].Initialize();
-                stateList.Add(stateNames[num], states[num]);
+                AddState(state);
                 num++;
             }
         }
-        // 初期ステートは配列の0番目
-        currentState = states[0];
-        currentState.Enter();
-        enemy.StateName = stateNames[0];
+        // 初期ステートを設定
+        currentState = stateDatas[initStateID];
+        currentState.state.Enter();
+        enemy.StateName = stateDatas[0].name;
     }
 
-    /*
-     * <summary>
-     * 遷移処理
-     * <param>
-     * string 遷移先名称
-     * <return>
-     * bool 遷移の成否
-     */
-    public override bool TransitionTo(string key)
+    public override bool TransitionTo(int key)
     {
         bool b = base.TransitionTo(key);
         // 辞書にキーが登録されているかチェック
-        if (b) { enemy.StateName = key; return true; }
+        if (b) { enemy.StateName = stateDatas[key].name; return true; }
         else return false;
     }
 
     public override void AddState(State state)
     {
-        if(!stateList.ContainsKey(state.StateName))
+        if(!idDatas.Contains(state.StateID))
         {
             if (state is EnemyState)
             {
                 EnemyState es = (EnemyState)state;
                 es.EnemyObject = enemy;
                 es.Machine = this;
+                StateData data = new StateData();
+                data.state = state;
+                data.id = state.StateID;
+                data.name = state.StateName;
                 es.Initialize();
-                states.Add(state);
-                stateNames.Add(state.StateName);
-                stateList.Add(es.StateName, es);
+                stateDatas.Add(data);
+                idDatas.Add(data.id);
             }
         }
     }

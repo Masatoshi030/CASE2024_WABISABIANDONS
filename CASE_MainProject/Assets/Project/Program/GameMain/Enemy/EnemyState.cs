@@ -9,10 +9,11 @@ public class EnemyState : State
     public Enemy EnemyObject { get => enemy; set => enemy = value; }
     [SerializeField, Header("アニメーションをするか")]
     bool isAnimation = true;
-    [SerializeField, Header("アニメーション速度")]
-    protected float animSpeed = 1.0f;
     [SerializeField, Header("開始時アニメーション")]
     protected string enterAnimation;
+    [SerializeField, Header("アニメーション速度")]
+    protected float animSpeed = 1.0f;
+    
     
 
     /*

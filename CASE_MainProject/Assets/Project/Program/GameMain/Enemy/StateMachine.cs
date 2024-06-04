@@ -1,9 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
+    [System.Serializable]
+    public class StateData
+    {
+        [SerializeField, Header("ID")]
+        public int id;
+        [SerializeField, Header("状態名")]
+        public string name;
+        [SerializeField, Header("ステート")]
+        public State state;
+    }
+
+
     // このコンポーネントを所持してるオブジェクト
     protected GameObject controller;
     public GameObject Controller { get => controller; set => controller = value; }
@@ -12,19 +25,21 @@ public class StateMachine : MonoBehaviour
     protected GameObject stateObject;
     public GameObject StateObject { get => stateObject; }
 
+    [SerializeField, Header("初期状態ID")]
+    protected int initStateID = 1;
+
     [SerializeField, Header("現在の状態"), ReadOnly]
-    protected State currentState;
+    protected StateData currentState;
+    protected StateData nextState;
 
-    protected State nextState;
+    // 状態リスト
+    [SerializeField, Header("状態データ")]
+    protected List<StateData> stateDatas = new List<StateData>();
+    public List<StateData> StateDatas { get => stateDatas; }
 
-    [SerializeField, Header("状態一覧")]
-    protected List<State> states;
-    [SerializeField, Header("状態名一覧"), ReadOnly]
-    protected List<string> stateNames;
-
-    [SerializeField, Header("状態")]
-    protected Dictionary<string, State> stateList = new Dictionary<string, State>();
-    public Dictionary<string, State> StateList { get => stateList; }
+    // IDリスト
+    protected List<int> idDatas = new List<int>();
+    public List<int> IDDatas { get => idDatas; }
 
     [SerializeField, Header("経過時間"), ReadOnly]
     float cnt;
@@ -49,18 +64,14 @@ public class StateMachine : MonoBehaviour
             if (stateObject.GetComponentAtIndex(i) is State)
             {
                 // ステートの格納
-                states.Add((State)stateObject.GetComponentAtIndex(i));
-                stateNames.Add(states[num].StateName);
-                states[num].Controller = controller;
-                states[num].Machine = this;
-                states[num].Initialize();
-                stateList.Add(stateNames[num], states[num]);
+                State state = (State)stateObject.GetComponentAtIndex(i);
+                AddState(state);
                 num++;
             }
         }
-        // 初期ステートは配列の0番目
-        currentState = states[0];
-        currentState.Enter();
+        // 初期ステートを設定
+        currentState = stateDatas[initStateID];
+        currentState.state.Enter();
     }
 
     /*
@@ -76,17 +87,17 @@ public class StateMachine : MonoBehaviour
         if(bTransition)
         {
             cnt = 0.0f;
-            currentState.Exit();
+            currentState.state.Exit();
             currentState = nextState;
             nextState = null;
             bTransition = false;
-            currentState.Enter();
+            currentState.state.Enter();
         }
         if (currentState != null)
         {
             cnt += Time.deltaTime;
             // 現在の状態のメイン処理を呼ぶ
-            currentState.MainFunc();
+            currentState.state.MainFunc();
         }
     }
 
@@ -94,57 +105,52 @@ public class StateMachine : MonoBehaviour
      * <summary>
      * 遷移処理
      * <param>
-     * string 遷移先名称
+     * int 遷移先ID
      * <return>
      * bool 遷移の成否
      */
-    public virtual bool TransitionTo(string key)
+    public virtual bool TransitionTo(int id)
     {
         if(!bTransition)
         {
-            // 辞書にキーが登録されているかチェック
-            if (stateList.ContainsKey(key))
+            if(idDatas.Contains(id))
             {
-                nextState = stateList[key];
-                // 遷移予約
+                nextState = stateDatas[id];
                 bTransition = true;
                 return true;
             }
             else
             {
-                Debug.Log("ステート更新エラー : " + controller.name + "( stateName : " + key + " )");
+                Debug.Log(controller.name + " ステート更新エラー StateID : " + id);
                 return false;
             }
         }
         return false;
     }
 
-    /*
-     * <summary>
-     * 遷移処理
-     * <param>
-     * int 遷移先のインデックス
-     * <return>
-     * bool 遷移の成否
-     */
-    public virtual bool TransitionTo(int index)
+    public virtual bool TransitionTo(State state)
     {
-        if (index >= states.Count || bTransition)
+        if(!bTransition)
+        {
+            nextState.state = state;
+            nextState.id = state.StateID;
+            nextState.name = state.name;
+            bTransition = true;
+            return true;
+        }
+        else
         {
             return false;
         }
-        nextState = states[index];
-        // 遷移予約
-        bTransition = true;
-        return true;
     }
 
     public virtual void AddState(State state)
     {
-        state.Machine = this;
-        states.Add(state);
-        stateNames.Add(state.StateName);
-        stateList.Add(state.StateName, state);
+        StateData data = new StateData();
+        data.state = state;
+        data.id = state.StateID;
+        data.name = state.StateName;
+        data.state.Machine = this;
         state.Initialize();
     }
 
@@ -158,7 +164,7 @@ public class StateMachine : MonoBehaviour
      */
     public virtual void CollisionEnterSelf(Collision collision)
     {
-        if (currentState != null) currentState.CollisionEnterSelf(collision);
+        if (currentState != null) currentState.state.CollisionEnterSelf(collision);
     }
 
     /*
@@ -171,56 +177,56 @@ public class StateMachine : MonoBehaviour
      */
     public virtual void CollisionEnterOpponent(Collision collision)
     {
-        if (currentState != null) currentState.CollisionEnterOpponent(collision);
+        if (currentState != null) currentState.state.CollisionEnterOpponent(collision);
     }
 
     public virtual void CollisionStaySelf(Collision collision)
     {
-        if (currentState != null) currentState.CollisionStaySelf(collision);
+        if (currentState != null) currentState.state.CollisionStaySelf(collision);
     }
 
     public virtual void CollisionStayOpponent(Collision collision)
     {
-        if (currentState != null) currentState.CollisionStayOpponent(collision);
+        if (currentState != null) currentState.state.CollisionStayOpponent(collision);
     }
 
     public virtual void CollisionExitSelf(Collision collision)
     {
-        if (currentState != null) currentState.CollisionExitSelf(collision);
+        if (currentState != null) currentState.state.CollisionExitSelf(collision);
     }
 
     public virtual void CollisionExitOpponent(Collision collision)
     {
-        if (currentState != null) currentState.CollisionExitOpponent(collision);
+        if (currentState != null) currentState.state.CollisionExitOpponent(collision);
     }
 
     public virtual void TriggerEnterSelf(Collider other)
     {
-        if (currentState != null) currentState.TriggerEnterSelf(other);
+        if (currentState != null) currentState.state.TriggerEnterSelf(other);
     }
 
     public virtual void TriggerEnterOpponent(Collider other)
     {
-        if (currentState != null) currentState.TriggerEnterOpponent(other);
+        if (currentState != null) currentState.state.TriggerEnterOpponent(other);
     }
 
     public virtual void TriggerStaySelf(Collider other)
     {
-        if (currentState != null) currentState.TriggerStaySelf(other);
+        if (currentState != null) currentState.state.TriggerStaySelf(other);
     }
 
     public virtual void TriggerStayOpponent(Collider other)
     {
-        if (currentState != null) currentState.TriggerStayOpponent(other);
+        if (currentState != null) currentState.state.TriggerStayOpponent(other);
     }
 
     public virtual void TriggerExitSelf(Collider other)
     {
-        if (currentState != null) currentState.TriggerExitSelf(other);
+        if (currentState != null) currentState.state.TriggerExitSelf(other);
     }
 
     public virtual void TriggerExitOpponent(Collider other)
     {
-        if (currentState != null) currentState.TriggerExitOpponent(other);
+        if (currentState != null) currentState.state.TriggerExitOpponent(other);
     }
 }

@@ -12,10 +12,10 @@ public class General_Attack : EnemyState
 
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("ŽžŠÔŒo‰ßŒã‚Ì‘JˆÚ")]
-    string elapsedTransition = "ˆÚ“®";
+    int elapsedID;
 
     [SerializeField, Header("”í’eŽž‚Ì‘JˆÚ")]
-    string damegedTransition = "”í’e";
+    int damegedID;
 
 
     public override void Enter()
@@ -27,12 +27,12 @@ public class General_Attack : EnemyState
     {
         if(machine.Cnt >= waitInterval)
         {
-            machine.TransitionTo(elapsedTransition);
+            machine.TransitionTo(elapsedID);
         }
         else if(enemy.IsDamaged)
         {
             enemy.IsDamaged = false;
-            machine.TransitionTo(damegedTransition);
+            machine.TransitionTo(damegedID);
         }
     }
 

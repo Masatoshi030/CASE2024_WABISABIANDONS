@@ -24,7 +24,7 @@ public class EnemyC_Rolling : EnemyState_C
 
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("Õ“Ë‚Ì‘JˆÚ")]
-    string collisionTransition = "€–S";
+    int collisionID;
 
     public override void Initialize()
     {
@@ -105,13 +105,12 @@ public class EnemyC_Rolling : EnemyState_C
                                 Enemy enem = implicateObjects[i].GetComponent<Enemy>();
                                 enem.GetComponent<NavMeshAgent>().enabled = false;
                                 enem.EnemyRigidbody.AddForce(velocity * rollSpeed * 2.0f, ForceMode.Impulse);
-                                enem.Machine.TransitionTo("€–S‘Ò‹@");
                             }
                             positions.Remove(implicateObjects[i]);
                             angles.Remove(implicateObjects[i]);
                             implicateObjects.RemoveAt(i);
                         }
-                        machine.TransitionTo(collisionTransition);
+                        machine.TransitionTo(collisionID);
                         break;
                 }
             }
@@ -138,18 +137,6 @@ public class EnemyC_Rolling : EnemyState_C
                 angles.Add(collision.gameObject, angle);
 
                 Enemy enem = collision.gameObject.GetComponent<Enemy>();
-                enem.Machine.StateObject.AddComponent<EnemyC_Caught>();
-                EnemyC_Caught state = enem.Machine.StateObject.GetComponent<EnemyC_Caught>();
-                state.StateName = "Šª‚«‚İ";
-                collision.gameObject.GetComponent<Enemy>().Machine.AddState(state);
-                state.Caught = true;
-                collision.gameObject.GetComponent<EnemyStateMachine>().TransitionTo("Šª‚«‚İ");
-
-                enem.Machine.StateObject.AddComponent<EnemyC_IntervalDeath>();
-                EnemyC_IntervalDeath deathState = enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>();
-                deathState.waitInterval = 2.0f;
-                deathState.StateName = "€–S‘Ò‹@";
-                collision.gameObject.GetComponent<EnemyStateMachine>().AddState(deathState);
             }
         }
     }

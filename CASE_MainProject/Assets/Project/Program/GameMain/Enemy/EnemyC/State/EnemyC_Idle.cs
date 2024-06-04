@@ -6,7 +6,7 @@ public class EnemyC_Idle : EnemyState_C
 {
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("”í’e‚Ì‘JˆÚ")]
-    string damagedTransition;
+    int damagedID;
     public override void Enter()
     {
         base.Enter();
@@ -16,7 +16,7 @@ public class EnemyC_Idle : EnemyState_C
     {
         if(enemy.IsDamaged)
         {
-            machine.TransitionTo(damagedTransition);
+            machine.TransitionTo(damagedID);
         }
     }
 
