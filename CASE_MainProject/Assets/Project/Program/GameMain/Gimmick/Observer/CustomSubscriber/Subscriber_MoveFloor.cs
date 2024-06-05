@@ -60,6 +60,10 @@ public class Subscriber_MoveFloor : Subscriber
             case 1:
                 bool msg = GetValue<T, bool>(value);
                 break;
+            case 2:
+                int ms = GetValue<T, int>(value);
+                break;
+
         }
     }
 }
