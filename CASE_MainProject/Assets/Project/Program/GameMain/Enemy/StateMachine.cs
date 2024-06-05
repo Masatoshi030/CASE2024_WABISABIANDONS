@@ -26,7 +26,7 @@ public class StateMachine : MonoBehaviour
     public GameObject StateObject { get => stateObject; }
 
     [SerializeField, Header("初期状態ID")]
-    protected int initStateID = 1;
+    protected int initStateID = 2;
 
     [SerializeField, Header("現在の状態"), ReadOnly]
     protected StateData currentState;
@@ -45,7 +45,8 @@ public class StateMachine : MonoBehaviour
     float cnt;
     public float Cnt { get => cnt; }
 
-    bool bTransition = false;
+    protected bool isUpdate = true;
+    public bool IsUpdate { get => isUpdate; set => isUpdate = value; }
 
     /*
      * <summary>
@@ -57,6 +58,8 @@ public class StateMachine : MonoBehaviour
      */
     public virtual void Initialize()
     {
+        controller = gameObject;
+
         int num = 0;
         // 状態、状態名、辞書を作成
         for (int i = 0; i < stateObject.GetComponentCount(); i++)
@@ -70,7 +73,7 @@ public class StateMachine : MonoBehaviour
             }
         }
         // 初期ステートを設定
-        currentState = stateDatas[initStateID];
+        currentState = stateDatas[IDDatas[initStateID]];
         currentState.state.Enter();
     }
 
@@ -84,15 +87,6 @@ public class StateMachine : MonoBehaviour
      */
     public virtual void MainFunc()
     {
-        if(bTransition)
-        {
-            cnt = 0.0f;
-            currentState.state.Exit();
-            currentState = nextState;
-            nextState = null;
-            bTransition = false;
-            currentState.state.Enter();
-        }
         if (currentState != null)
         {
             cnt += Time.deltaTime;
@@ -111,12 +105,14 @@ public class StateMachine : MonoBehaviour
      */
     public virtual bool TransitionTo(int id)
     {
-        if(!bTransition)
-        {
             if(idDatas.Contains(id))
             {
-                nextState = stateDatas[id];
-                bTransition = true;
+                nextState = stateDatas[IDDatas[id]];
+                cnt = 0.0f;
+                currentState.state.Exit();
+                currentState = nextState;
+                nextState = null;
+                currentState.state.Enter();
                 return true;
             }
             else
@@ -124,24 +120,19 @@ public class StateMachine : MonoBehaviour
                 Debug.Log(controller.name + " ステート更新エラー StateID : " + id);
                 return false;
             }
-        }
-        return false;
     }
 
     public virtual bool TransitionTo(State state)
     {
-        if(!bTransition)
-        {
-            nextState.state = state;
-            nextState.id = state.StateID;
-            nextState.name = state.name;
-            bTransition = true;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        nextState.state = state;
+        nextState.id = state.StateID;
+        nextState.name = state.name;
+        cnt = 0.0f;
+        currentState.state.Exit();
+        currentState = nextState;
+        nextState = null;
+        currentState.state.Enter();
+        return true;
     }
 
     public virtual void AddState(State state)

@@ -16,11 +16,15 @@ public class EnemyC_Caught : EnemyState
 
     public override void Enter()
     {
-        
+        base.Enter();
+
+        enemy.IsVelocityZero = true;
     }
 
     public override void MainFunc()
     {
+        base.MainFunc();
+
         if(enemy.IsDamaged)
         {
             machine.TransitionTo(damagedID);
@@ -35,6 +39,9 @@ public class EnemyC_Caught : EnemyState
 
     public override void Exit()
     {
+        base.Exit();
+
         bCaught = false;
+        enemy.EnemyRigidbody.velocity = Vector3.zero;
     }
 }

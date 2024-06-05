@@ -8,6 +8,8 @@ public class EnemyState_C : EnemyState
 
     public override void Initialize()
     {
+        base.Initialize();
+
         enemyC = enemy.gameObject.GetComponent<EnemyC>();
     }
 }

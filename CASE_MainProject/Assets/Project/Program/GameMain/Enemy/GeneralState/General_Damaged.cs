@@ -29,12 +29,15 @@ public class General_Damaged : EnemyState
 
     public override void MainFunc()
     {
-        if(bUpdate) if (machine.Cnt >= stiffnessTime) machine.TransitionTo(elapsedID);
+        base.MainFunc();
+        if (!machine.IsUpdate) return;
+
+        if (bUpdate) if (machine.Cnt >= stiffnessTime) machine.TransitionTo(elapsedID);
     }
 
     public override void Exit()
     {
-        
+        base.Exit();
     }
 
     public override void CollisionEnterOpponent(Collision collision)

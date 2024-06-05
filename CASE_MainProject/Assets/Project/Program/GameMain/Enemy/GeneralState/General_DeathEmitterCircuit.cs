@@ -18,6 +18,8 @@ public class General_DeathEmitterCircuit : EnemyState
 
     public override void Enter()
     {
+        base.Enter();
+
         GameObject obj = Instantiate(spawnObj, transform.position, Quaternion.identity);
         EffectMoveConnectCircuit com = obj.GetComponent<EffectMoveConnectCircuit>();
         com.Excute(enemy.transform.position, targetTransform.position, effectMoveTime);
@@ -25,7 +27,6 @@ public class General_DeathEmitterCircuit : EnemyState
         com.Present = present;
 
         enemy.EnemyRigidbody.velocity = Vector3.zero;
-        base.Enter();
         Destroy(enemy.gameObject);
         Destroy(gameObject);
     }

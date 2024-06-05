@@ -20,12 +20,17 @@ public class General_Attack : EnemyState
 
     public override void Enter()
     {
+        base.Enter();
+
         PlayerController.instance.Damage(attackPower);
     }
 
     public override void MainFunc()
     {
-        if(machine.Cnt >= waitInterval)
+        base.MainFunc();
+        if (!machine.IsUpdate) return;
+
+        if (machine.Cnt >= waitInterval)
         {
             machine.TransitionTo(elapsedID);
         }

@@ -15,11 +15,15 @@ public class General_IdleNoSearch : EnemyState
     public override void Enter()
     {
         base.Enter();
+
         enemy.IsSearchPlayer = false;
+        enemy.IsVelocityZero = true;
     }
 
     public override void MainFunc()
     {
+        base.MainFunc();
+
         if (enemy.IsDamaged)
         {
             enemy.IsDamaged = false;
@@ -34,6 +38,8 @@ public class General_IdleNoSearch : EnemyState
 
     public override void Exit()
     {
+        base.Exit();
+
         enemy.IsSearchPlayer = true;
     }
 }

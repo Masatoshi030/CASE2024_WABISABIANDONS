@@ -7,13 +7,13 @@ public class EnemyC_Rolling : EnemyState_C
 {
     Rigidbody rb;
 
-    [SerializeField, Header("速度")]
+    [SerializeField, Header("速度"), ReadOnly]
     float rollSpeed;
-    [SerializeField, Header("方向")]
+    [SerializeField, Header("方向"), ReadOnly]
     Vector3 direction;
     [SerializeField, Header("回転するボディ")]
     GameObject rollingBody;
-    [SerializeField, Header("回転軸"), VectorRange(-1.0f, 1.0f), ReadOnly]
+    [SerializeField, Header("回転軸"), ReadOnly, VectorRange(-1.0f, 1.0f)]
     Vector3 rollAxis;
     float angle;
 
@@ -29,23 +29,30 @@ public class EnemyC_Rolling : EnemyState_C
     public override void Initialize()
     {
         base.Initialize();
+
         rb = enemy.transform.GetComponent<Rigidbody>();
         rollingBody = enemy.transform.Find("Body").gameObject;
     }
 
     public override void Enter()
     {
+        base.Enter();
+
         rollSpeed = enemyC.DamageValue;
         direction = enemyC.DamageVector;
+        direction.y = 0.0f;
         direction.Normalize();
 
         Vector3 u = (Mathf.Abs(direction.z) < 0.0001f) ? Vector3.forward : Vector3.up;
         rollAxis = Vector3.Cross(direction, u);
         rollAxis.Normalize();
+        enemy.IsVelocityZero = false;
     }
 
     public override void MainFunc()
     {
+        base.MainFunc();
+
         angle -= rollSpeed;
         angle %= -360.0f;
         enemyC.gameObject.transform.Translate(direction * rollSpeed * Time.deltaTime);
@@ -65,6 +72,7 @@ public class EnemyC_Rolling : EnemyState_C
             // 反射ベクトルの計算
             Vector3 point = collision.contacts[0].point;
             Vector3 localdirection = point - enemy.transform.position;
+            enemy.EnemyRigidbody.velocity = Vector3.zero;
 
             Ray ray = new Ray(enemy.transform.position, localdirection);
             Vector3 normal = Vector3.zero;
@@ -93,23 +101,28 @@ public class EnemyC_Rolling : EnemyState_C
                 {
                     case EnemyC.PressureState.Empty: enemyC.CState = EnemyC.PressureState.Medium; break;
                     case EnemyC.PressureState.Medium: enemyC.CState = EnemyC.PressureState.Full; break;
-                    case EnemyC.PressureState.Full: 
+                    case EnemyC.PressureState.Full:
                         // 最大の場合
-                        for(int i = 0; i < implicateObjects.Count;i++)
+                        foreach(GameObject obj in implicateObjects)
                         {
-                            if (implicateObjects[i].GetComponent<Enemy>() != null)
+                            if (obj.GetComponent<Enemy>() != null)
                             {
-                                Vector3 velocity = implicateObjects[i].transform.position - enemy.transform.position;
+                                Vector3 velocity = obj.transform.position - enemy.transform.position;
                                 velocity.Normalize();
                                 velocity.y = 5.0f;
-                                Enemy enem = implicateObjects[i].GetComponent<Enemy>();
+                                Enemy enem = obj.GetComponent<Enemy>();
                                 enem.GetComponent<NavMeshAgent>().enabled = false;
                                 enem.EnemyRigidbody.AddForce(velocity * rollSpeed * 2.0f, ForceMode.Impulse);
+                                if(enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>())
+                                {
+                                    EnemyC_IntervalDeath deathState = enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>();
+                                    enem.Machine.TransitionTo(deathState.StateID);
+                                }
                             }
-                            positions.Remove(implicateObjects[i]);
-                            angles.Remove(implicateObjects[i]);
-                            implicateObjects.RemoveAt(i);
                         }
+                        positions.Clear();
+                        angles.Clear();
+                        implicateObjects.Clear();
                         machine.TransitionTo(collisionID);
                         break;
                 }
@@ -125,18 +138,64 @@ public class EnemyC_Rolling : EnemyState_C
         // 敵にぶつかった場合巻き込む
         if(collision.transform.tag == "Enemy")
         {
+            enemy.EnemyRigidbody.velocity = Vector3.zero;
+            // オブジェクトが未登録
             if (!implicateObjects.Contains(collision.gameObject))
             {
-                // 衝突オブジェクトリストに追加
-                implicateObjects.Add(collision.gameObject);
-                // 衝突時のベクトルの差分を求める
-                Vector3 sub = collision.transform.position - enemyC.transform.position;
-                // 差分を辞書に登録
-                positions.Add(collision.gameObject, sub);
-                // 衝突時の回転角度を保存しておく
-                angles.Add(collision.gameObject, angle);
-
                 Enemy enem = collision.gameObject.GetComponent<Enemy>();
+                // ステートの取得が成功
+                if(enem.Machine.StateObject.GetComponent<EnemyC_Caught>())
+                {
+                    EnemyC_Caught caughtState = enem.Machine.StateObject.GetComponent<EnemyC_Caught>();
+                    caughtState.Caught = true;
+                    enem.Machine.TransitionTo(caughtState.StateID);
+                    enem.EnemyCollider.enabled = false;
+                    // 衝突オブジェクトリストに追加
+                    implicateObjects.Add(collision.gameObject);
+                    // 衝突時のベクトルの差分を求める
+                    Vector3 sub = collision.transform.position - enemyC.transform.position;
+                    // 差分を辞書に登録
+                    positions.Add(collision.gameObject, sub);
+                    // 衝突時の回転角度を保存しておく
+                    angles.Add(collision.gameObject, angle);
+                }
+            }
+            else
+            {
+                Debug.Log("登録済み");
+            }
+        }
+    }
+
+    public override void TriggerEnterSelf(Collider other)
+    {
+        // 敵にぶつかった場合巻き込む
+        if (other.transform.tag == "Enemy")
+        {
+            // オブジェクトが未登録
+            if (!implicateObjects.Contains(other.gameObject))
+            {
+                Enemy enem = other.gameObject.GetComponent<Enemy>();
+                // ステートの取得が成功
+                if (enem.Machine.StateObject.GetComponent<EnemyC_Caught>())
+                {
+                    EnemyC_Caught caughtState = enem.Machine.StateObject.GetComponent<EnemyC_Caught>();
+                    caughtState.Caught = true;
+                    enem.Machine.TransitionTo(caughtState.StateID);
+                    enem.EnemyCollider.enabled = false;
+                    // 衝突オブジェクトリストに追加
+                    implicateObjects.Add(other.gameObject);
+                    // 衝突時のベクトルの差分を求める
+                    Vector3 sub = other.transform.position - enemyC.transform.position;
+                    // 差分を辞書に登録
+                    positions.Add(other.gameObject, sub);
+                    // 衝突時の回転角度を保存しておく
+                    angles.Add(other.gameObject, angle);
+                }
+            }
+            else
+            {
+                Debug.Log("登録済み");
             }
         }
     }

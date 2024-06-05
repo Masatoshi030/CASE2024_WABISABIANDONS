@@ -19,11 +19,13 @@ public class General_Idle : EnemyState
     public override void Enter()
     {
         base.Enter();
-        enemy.EnemyRigidbody.velocity = Vector3.zero;
+        enemy.IsVelocityZero = true;
     }
 
     public override void MainFunc()
     {
+        base.MainFunc();
+
         if(enemy.IsFindPlayer)
         {
             machine.TransitionTo(searchSuccessID);
@@ -41,7 +43,7 @@ public class General_Idle : EnemyState
 
     public override void Exit()
     {
-        
+        base.Exit();
     }
 
     public override void CollisionEnterSelf(Collision collision)

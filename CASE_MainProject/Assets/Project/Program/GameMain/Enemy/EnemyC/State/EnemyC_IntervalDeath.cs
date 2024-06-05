@@ -9,16 +9,18 @@ public class EnemyC_IntervalDeath : EnemyState
     public float waitInterval;
     public override void Initialize()
     {
-        StateName = "Ž€–S‘Ò‹@";
+        base.Initialize();
     }
 
     public override void Enter()
     {
-        
+        base.Enter();
     }
 
     public override void MainFunc()
     {
+        base.MainFunc();
+
         if(machine.Cnt >= waitInterval)
         {
             Destroy(enemy.gameObject);

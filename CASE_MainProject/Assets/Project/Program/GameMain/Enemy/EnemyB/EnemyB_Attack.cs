@@ -23,23 +23,24 @@ public class EnemyB_Attack : EnemyState
 
     public override void Initialize()
     {
-        
+        base.Initialize();
     }
 
     public override void Enter()
     {
         base.Enter();
+
         enemy.EnemyRigidbody.velocity = Vector3.zero;
     }
 
     public override void MainFunc()
     {
-        
+        base.MainFunc();
     }
 
     public override void Exit()
     {
-
+        base.Exit();
     }
 
     public override void CollisionEnterOpponent(Collision collision)

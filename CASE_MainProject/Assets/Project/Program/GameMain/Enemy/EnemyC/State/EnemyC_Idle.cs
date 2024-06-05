@@ -14,6 +14,8 @@ public class EnemyC_Idle : EnemyState_C
 
     public override void MainFunc()
     {
+        base.MainFunc();
+
         if(enemy.IsDamaged)
         {
             machine.TransitionTo(damagedID);

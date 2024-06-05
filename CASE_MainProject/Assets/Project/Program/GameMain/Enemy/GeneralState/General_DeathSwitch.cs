@@ -12,13 +12,16 @@ public class General_DeathSwitch : EnemyState
 
     public override void Initialize()
     {
+        base.Initialize();
+
         switchObject = enemy.GetComponent<Switch>();
     }
     public override void Enter()
     {
+        base.Enter();
+
         switchObject.SendMsg<bool>(0, provideValue);
         enemy.EnemyRigidbody.velocity = Vector3.zero;
-        base.Enter();
         Destroy(enemy.gameObject);
         Destroy(gameObject);
     }

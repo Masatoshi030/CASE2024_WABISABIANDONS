@@ -52,7 +52,6 @@ public class EnemyC : Enemy
         // シンプルにポジションの差を計算
         Transform tra = PlayerController.instance.transform;
         Vector3 dir = transform.position - tra.position;
-        dir.y = 0.0f;
         damageVector = dir;
 
         //// 衝突点の検知

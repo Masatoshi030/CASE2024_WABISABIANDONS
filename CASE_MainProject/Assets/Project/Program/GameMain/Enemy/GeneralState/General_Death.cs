@@ -6,8 +6,8 @@ public class General_Death : EnemyState
 {
     public override void Enter()
     {
-        enemy.EnemyRigidbody.velocity = Vector3.zero;
         base.Enter();
+        enemy.EnemyRigidbody.velocity = Vector3.zero;
         Destroy(enemy.gameObject);
         Destroy(gameObject);
     }

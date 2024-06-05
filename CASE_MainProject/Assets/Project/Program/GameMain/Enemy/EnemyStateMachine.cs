@@ -17,6 +17,8 @@ public class EnemyStateMachine : StateMachine
      */
     public override void Initialize()
     {
+        controller = gameObject;
+
         int num = 0;
         // 状態、状態名、辞書を作成
         for (int i = 0; i < stateObject.GetComponentCount(); i++)
@@ -30,9 +32,9 @@ public class EnemyStateMachine : StateMachine
             }
         }
         // 初期ステートを設定
-        currentState = stateDatas[initStateID];
+        currentState = stateDatas[IDDatas[initStateID]];
         currentState.state.Enter();
-        enemy.StateName = stateDatas[0].name;
+        enemy.StateName = stateDatas[IDDatas[initStateID]].name;
     }
 
     public override bool TransitionTo(int key)

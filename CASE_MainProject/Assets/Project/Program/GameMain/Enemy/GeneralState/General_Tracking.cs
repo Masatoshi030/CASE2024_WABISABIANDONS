@@ -27,12 +27,18 @@ public class General_Tracking : EnemyState
 
     public override void Initialize()
     {
+        base.Initialize();
+
         patrol = enemy.GetComponent<NavMeshPatrol>();
     }
 
     public override void Enter()
     {
         base.Enter();
+
+        enemy.IsVelocityZero = true;
+        patrol.enabled = true;
+        patrol.Agent.velocity = Vector3.zero;
         patrol.SetAgentParam(moveSpeed, acceleration, angularSpeed);
         Vector3 Direction = Enemy.Target.transform.position - enemy.gameObject.transform.position;
         Direction.Normalize();
@@ -42,6 +48,9 @@ public class General_Tracking : EnemyState
 
     public override void MainFunc()
     {
+        base.MainFunc();
+        if (!machine.IsUpdate) return;
+
         if (machine.Cnt >= trackingInterval)
         {
             machine.TransitionTo(failedID);
@@ -60,6 +69,8 @@ public class General_Tracking : EnemyState
 
     public override void Exit()
     {
+        base.Exit();
+
         patrol.Stop();
     }
 

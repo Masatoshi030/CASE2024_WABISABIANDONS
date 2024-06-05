@@ -32,6 +32,8 @@ public class General_MoveInterval : EnemyState
 
     public override void Initialize()
     {
+        base.Initialize();
+
         patrol = enemy.GetComponent<NavMeshPatrol>();
         targetNum = patrol.GetTargets().Length;
         targetIdx = 0;
@@ -40,15 +42,21 @@ public class General_MoveInterval : EnemyState
     public override void Enter()
     {
         base.Enter();
+
         // ˆÚ“®ˆ—
+        patrol.enabled = true;
+        patrol.Agent.velocity = Vector3.zero;
         patrol.SetAgentParam(moveSpeed, acceleration, angularSpeed);
         patrol.ExcutePatrol(targetIdx);
-        enemy.EnemyRigidbody.velocity = Vector3.zero;
+        enemy.IsVelocityZero = true;
     }
 
     public override void MainFunc()
     {
-        if(enemy.IsFindPlayer)
+        base.MainFunc();
+        if (!machine.IsUpdate) return;
+
+        if (enemy.IsFindPlayer)
         {
             machine.TransitionTo(serchSuccessID);
             return;
@@ -68,6 +76,8 @@ public class General_MoveInterval : EnemyState
 
     public override void Exit()
     {
+        base.Exit();
+
         patrol.Stop();
         targetIdx++;
         if (targetIdx >= targetNum)
