@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("移動加速度")]
     float runSpeed = 1.0f;
 
+    [SerializeField, Header("空中移動速度減衰")]
+    float runSpeed_AirAttenuation = 0.5f;
+
     [SerializeField, Header("蒸気最大移動加速度")]
     float runSpeed_Steam = 1.0f;
 
@@ -52,6 +55,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, Header("最大瞬間出力蒸気量")]
     float outMaxSteamValue = 0.5f;
+
+    [SerializeField, Header("自然加圧量")]
+    float naturalAddPressure = 10.0f;
 
     [SerializeField, Header("スチーム音　AudioSource")]
     AudioSource au_Steam;
@@ -171,8 +177,13 @@ public class PlayerController : MonoBehaviour
         OnJump();
 
         //=== 蒸気貯蔵 ===//
-        if (outSteamValue > 0.0f) { }
-        else heldSteam += 10.0f * Time.deltaTime;
+        if (outSteamValue > 0.0f)
+        {
+        }
+        else
+        {
+            heldSteam += naturalAddPressure * Time.deltaTime;
+        }
 
         //=== 蒸気出力量 ===//
 
@@ -240,6 +251,12 @@ public class PlayerController : MonoBehaviour
 
         // 移動量計算　　移動入力 × 線形補間（通常スピードと蒸気スピードの間を蒸気出力量で補間）
         Vector2 runValue = runInput * Mathf.Lerp(runSpeed, runSpeed_Steam, outSteamValue);
+
+        //空中にいると移動速度を減衰する
+        if(myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.Off)
+        {
+            runValue *= runSpeed_AirAttenuation;
+        }
 
         //フレーム制御
         runValue *= Time.deltaTime;
