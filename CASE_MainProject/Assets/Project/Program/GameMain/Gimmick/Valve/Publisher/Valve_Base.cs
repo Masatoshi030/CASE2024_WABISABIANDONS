@@ -16,8 +16,8 @@ public class Valve_Base : Publisher
     static GameObject player;
     void Start()
     {
-        SendMsg<Valve_Type>(typeNunber, type);
         player = GameObject.Find("Player");
+        SendMsg<Valve_Type>(typeNunber, type);
     }
 
     void Update()
