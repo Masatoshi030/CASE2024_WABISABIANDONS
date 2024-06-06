@@ -9,11 +9,19 @@ public class EnemyState : State
     public Enemy EnemyObject { get => enemy; set => enemy = value; }
     [SerializeField, Header("アニメーションをするか")]
     bool isAnimation = true;
-    [SerializeField, Header("アニメーション速度")]
-    protected float animSpeed = 1.0f;
     [SerializeField, Header("開始時アニメーション")]
     protected string enterAnimation;
-    
+    [SerializeField, Header("アニメーション速度")]
+    protected float animSpeed = 1.0f;
+    [SerializeField, Header("使用蒸気量")]
+    protected float pressureAmount;
+    [SerializeField, Header("-圧力一定以下の遷移ID-")]
+    protected int pressureZeroID = 1;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+    }
 
     /*
      * <summary>
@@ -25,11 +33,30 @@ public class EnemyState : State
      */
     public override void Enter()
     {
+        base.Enter();
         // アニメーションの速度と指定したアニメーションの開始
         if(isAnimation)
         {
+            enemy.EnemyAnimator.enabled = true;
             enemy.EnemyAnimator.speed = animSpeed;
             enemy.EnemyAnimator.Play(enterAnimation);
+        }
+        else
+        {
+            enemy.EnemyAnimator.enabled = false;
+        }
+    }
+
+    public override void MainFunc()
+    {
+        base.MainFunc();
+        if (!machine.IsUpdate) return;
+
+        enemy.CalcPressure(-pressureAmount * Time.deltaTime);
+        if(enemy.Pressre <= 0.0)
+        {
+            machine.TransitionTo(pressureZeroID);
+            machine.IsUpdate = false;
         }
     }
 }

@@ -16,6 +16,10 @@ public class State : MonoBehaviour
     string stateName;
     public string StateName { get => stateName; set => stateName = value; }
 
+    [SerializeField, Header("ó‘ÔID")]
+    int stateID;
+    public int StateID { get => stateID; }
+
     public virtual void Initialize()
     {
         // ‰Šú‰»ˆ—

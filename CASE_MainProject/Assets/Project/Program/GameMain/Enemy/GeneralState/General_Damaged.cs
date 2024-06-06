@@ -10,18 +10,18 @@ public class General_Damaged : EnemyState
 
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("Œo‰ßŒã‚Ì‘JˆÚ")]
-    string elapsedTransition = "‘Ò‹@";
+    int elapsedID;
     [SerializeField, Header("”í’e‚Ì‘JˆÚ")]
-    string damagedTransition = "”í’e";
+    int damagedID;
     [SerializeField, Header("HP‚ª0‚Ì‘JˆÚ")]
-    string noHitPointTransition = "€–S";
+    int noHitPointID;
 
     public override void Enter()
     {
         base.Enter();
         if(enemy.Hp <= 0)
         {
-            machine.TransitionTo(noHitPointTransition);
+            machine.TransitionTo(noHitPointID);
             bUpdate = false;
         }
         enemy.IsInvincible = true;
@@ -29,12 +29,15 @@ public class General_Damaged : EnemyState
 
     public override void MainFunc()
     {
-        if(bUpdate) if (machine.Cnt >= stiffnessTime) machine.TransitionTo(elapsedTransition);
+        base.MainFunc();
+        if (!machine.IsUpdate) return;
+
+        if (bUpdate) if (machine.Cnt >= stiffnessTime) machine.TransitionTo(elapsedID);
     }
 
     public override void Exit()
     {
-        
+        base.Exit();
     }
 
     public override void CollisionEnterOpponent(Collision collision)
@@ -42,7 +45,7 @@ public class General_Damaged : EnemyState
         if (collision.transform.root.name == "Player")
         {
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
-                machine.TransitionTo(damagedTransition);
+                machine.TransitionTo(damagedID);
         }
     }
 
@@ -51,7 +54,7 @@ public class General_Damaged : EnemyState
         if (other.transform.root.name == "Player")
         {
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
-                machine.TransitionTo(damagedTransition);
+                machine.TransitionTo(damagedID);
         }
     }
 }

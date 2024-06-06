@@ -8,32 +8,38 @@ public class General_IdleNoSearch : EnemyState
     float waitInterval;
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("ŽžŠÔŒo‰ßŒã‚Ì‘JˆÚ")]
-    public string elapsedTransition = "ˆÚ“®";
+    public int elapsedID;
     [SerializeField, Header("”í’eŽž‚Ì‘JˆÚ")]
-    public string damagedTransition = "”í’e";
+    public int damagedID;
 
     public override void Enter()
     {
         base.Enter();
+
         enemy.IsSearchPlayer = false;
+        enemy.IsVelocityZero = true;
     }
 
     public override void MainFunc()
     {
+        base.MainFunc();
+
         if (enemy.IsDamaged)
         {
             enemy.IsDamaged = false;
-            machine.TransitionTo(damagedTransition);
+            machine.TransitionTo(damagedID);
             return;
         }
         else if (machine.Cnt >= waitInterval)
         {
-            machine.TransitionTo(elapsedTransition);
+            machine.TransitionTo(elapsedID);
         }
     }
 
     public override void Exit()
     {
+        base.Exit();
+
         enemy.IsSearchPlayer = true;
     }
 }

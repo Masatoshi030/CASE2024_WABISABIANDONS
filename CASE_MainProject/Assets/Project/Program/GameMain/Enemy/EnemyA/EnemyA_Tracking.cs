@@ -5,48 +5,86 @@ using UnityEngine.AI;
 
 public class EnemyA_Tracking : EnemyState
 {
-    [SerializeField, Header("NavMeshAgent")]
-    NavMeshAgent agent;
-    [SerializeField, Header("RigidBody")]
-    Rigidbody rb;
+    [SerializeField, Header("ƒpƒgƒ[ƒ‹"), ReadOnly]
+    NavMeshPatrol patrol;
+    [SerializeField, Header("ˆÚ“®‘¬“x")]
+    float moveSpeed;
+    [SerializeField, Header("‰Á‘¬“x")]
+    float acceleration;
+    [SerializeField, Header("‰ñ“]‘¬“x")]
+    float angularSpeed;
+    [SerializeField, Header("’ÇÕŠÔ")]
+    float trackingInterval;
+    [SerializeField, Header("ˆÚ“®‹——£")]
+    float moveDistance;
+    [SerializeField, Header("UŒ‚—Í")]
+    float attackPower = 5.0f;
 
-    [SerializeField, Header("—\”õ“®ì‹——£")]
-    float prepareDistance = 2.0f;
-    [SerializeField, Header("ƒWƒƒƒ“ƒv—Í")]
-    float jumpPower = 15.0f;
-    [SerializeField, Header("‘O•ûƒWƒƒƒ“ƒv—Í")]
-    float forwardJumpPower = 5.0f;
-    Transform eyeTransform;
 
+    [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
+    [SerializeField, Header("’ÇÕ¸”s‚Ì‘JˆÚ")]
+    public int failedID;
+    [SerializeField, Header("”í’e‚Ì‘JˆÚ")]
+    public int damagedID;
+    [SerializeField, Header("Õ“Ë‚Ì‘JˆÚ")]
+    public int collisionID;
 
     public override void Initialize()
     {
-        agent = enemy.GetComponent<NavMeshAgent>();
-        rb = enemy.GetComponent<Rigidbody>();
-        eyeTransform = enemy.EyeTransform;
+        base.Initialize();
+
+        patrol = enemy.GetComponent<NavMeshPatrol>();
     }
+
+    public override void Enter()
+    {
+        base.Enter();
+
+        enemy.IsVelocityZero = true;
+        patrol.enabled = true;
+        patrol.Agent.velocity = Vector3.zero;
+        patrol.SetAgentParam(moveSpeed, acceleration, angularSpeed);
+        Vector3 Direction = Enemy.Target.transform.position - enemy.gameObject.transform.position;
+        Direction.Normalize();
+        Direction *= moveDistance;
+        patrol.ExcuteCustom(enemy.gameObject.transform.position + Direction);
+    }
+
     public override void MainFunc()
     {
-        agent.SetDestination(Enemy.Target.transform.position);
-        // ³–Ê‚ÉƒŒƒC‚ğ”ò‚Î‚µ‚Ä•Ç‚ÉÕ“Ë‚µ‚»‚¤‚©æ“¾‚·‚é
-        RaycastHit[] hits = Physics.RaycastAll(eyeTransform.position, eyeTransform.forward, prepareDistance);
-        for (int i = 0; i < hits.Length; i++)
+        base.MainFunc();
+        if (!machine.IsUpdate) return;
+
+        if (machine.Cnt >= trackingInterval)
         {
-            if (hits[i].transform.tag == "Ground")
-            {
-                Debug.Log("Õ“Ë");
-                Vector3 normal = hits[i].normal;
-                float Dot = Vector3.Dot(eyeTransform.forward, normal);
-                Debug.Log(Dot);
-                if(Dot < -0.3f)
-                {
-                    agent.enabled = false;
-                    Vector3 forceUp = enemy.transform.up * jumpPower;
-                    Vector3 forceForward = enemy.transform.forward * forwardJumpPower;
-                    rb.velocity = forceForward;
-                    rb.AddForce(forceUp, ForceMode.Impulse);
-                }
-            }
+            machine.TransitionTo(failedID);
+        }
+        else if (enemy.IsDamaged)
+        {
+            enemy.IsDamaged = false;
+            machine.TransitionTo(damagedID);
+        }
+        Vector3 Direction = Enemy.Target.transform.position - enemy.gameObject.transform.position;
+        Direction.Normalize();
+        Direction *= moveDistance;
+        patrol.ExcuteCustom(enemy.gameObject.transform.position + Direction);
+    }
+
+    public override void CollisionEnterSelf(Collision collision)
+    {
+        if (collision.transform.name == "Player" && !enemy.IsDamaged)
+        {
+            PlayerController.instance.Damage(attackPower);
+            machine.TransitionTo(collisionID);
+        }
+    }
+
+    public override void TriggerEnterSelf(Collider other)
+    {
+        if (other.transform.name == "Player" && !enemy.IsDamaged)
+        {
+            PlayerController.instance.Damage(attackPower);
+            machine.TransitionTo(collisionID);
         }
     }
 }

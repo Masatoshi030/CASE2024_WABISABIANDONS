@@ -21,6 +21,7 @@ public class NavMeshPatrol : MonoBehaviour
     Vector3 customedPosition;
 
     NavMeshAgent agent;
+    public NavMeshAgent Agent { get => agent; }
 
     private void Awake()
     {

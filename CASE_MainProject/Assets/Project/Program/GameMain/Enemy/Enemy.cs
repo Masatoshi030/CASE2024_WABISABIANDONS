@@ -64,6 +64,11 @@ public class Enemy : Subscriber
     protected bool isInvincible = false;
     public bool IsInvincible { set => isInvincible = value; }
 
+    protected bool isVelocityZero = false;
+
+    public bool IsVelocityZero { get => IsVelocityZero; set => isVelocityZero = value; }
+
+
     [SerializeField, Header("RigidBody")]
     Rigidbody rb;
     public Rigidbody EnemyRigidbody { get => rb; }
@@ -71,6 +76,10 @@ public class Enemy : Subscriber
     [SerializeField, Header("アニメーター")]
     protected Animator animator;
     public Animator EnemyAnimator { get => animator; }
+
+    [SerializeField, Header("コライダー")]
+    protected Collider enemyCollider;
+    public Collider EnemyCollider { get => enemyCollider; }
 
     protected void Awake()
     {
@@ -95,6 +104,10 @@ public class Enemy : Subscriber
 
     protected void Update()
     {
+        if(isVelocityZero)
+        {
+            rb.velocity = Vector3.zero;
+        }
         // 無敵をなくす
         isInvincible = false;
         if (isSearchPlayer)
@@ -198,5 +211,12 @@ public class Enemy : Subscriber
             }
         }
         return false;
+    }
+
+    public void CalcPressure(float value)
+    {
+        enemyPressure += value;
+        if (enemyPressure > maxPressure) enemyPressure = maxPressure;
+        else if (enemyPressure < 0.0f) enemyPressure = 0.0f;
     }
 }

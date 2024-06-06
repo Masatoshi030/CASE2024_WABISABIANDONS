@@ -13,33 +13,34 @@ public class EnemyB_Attack : EnemyState
 
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("’ÇÕ¸”s‚Ì‘JˆÚ")]
-    public string failedTransition = "‘Ò‹@";
+    public int failedID;
     [SerializeField, Header("‹——£ˆê’èˆÈ“à‚Ì‘JˆÚ")]
-    public string successfulTransition = "UŒ‚";
+    public int successfuID;
     [SerializeField, Header("”í’e‚Ì‘JˆÚ")]
-    public string damagedTransition = "”í’e";
+    public int damagedID;
     [SerializeField, Header("Õ“Ë‚Ì‘JˆÚ")]
-    public string collisionTransition = "‘Ò‹@";
+    public int collisionID;
 
     public override void Initialize()
     {
-        
+        base.Initialize();
     }
 
     public override void Enter()
     {
         base.Enter();
+
         enemy.EnemyRigidbody.velocity = Vector3.zero;
     }
 
     public override void MainFunc()
     {
-        
+        base.MainFunc();
     }
 
     public override void Exit()
     {
-
+        base.Exit();
     }
 
     public override void CollisionEnterOpponent(Collision collision)
@@ -47,9 +48,9 @@ public class EnemyB_Attack : EnemyState
         if (collision.transform.root.name == "Player")
         {
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
-                machine.TransitionTo(damagedTransition);
+                machine.TransitionTo(damagedID);
             else
-                machine.TransitionTo(collisionTransition);
+                machine.TransitionTo(collisionID);
         }
     }
 
@@ -58,9 +59,9 @@ public class EnemyB_Attack : EnemyState
         if (other.transform.root.name == "Player")
         {
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
-                machine.TransitionTo(damagedTransition);
+                machine.TransitionTo(damagedID);
             else
-                machine.TransitionTo(collisionTransition);
+                machine.TransitionTo(collisionID);
         }
     }
 }

@@ -3,7 +3,12 @@ guid: ac9f6abba3993fd4eadfb66d4bca8d8b
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert1
+    second: {fileID: 2100000, guid: 7190d0d742020e841b158e449d0d4d44, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -57,8 +62,86 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events: []
-      transformMask: []
-      maskType: 3
+      transformMask:
+      - path: 
+        weight: 1
+      - path: SM_Enemy_A_body
+        weight: 1
+      - path: SM_Enemy_A_body/SM_Enemy_A_body_a
+        weight: 1
+      - path: SM_Enemy_A_body/SM_Enemy_A_body_b
+        weight: 1
+      - path: SM_Enemy_A_body/SM_Enemy_A_body_c
+        weight: 1
+      - path: SM_Enemy_A_body/SM_Enemy_A_body_d
+        weight: 1
+      - path: SM_Enemy_A_Eye
+        weight: 1
+      - path: SM_Enemy_A_Eye/SM_Enemy_A_Eye_a
+        weight: 1
+      - path: SM_Enemy_A_Eye/SM_Enemy_A_Eye_b
+        weight: 1
+      - path: SM_Enemy_A_Gear
+        weight: 1
+      - path: SM_Enemy_A_Gear/SM_Enemy_A_Gear_a
+        weight: 1
+      - path: SM_Enemy_A_Gear/SM_Enemy_A_Gear_b
+        weight: 1
+      - path: SM_Enemy_A_Gear/SM_Enemy_A_Gear_c
+        weight: 1
+      - path: SM_Enemy_A_Gear/SM_Enemy_A_Gear_d
+        weight: 1
+      - path: SM_Enemy_A_Leg
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg1
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg1/SM_Enemy_A_Leg1_a
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg1/SM_Enemy_A_Leg1_a/SM_Enemy_A_Leg1_b
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg1/SM_Enemy_A_Leg1_a/SM_Enemy_A_Leg1_b/SM_Enemy_A_Leg1_c
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg1/SM_Enemy_A_Leg1_a/SM_Enemy_A_Leg1_b/SM_Enemy_A_Leg1_c/SM_Enemy_A_Leg1_d
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg1/SM_Enemy_A_Leg1_a/SM_Enemy_A_Leg1_b/SM_Enemy_A_Leg1_c/SM_Enemy_A_Leg1_d/SM_Enemy_A_Leg1_e
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg2
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg2/SM_Enemy_A_Leg2_a
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg2/SM_Enemy_A_Leg2_a/SM_Enemy_A_Leg2_b
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg2/SM_Enemy_A_Leg2_a/SM_Enemy_A_Leg2_b/SM_Enemy_A_Leg2_c
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg2/SM_Enemy_A_Leg2_a/SM_Enemy_A_Leg2_b/SM_Enemy_A_Leg2_c/SM_Enemy_A_Leg2_d
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg2/SM_Enemy_A_Leg2_a/SM_Enemy_A_Leg2_b/SM_Enemy_A_Leg2_c/SM_Enemy_A_Leg2_d/SM_Enemy_A_Leg2_e
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg3
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg3/SM_Enemy_A_Leg3_a
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg3/SM_Enemy_A_Leg3_a/SM_Enemy_A_Leg3_b
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg3/SM_Enemy_A_Leg3_a/SM_Enemy_A_Leg3_b/SM_Enemy_A_Leg3_c
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg3/SM_Enemy_A_Leg3_a/SM_Enemy_A_Leg3_b/SM_Enemy_A_Leg3_c/SM_Enemy_A_Leg3_d
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg3/SM_Enemy_A_Leg3_a/SM_Enemy_A_Leg3_b/SM_Enemy_A_Leg3_c/SM_Enemy_A_Leg3_d/SM_Enemy_A_Leg3_e
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg4
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg4/SM_Enemy_A_Leg4_a
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg4/SM_Enemy_A_Leg4_a/SM_Enemy_A_Leg4_b
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg4/SM_Enemy_A_Leg4_a/SM_Enemy_A_Leg4_b/SM_Enemy_A_Leg4_c
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg4/SM_Enemy_A_Leg4_a/SM_Enemy_A_Leg4_b/SM_Enemy_A_Leg4_c/SM_Enemy_A_Leg4_d
+        weight: 1
+      - path: SM_Enemy_A_Leg/SM_Enemy_A_Leg4/SM_Enemy_A_Leg4_a/SM_Enemy_A_Leg4_b/SM_Enemy_A_Leg4_c/SM_Enemy_A_Leg4_d/SM_Enemy_A_Leg4_e
+        weight: 1
+      maskType: 0
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     isReadable: 0

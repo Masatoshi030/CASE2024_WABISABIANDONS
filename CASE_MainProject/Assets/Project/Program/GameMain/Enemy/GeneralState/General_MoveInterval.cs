@@ -15,13 +15,13 @@ public class General_MoveInterval : EnemyState
 
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("Œo‰ßŒã‚Ì‘JˆÚæ")]
-    string elapsedTransition = "‘Ò‹@";
+    public int elapsedID;
     [SerializeField, Header("õ“G¬Œ÷‚Ì‘JˆÚæ")]
-    string serchSuccessTransition = "’ÇÕ";
+    public int serchSuccessID;
     [SerializeField, Header("”í’e‚Ì‘JˆÚ")]
-    string damagedTransition = "”í’e";
+    public int damagedID;
     [SerializeField, Header("Õ“Ë‚Ì‘JˆÚ")]
-    string collisionTransition = "’ÇÕ";
+    public int collisionID;
 
     [SerializeField, Header("ƒpƒgƒ[ƒ‹"), ReadOnly]
     NavMeshPatrol patrol;
@@ -32,6 +32,8 @@ public class General_MoveInterval : EnemyState
 
     public override void Initialize()
     {
+        base.Initialize();
+
         patrol = enemy.GetComponent<NavMeshPatrol>();
         targetNum = patrol.GetTargets().Length;
         targetIdx = 0;
@@ -40,34 +42,42 @@ public class General_MoveInterval : EnemyState
     public override void Enter()
     {
         base.Enter();
+
         // ˆÚ“®ˆ—
+        patrol.enabled = true;
+        patrol.Agent.velocity = Vector3.zero;
         patrol.SetAgentParam(moveSpeed, acceleration, angularSpeed);
         patrol.ExcutePatrol(targetIdx);
-        enemy.EnemyRigidbody.velocity = Vector3.zero;
+        enemy.IsVelocityZero = true;
     }
 
     public override void MainFunc()
     {
-        if(enemy.IsFindPlayer)
+        base.MainFunc();
+        if (!machine.IsUpdate) return;
+
+        if (enemy.IsFindPlayer)
         {
-            machine.TransitionTo(serchSuccessTransition);
+            machine.TransitionTo(serchSuccessID);
             return;
         }
         else if(enemy.IsDamaged)
         {
             enemy.IsDamaged = false;
-            machine.TransitionTo(damagedTransition);
+            machine.TransitionTo(damagedID);
             return;
         }
         else if(machine.Cnt >= moveInterval)
         {
             patrol.Stop();
-            machine.TransitionTo(elapsedTransition);
+            machine.TransitionTo(elapsedID);
         }
     }
 
     public override void Exit()
     {
+        base.Exit();
+
         patrol.Stop();
         targetIdx++;
         if (targetIdx >= targetNum)

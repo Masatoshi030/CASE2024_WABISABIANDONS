@@ -19,20 +19,26 @@ public class General_Tracking : EnemyState
 
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("’ÇÕ¸”s‚Ì‘JˆÚ")]
-    public string failedTransition = "‘Ò‹@";
+    public int failedID;
     [SerializeField, Header("”í’e‚Ì‘JˆÚ")]
-    public string damagedTransition = "”í’e";
+    public int damagedID;
     [SerializeField, Header("Õ“Ë‚Ì‘JˆÚ")]
-    public string collisionTransition = "UŒ‚";
+    public int collisionID;
 
     public override void Initialize()
     {
+        base.Initialize();
+
         patrol = enemy.GetComponent<NavMeshPatrol>();
     }
 
     public override void Enter()
     {
         base.Enter();
+
+        enemy.IsVelocityZero = true;
+        patrol.enabled = true;
+        patrol.Agent.velocity = Vector3.zero;
         patrol.SetAgentParam(moveSpeed, acceleration, angularSpeed);
         Vector3 Direction = Enemy.Target.transform.position - enemy.gameObject.transform.position;
         Direction.Normalize();
@@ -42,14 +48,17 @@ public class General_Tracking : EnemyState
 
     public override void MainFunc()
     {
+        base.MainFunc();
+        if (!machine.IsUpdate) return;
+
         if (machine.Cnt >= trackingInterval)
         {
-            machine.TransitionTo(failedTransition);
+            machine.TransitionTo(failedID);
         }
         else if(enemy.IsDamaged)
         {
             enemy.IsDamaged = false;
-            machine.TransitionTo(damagedTransition);
+            machine.TransitionTo(damagedID);
         }
         Vector3 Direction = Enemy.Target.transform.position - enemy.gameObject.transform.position;
         Direction.Normalize();
@@ -60,6 +69,8 @@ public class General_Tracking : EnemyState
 
     public override void Exit()
     {
+        base.Exit();
+
         patrol.Stop();
     }
 
@@ -67,22 +78,14 @@ public class General_Tracking : EnemyState
     {
         if (collision.transform.name == "Player" && !enemy.IsDamaged)
         {
-            Vector3 direction = collision.transform.position - transform.position;
-            direction.Normalize();
-            direction.y = 0.5f;
-            PlayerController.instance.KnockBack(moveSpeed, direction);
-            machine.TransitionTo(collisionTransition);
+            machine.TransitionTo(collisionID);
         }
     }
     public override void TriggerEnterSelf(Collider other)
     {
-        if (other.name == "Player" && !enemy.IsDamaged)
+        if (other.transform.name == "Player" && !enemy.IsDamaged)
         {
-            Vector3 direction = other.transform.position - transform.position;
-            direction.Normalize();
-            direction.y = 0.5f;
-            PlayerController.instance.KnockBack(moveSpeed, direction);
-            machine.TransitionTo(collisionTransition);
+            machine.TransitionTo(collisionID);
         }
     }
 }
