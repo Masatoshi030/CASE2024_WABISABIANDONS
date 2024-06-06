@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8781556206902867021}
   - component: {fileID: 7250105989748436508}
   - component: {fileID: 3305854286359750936}
-  - component: {fileID: 6475742772680864596}
+  - component: {fileID: 2925885811700457763}
   - component: {fileID: 5602090942638879873}
   - component: {fileID: 5851730404853867565}
   - component: {fileID: 2174348458091901279}
@@ -137,7 +137,7 @@ MonoBehaviour:
   patrol: {fileID: 0}
   targetNum: 0
   targetIdx: 0
---- !u!114 &6475742772680864596
+--- !u!114 &2925885811700457763
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2688158642366154541}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 234e239417acb8a4e83f62a45337f500, type: 3}
+  m_Script: {fileID: 11500000, guid: c1e8f75cfb6fc6141a161947f640b2bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   stateName: "\u8FFD\u8DE1"
@@ -160,11 +160,12 @@ MonoBehaviour:
   moveSpeed: 4
   acceleration: 4
   angularSpeed: 360
-  trackingInterval: 5
-  moveDistance: 10
+  trackingInterval: 6
+  moveDistance: 5
+  attackPower: 6
   failedID: 6
-  damagedID: 5
-  collisionID: 6
+  damagedID: 0
+  collisionID: 0
 --- !u!114 &5602090942638879873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,7 +278,7 @@ Transform:
   m_GameObject: {fileID: 6125822798962081333}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 30.68, y: 0.26, z: -8.44}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -16,7 +16,7 @@ public class EnemyState : State
     [SerializeField, Header("g—pö‹C—Ê")]
     protected float pressureAmount;
     [SerializeField, Header("-ˆ³—Íˆê’èˆÈ‰º‚Ì‘JˆÚID-")]
-    protected int pressureZeroID = -1;
+    protected int pressureZeroID = 1;
 
     public override void Initialize()
     {

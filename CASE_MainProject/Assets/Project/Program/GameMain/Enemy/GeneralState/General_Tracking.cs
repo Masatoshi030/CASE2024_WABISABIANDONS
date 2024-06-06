@@ -78,21 +78,13 @@ public class General_Tracking : EnemyState
     {
         if (collision.transform.name == "Player" && !enemy.IsDamaged)
         {
-            Vector3 direction = collision.transform.position - transform.position;
-            direction.Normalize();
-            direction.y = 0.5f;
-            PlayerController.instance.KnockBack(moveSpeed, direction);
             machine.TransitionTo(collisionID);
         }
     }
     public override void TriggerEnterSelf(Collider other)
     {
-        if (other.name == "Player" && !enemy.IsDamaged)
+        if (other.transform.name == "Player" && !enemy.IsDamaged)
         {
-            Vector3 direction = other.transform.position - transform.position;
-            direction.Normalize();
-            direction.y = 0.5f;
-            PlayerController.instance.KnockBack(moveSpeed, direction);
             machine.TransitionTo(collisionID);
         }
     }
