@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -81,6 +82,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, Header("突進上方向修正")]
     float attackUpCorrectionPower = 1.0f;
+
+    //突撃ターゲット座標
+    Vector3 AttackTargetPosition;
 
     [SerializeField, Header("キャラクターアニメーション")]
     Animator characterAnimation;
@@ -355,7 +359,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnValveJump(float _jumpPower)
+    public void OnValveJump(float _jumpPower, Vector3 _forceVec)
     {
         //速度ゼロ
         myRigidbody.velocity = Vector3.zero;
@@ -364,7 +368,7 @@ public class PlayerController : MonoBehaviour
         StopAttack();
 
         //初速をつける
-        myRigidbody.velocity += Vector3.up * _jumpPower;
+        myRigidbody.velocity += _forceVec * _jumpPower;
         Debug.Log("ばるぶ！");
     }
 
@@ -387,7 +391,7 @@ public class PlayerController : MonoBehaviour
 
         if(other.tag == "Valve")
         {
-            OnValveJump(20.0f);
+            OnValveJump(20.0f, new Vector3(1,0,1));
         }
     }
 
@@ -406,27 +410,11 @@ public class PlayerController : MonoBehaviour
         if (attackState == ATTACK_STATE.Attack)
         {
 
-            //スクリーンの中心（カーソルを合わせたオブジェクト）に向かうベクトルを計算する
-
-            //カメラの前方ベクトルを初期値とする　※もしターゲットが検出されなくても前方に飛べるようにする。
-            Vector3 targetPosition = mainPlayerCamera_Obj.transform.forward;
-
-            Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-            RaycastHit hit;
-
-            int LayerMask = ~(1 << playerLayerMask);
-
-            // Rayが何かに当たったかどうかを確認
-            if (Physics.Raycast(ray, out hit, 1000.0f, LayerMask))
-            {
-                targetPosition = hit.point;
-            }
-
             //突撃速度　計算したターゲットへのベクトルを正規化し、速度を乗算する
-            transform.position += (targetPosition - transform.position).normalized * (attackSpeed * gaugeAttackValue) * Time.deltaTime;
+            transform.position += (AttackTargetPosition - transform.position).normalized * (attackSpeed * gaugeAttackValue) * Time.deltaTime;
 
             //頭を飛んでいくほうに向ける
-            attackShaft.transform.LookAt(targetPosition);      //前方ベクトルを向ける
+            attackShaft.transform.LookAt(AttackTargetPosition);      //前方ベクトルを向ける
             attackShaft.transform.Rotate(90.0f, 0.0f, 0.0f);
         }
 
@@ -466,6 +454,9 @@ public class PlayerController : MonoBehaviour
                 //全ての方向の力を０にする
                 myRigidbody.velocity = Vector3.zero;
 
+                //重力を無効にする
+                myRigidbody.useGravity = false;
+
                 //スロー
                 Time.timeScale = 0.1f;
             }
@@ -485,6 +476,26 @@ public class PlayerController : MonoBehaviour
                     attackGauge.SetValue(0.0f);
                     attackGauge.gameObject.SetActive(false);
 
+
+                    //スクリーンの中心（カーソルを合わせたオブジェクト）に向かうベクトルを計算する
+
+                    //カメラの前方ベクトルを初期値とする　※もしターゲットが検出されなくても前方に飛べるようにする。
+                    AttackTargetPosition = mainPlayerCamera_Obj.transform.forward;
+
+                    Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+                    RaycastHit hit;
+
+                    int LayerMask = ~(1 << playerLayerMask);
+
+                    // Rayが何かに当たったかどうかを確認
+                    if (Physics.Raycast(ray, out hit, 1000.0f, LayerMask))
+                    {
+                        AttackTargetPosition = hit.point;
+                    }
+
+
+
+
                     //スロー終了
                     Time.timeScale = 1.0f;
                 }
@@ -501,6 +512,9 @@ public class PlayerController : MonoBehaviour
         attackShaft.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
         //突撃ポストエフェクト無効
         volumeAnimation.SetBool("bAttack", false);
+
+        //重力を無効にする
+        myRigidbody.useGravity = true;
     }
 
     public void KnockBack()
