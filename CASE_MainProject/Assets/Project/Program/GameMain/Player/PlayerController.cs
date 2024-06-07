@@ -86,6 +86,21 @@ public class PlayerController : MonoBehaviour
     //突撃ターゲット座標
     Vector3 AttackTargetPosition;
 
+    [SerializeField, Header("バルブぶっ飛び時間")]
+    float valveFlyTime = 1.0f;
+
+    [SerializeField, Header("バルブぶっ飛びタイマー")]
+    float valveFlyTimer = 0.0f;
+
+    //バルブでぶっ飛んでいくベクトル
+    Vector3 valveFlyVector = Vector3.zero;
+
+    public enum VALVE_FLY_STATE
+    { Idle, Fly };
+    [SerializeField, Header("バルブぶっ飛び状態（ステート）"), Toolbar(typeof(VALVE_FLY_STATE), "ValveFlyState")]
+    public VALVE_FLY_STATE valveFlyState = VALVE_FLY_STATE.Idle;
+
+
     [SerializeField, Header("キャラクターアニメーション")]
     Animator characterAnimation;
 
@@ -291,6 +306,10 @@ public class PlayerController : MonoBehaviour
                 Quaternion.LookRotation(new Vector3(runInput.x, 0.0f, runInput.y)),
                 rotationLerpSpeed * Time.deltaTime);
         }
+
+
+        //=== バルブぶっ飛び ===//
+        OnValveJump();
     }
 
     /// <summary>
@@ -359,19 +378,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnValveJump(float _jumpPower, Vector3 _forceVec)
-    {
-        //速度ゼロ
-        myRigidbody.velocity = Vector3.zero;
-
-        //突撃終了
-        StopAttack();
-
-        //初速をつける
-        myRigidbody.velocity += _forceVec * _jumpPower;
-        Debug.Log("ばるぶ！");
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Enemy")
@@ -389,9 +395,42 @@ public class PlayerController : MonoBehaviour
             other.GetComponent<GoldValveController>().GetGoldValve();
         }
 
-        if(other.tag == "Valve")
+        if (other.tag == "ValveSteam")
         {
-            OnValveJump(20.0f, new Vector3(1,0,1));
+            SetValveJump(other.transform.up * 35.0f);
+        }
+    }
+
+    public void SetValveJump(Vector3 _forceVec)
+    {
+        //速度ゼロ
+        myRigidbody.velocity = Vector3.zero;
+
+        //突撃終了
+        StopAttack();
+
+        valveFlyState = VALVE_FLY_STATE.Fly;
+
+        valveFlyVector = _forceVec;
+
+        Debug.Log("ばるぶ！");
+    }
+
+    void OnValveJump()
+    {
+        if (valveFlyState == VALVE_FLY_STATE.Fly)
+        {
+            valveFlyTimer += Time.deltaTime;
+
+            transform.position += valveFlyVector * Time.deltaTime;
+
+            if(myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.On)
+            {
+                valveFlyState = VALVE_FLY_STATE.Idle;
+                valveFlyTimer = 0.0f;
+
+                myRigidbody.velocity = Vector3.zero;
+            }
         }
     }
 
@@ -536,7 +575,7 @@ public class PlayerController : MonoBehaviour
         //ノックバックアニメーション終了
         characterAnimation.SetTrigger("tHit");
 
-        //Debug.Log("Knock");
+        Debug.Log("Knock");
 
         //突撃方向の反対ベクトルの斜め上にノックバックする
         myRigidbody.velocity = direction * power;

@@ -32,7 +32,7 @@ public class HeadCollision_Manager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Wall" || other.tag == "Ground" || other.tag == "Enemy" || other.tag == "Dummy" || other.tag == "Gimmick")
+        if (other.tag == "Wall" || other.tag == "Ground" || other.tag == "Enemy" || other.tag == "Dummy" || other.tag == "Valve")
         {
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
             {
