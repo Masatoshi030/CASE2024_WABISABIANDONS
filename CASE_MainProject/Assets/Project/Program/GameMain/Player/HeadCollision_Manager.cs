@@ -46,7 +46,7 @@ public class HeadCollision_Manager : MonoBehaviour
                     bool isDeath = enemy.Damage(20.0f, transform.up);
 
                     // エネミーのトリガーを呼び出し
-                    enemy.Machine.TriggerEnterOpponent(transform.root.gameObject);
+                    enemy.Machine.TriggerEnterOpponent(other);
 
                     //衝突金属音
                     audioSource.PlayOneShot(soundClips[0]);

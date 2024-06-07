@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Obj_move : MonoBehaviour
 {
+    [SerializeField, Header("ぶっ飛び速度")]
+    float Force;
+
 
     static GameObject player;  //プレイヤー
     static Rigidbody rb;  //プレイヤーのRigidbody
