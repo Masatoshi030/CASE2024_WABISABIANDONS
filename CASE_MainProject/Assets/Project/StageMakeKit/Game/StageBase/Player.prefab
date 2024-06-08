@@ -927,6 +927,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runSpeed: 250
+  runSpeed_AirAttenuation: 0.6
   runSpeed_Steam: 800
   rotationLerpSpeed: 10
   horizontalRotationShaft: {fileID: 1664696895489853387}
@@ -936,15 +937,19 @@ MonoBehaviour:
   jumpMaxTime: 1
   jumpState: 0
   myGroundJudgeController: {fileID: 4071649843644959769}
-  heldSteam: 5000
-  maxHeldSteam: 5000
+  heldSteam: 50
+  maxHeldSteam: 100
   outSteamValue: 0
   outMaxSteamValue: 0.1
+  naturalAddPressure: 10
   au_Steam: {fileID: 4174861317411024326}
   runInput: {x: 0, y: 0}
   attackState: 0
-  attackSpeed: 30
+  attackSpeed: 100
   attackUpCorrectionPower: 0.0001
+  valveFlyTime: 1
+  valveFlyTimer: 0
+  valveFlyState: 0
   characterAnimation: {fileID: 5388342415154553277}
   mainPlayerCamera_Obj: {fileID: 0}
   moveVelocity: {x: 0, y: 0, z: 0}

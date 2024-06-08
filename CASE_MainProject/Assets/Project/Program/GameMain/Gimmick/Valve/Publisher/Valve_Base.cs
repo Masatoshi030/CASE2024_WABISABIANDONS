@@ -25,9 +25,9 @@ public class Valve_Base : Publisher
 
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void SetCommand()
     {
-        if (collision.gameObject == player)
+        if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
         {
             SendMsg<bool>(moveNunber, true);
             Debug.Log("çÏìÆ");

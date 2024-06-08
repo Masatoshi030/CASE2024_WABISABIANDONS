@@ -27,6 +27,12 @@ public class Steam_Scale : Subscriber
     [SerializeField, Header("動作時間")]
     float steam_Limit;
 
+    [SerializeField, Header("バルブの開閉アニメーション")]
+    Animator valveOpenCloseAnimator;
+
+    [SerializeField, Header("蒸気エフェクト")]
+    ParticleSystem steamEffect;
+
     private float nothing_Steam = 0;  //スチームが出てない状態
 
     private bool move_Valve;  //作動したか？
@@ -42,12 +48,19 @@ public class Steam_Scale : Subscriber
                 change_localScale = transform.localScale;
                 change_localScale.y = nothing_Steam;
                 Debug.Log("0に設定");
+
+                valveOpenCloseAnimator.SetBool("bOpen", false);
+                steamEffect.Stop();
+
                 break;
 
             case Valve_Base.Valve_Type.close:
                 change_localScale = transform.localScale;
                 change_localScale.y = steam_Scale; //スチームが出ている状態
                 Debug.Log("最大値の設定");
+
+                valveOpenCloseAnimator.SetBool("bOpen", true);
+                steamEffect.Play();
                 break;
         }
 
@@ -131,6 +144,17 @@ public class Steam_Scale : Subscriber
                     {
                         state = State.RunningToStart;
                         limit = 0;
+
+                        if (type == Valve_Base.Valve_Type.open)
+                        {
+                            valveOpenCloseAnimator.SetBool("bOpen", false);
+                            steamEffect.Stop();
+                        }
+                        else if (type == Valve_Base.Valve_Type.close)
+                        {
+                            valveOpenCloseAnimator.SetBool("bOpen", true);
+                            steamEffect.Play();
+                        }
                     }
                 }
                 break;
@@ -153,6 +177,17 @@ public class Steam_Scale : Subscriber
                 {
                     move_Valve = GetValue<T, bool>(value);
                     Debug.Log("動作確認");
+
+                    if(type == Valve_Base.Valve_Type.open)
+                    {
+                        valveOpenCloseAnimator.SetBool("bOpen", true);
+                        steamEffect.Play();
+                    }
+                    else if(type == Valve_Base.Valve_Type.close)
+                    {
+                        valveOpenCloseAnimator.SetBool("bOpen", false);
+                        steamEffect.Stop();
+                    }
                 }
                 break;
         }

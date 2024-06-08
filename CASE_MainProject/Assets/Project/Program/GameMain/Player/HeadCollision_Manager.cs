@@ -86,10 +86,9 @@ public class HeadCollision_Manager : MonoBehaviour
                     }
                 }
                 // ギミック衝突時の処理
-                if(other.transform.tag == "Gimmick")
+                if(other.transform.tag == "Valve")
                 {
-                    //ノックバック
-                    PlayerController.instance.KnockBack();
+                    other.GetComponent<Valve_Base>().SetCommand();
                 }
                 //突撃終了
                 PlayerController.instance.StopAttack();
