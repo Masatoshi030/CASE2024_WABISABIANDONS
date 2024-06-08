@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class EnemyC_Idle : EnemyState_C
 {
+    [SerializeField, Header("‘Ò‹@ŽžŠÔ")]
+    float waitInterval;
+
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
+    [SerializeField, Header("ŽžŠÔŒo‰ßŒã‚Ì‘JˆÚID")]
+    int elapsedID;
     [SerializeField, Header("”í’eŽž‚Ì‘JˆÚ")]
     int damagedID;
+
     public override void Enter()
     {
         base.Enter();
@@ -16,9 +22,14 @@ public class EnemyC_Idle : EnemyState_C
     {
         base.MainFunc();
 
-        if(enemy.IsDamaged)
+        if (enemy.IsDamaged)
         {
             machine.TransitionTo(damagedID);
+            return;
+        }
+        else if(machine.Cnt >= waitInterval)
+        {
+            machine.TransitionTo(elapsedID);
         }
     }
 
