@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public class Steam_Scale : Subscriber
 {
-    enum State
+    public enum State
     {
         WaitStart, RunningToEnd, End, RunningToStart,
     }
 
     [SerializeField, Header("状態"), Toolbar(typeof(State))]
-    State state = State.WaitStart;
+    public State state = State.WaitStart;
 
     [SerializeField, Header("噴射速度")]
     float steam_Speed;
@@ -50,7 +51,7 @@ public class Steam_Scale : Subscriber
                 Debug.Log("0に設定");
 
                 valveOpenCloseAnimator.SetBool("bOpen", false);
-                steamEffect.Stop();
+                SetActiveSteam(1.0f, false);
 
                 break;
 
@@ -60,7 +61,7 @@ public class Steam_Scale : Subscriber
                 Debug.Log("最大値の設定");
 
                 valveOpenCloseAnimator.SetBool("bOpen", true);
-                steamEffect.Play();
+                SetActiveSteam(1.0f, true);
                 break;
         }
 
@@ -148,17 +149,18 @@ public class Steam_Scale : Subscriber
                         if (type == Valve_Base.Valve_Type.open)
                         {
                             valveOpenCloseAnimator.SetBool("bOpen", false);
-                            steamEffect.Stop();
+                            SetActiveSteam(1.0f, false);
                         }
                         else if (type == Valve_Base.Valve_Type.close)
                         {
                             valveOpenCloseAnimator.SetBool("bOpen", true);
-                            steamEffect.Play();
+                            SetActiveSteam(1.0f, true);
                         }
                     }
                 }
                 break;
         }
+
     }
     
     public override void ReceiveMsg<T>(Connection observer, int MsgType, T value)
@@ -181,12 +183,12 @@ public class Steam_Scale : Subscriber
                     if(type == Valve_Base.Valve_Type.open)
                     {
                         valveOpenCloseAnimator.SetBool("bOpen", true);
-                        steamEffect.Play();
+                        SetActiveSteam(1.0f, true);
                     }
                     else if(type == Valve_Base.Valve_Type.close)
                     {
                         valveOpenCloseAnimator.SetBool("bOpen", false);
-                        steamEffect.Stop();
+                        SetActiveSteam(1.0f, false);
                     }
                 }
                 break;
@@ -225,4 +227,19 @@ public class Steam_Scale : Subscriber
         transform.localScale = change_localScale;
     }
 
+    public async void SetActiveSteam(float _time, bool _active)
+    {
+        // ヒットストップの長さだけ待機
+        await Task.Delay((int)(_time * 1000));
+
+        //スチームをセット
+        if (_active)
+        {
+            steamEffect.Play();
+        }
+        else
+        {
+            steamEffect.Stop();
+        }
+    }
 }
