@@ -18,7 +18,6 @@ public class General_Heal : EnemyState
     public override void Enter()
     {
         base.Enter();
-
         machine.IsUpdate = true;
         enemy.CalcPressure(healAmount * Time.deltaTime);
     }
@@ -26,7 +25,6 @@ public class General_Heal : EnemyState
     public override void MainFunc()
     {
         base.MainFunc();
-
         enemy.CalcPressure(healAmount * Time.deltaTime);
 
         if(enemy.Pressre >= transitionAmount)

@@ -50,6 +50,9 @@ public class Enemy : Subscriber
     // プレイヤーとの2乗距離
     public float ToPlayerDistace { get => toPlayerDistance; }
 
+    protected float toPlayerAngle = 0.0f;
+    public float ToPlayerAngle { get => toPlayerAngle; }
+
     [SerializeField, Header("攻撃可能か"), ReadOnly]
     protected bool isAttackEnable = false;
     public bool IsAttackEnable { get => isAttackEnable; set => isAttackEnable = value; }
@@ -112,12 +115,16 @@ public class Enemy : Subscriber
         isInvincible = false;
         if (isSearchPlayer)
         {
-            (bool find, float dis) = FindPlayerAtFOV();
+            (bool find, float dis, float degree) = FindPlayerAtFOV();
             isFindPlayer = find;
             toPlayerDistance = dis;
+            toPlayerAngle = degree;
         }
-        // ステートマシンのメイン処理を呼ぶ
-        enemyStateMachine.MainFunc();
+        // ステートマシンのメイン処理
+        if (enemyStateMachine.IsUpdate)
+        {
+            enemyStateMachine.MainFunc();
+        }
     }
 
     protected virtual void OnTriggerEnter(Collider other)
@@ -157,20 +164,20 @@ public class Enemy : Subscriber
      * <returns>
      * bool isFind, float distance^2
      */
-    public (bool isFind, float distance) FindPlayerAtFOV()
+    public (bool isFind, float distance, float angle) FindPlayerAtFOV()
     {
         // 距離を測る
         Vector3 Diff = target.transform.position - eyeTransform.position;
         float distance = Diff.x * Diff.x + Diff.y * Diff.y + Diff.z * Diff.z;
 
+        // 外積でy軸から正面の左右どちらにあるか求める
+        Vector3 axis = Vector3.Cross(eyeTransform.forward, Diff);
+
+        // 角度が+なら正面より右にいる-なら左にいる
+        float angle = Vector3.Angle(eyeTransform.forward, Diff) * (axis.y < 0 ? -1.0f : 1.0f);
+
         if (distance < viewDistance * viewDistance)
         {
-            // 外積でy軸から正面の左右どちらにあるか求める
-            Vector3 axis = Vector3.Cross(eyeTransform.forward, Diff);
-
-            // 角度が+なら正面より右にいる-なら左にいる
-            float angle = Vector3.Angle(eyeTransform.forward, Diff) * (axis.y < 0 ? -1.0f : 1.0f);
-
             // 視野角内か判定
             if (Mathf.Abs(angle) < viewAngle / 2)
             {
@@ -181,12 +188,12 @@ public class Enemy : Subscriber
                 {
                     if(hits[0].transform.root.name == "Player")
                     {
-                        return (true, distance);
+                        return (true, distance, angle);
                     }
                 }
             }
         }
-        return (false, distance);
+        return (false, distance, angle);
     }
 
     /*

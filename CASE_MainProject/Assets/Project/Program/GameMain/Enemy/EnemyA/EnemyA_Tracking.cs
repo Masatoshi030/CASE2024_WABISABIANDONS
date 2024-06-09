@@ -42,6 +42,7 @@ public class EnemyA_Tracking : EnemyState
 
         enemy.IsVelocityZero = true;
         patrol.enabled = true;
+        patrol.Agent.enabled = true;
         patrol.Agent.velocity = Vector3.zero;
         patrol.SetAgentParam(moveSpeed, acceleration, angularSpeed);
         Vector3 Direction = Enemy.Target.transform.position - enemy.gameObject.transform.position;
@@ -53,7 +54,7 @@ public class EnemyA_Tracking : EnemyState
     public override void MainFunc()
     {
         base.MainFunc();
-        if (!machine.IsUpdate) return;
+        if (!continueProcessing) return;
 
         if (machine.Cnt >= trackingInterval)
         {
@@ -63,11 +64,20 @@ public class EnemyA_Tracking : EnemyState
         {
             enemy.IsDamaged = false;
             machine.TransitionTo(damagedID);
+            return;
         }
         Vector3 Direction = Enemy.Target.transform.position - enemy.gameObject.transform.position;
         Direction.Normalize();
         Direction *= moveDistance;
         patrol.ExcuteCustom(enemy.gameObject.transform.position + Direction);
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+
+        patrol.Stop();
+        patrol.Agent.enabled = false;
     }
 
     public override void CollisionEnterSelf(Collision collision)

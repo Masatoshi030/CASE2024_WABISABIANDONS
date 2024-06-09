@@ -22,7 +22,6 @@ public class EnemyB_Move : EnemyState
     int targetIndex;
     bool bReturn = false;
     Vector3 moveStartPosition;
-    GameObject rollBody;
 
     [Space(pad), Header("‘JˆÚæƒŠƒXƒg")]
     [SerializeField, Header("õ“G¬Œ÷‚Ì‘JˆÚ")]
@@ -35,7 +34,6 @@ public class EnemyB_Move : EnemyState
     public override void Initialize()
     {
         base.Initialize();
-        rollBody = enemy.transform.Find("Body").gameObject;
         for(int i = 0; i < targetParent.transform.childCount;i++)
         {
             targets.Add(targetParent.transform.GetChild(i).gameObject);
@@ -67,7 +65,7 @@ public class EnemyB_Move : EnemyState
         float value = machine.Cnt;
         value = value/moveTime > moveTime ? 1.0f : value/moveTime;
         enemy.transform.position = Vector3.Lerp(moveStartPosition, targets[targetIndex].transform.position, value);
-        rollBody.transform.Rotate(Vector3.up, angleSpeed * Time.deltaTime);
+        enemy.transform.Rotate(Vector3.up, angleSpeed * Time.deltaTime);
         subCnt += Time.deltaTime;
         if (subCnt >= angleChangeDuration)
         {

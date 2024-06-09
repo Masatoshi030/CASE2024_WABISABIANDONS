@@ -62,6 +62,8 @@ public class NavMeshPatrol : MonoBehaviour
 
     void CustomFunc()
     {
+        if (!agent.enabled) return;
+
         if (agent.remainingDistance <= agent.stoppingDistance &&!agent.pathPending)
         {
             Stop();
@@ -112,7 +114,10 @@ public class NavMeshPatrol : MonoBehaviour
     public bool ExcuteCustom(Vector3 target)
     {
         state = PatrolState.Custom;
-        return agent.SetDestination(target);
+        if (agent.enabled)
+            return agent.SetDestination(target);
+        else
+            return false;
     }
 
     /*

@@ -42,6 +42,5 @@ public class EnemyC_Caught : EnemyState
         base.Exit();
 
         bCaught = false;
-        enemy.EnemyRigidbody.velocity = Vector3.zero;
     }
 }
