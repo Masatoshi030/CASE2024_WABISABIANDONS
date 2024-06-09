@@ -17,7 +17,10 @@ public class MoveGrouond : MonoBehaviour
     Steam_Scale mySteam_Scale;
 
     [SerializeField, ReadOnly]
-    Vector3 groundStartPoint;
+    Vector3 groundStartPosition;
+
+    [SerializeField, ReadOnly]
+    Quaternion groundStartQuaternion;
 
     [SerializeField, ReadOnly]
     float moveTimer = 0.0f;
@@ -31,7 +34,8 @@ public class MoveGrouond : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        groundStartPoint = moveGround.transform.position;
+        groundStartPosition = moveGround.transform.position;
+        groundStartQuaternion = moveGround.transform.localRotation;
     }
 
     // Update is called once per frame
@@ -55,6 +59,10 @@ public class MoveGrouond : MonoBehaviour
             }
         }
 
-        moveGround.transform.position = Vector3.Lerp(groundStartPoint, endPoint.transform.position, moveTimer / moveTime);
+        //ç¿ïWÇÃê¸å`ï‚ä‘
+        moveGround.transform.position = Vector3.Lerp(groundStartPosition, endPoint.transform.position, moveTimer / moveTime);
+
+        //âÒì]ÇÃê¸å`ï‚ä‘
+        moveGround.transform.localRotation = Quaternion.Lerp(groundStartQuaternion, endPoint.transform.localRotation, moveTimer / moveTime);
     }
 }
