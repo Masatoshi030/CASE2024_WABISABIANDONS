@@ -5,17 +5,19 @@ using UnityEngine;
 public class EnemyB_Attack : EnemyState
 {
     [SerializeField, Header("UŒ‚ŠÔŠu")]
-    float attackDuration = 3.0f;
+    float attackInterval = 3.0f;
     [SerializeField, Header("UŒ‚Žž‚Ì¶¬ƒIƒuƒWƒFƒNƒg")]
     GameObject attackObject;
     [SerializeField, Header("UŒ‚ƒIƒuƒWƒFƒNƒg‚Ì‘¬“x")]
     float attackPower;
+    [SerializeField, Header("‰ñ“]‘¬“x")]
+    float rotationSpeed = 0.8f;
 
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
-    [SerializeField, Header("’ÇÕŽ¸”sŽž‚Ì‘JˆÚ")]
+    [SerializeField, Header("Ž‹–ì“à‚Ì‘JˆÚID")]
+    public int successID;
+    [SerializeField, Header("Ž‹–ìŠO‚Ì‘JˆÚID")]
     public int failedID;
-    [SerializeField, Header("‹——£ˆê’èˆÈ“à‚Ì‘JˆÚ")]
-    public int successfuID;
     [SerializeField, Header("”í’eŽž‚Ì‘JˆÚ")]
     public int damagedID;
     [SerializeField, Header("Õ“ËŽž‚Ì‘JˆÚ")]
@@ -36,6 +38,29 @@ public class EnemyB_Attack : EnemyState
     public override void MainFunc()
     {
         base.MainFunc();
+
+        float angleY = enemy.transform.rotation.y;
+        float angle = Mathf.Lerp(0.0f, enemy.ToPlayerAngle, rotationSpeed);
+
+        enemy.transform.Rotate(0.0f, angle * Time.deltaTime, 0.0f);
+
+        if(enemy.IsDamaged)
+        {
+            machine.TransitionTo(damagedID);
+            return;
+        }
+
+        if(machine.Cnt >= attackInterval)
+        {
+            if(enemy.IsFindPlayer)
+            {
+                machine.TransitionTo(successID);
+            }
+            else
+            {
+                machine.TransitionTo(failedID);
+            }
+        }
     }
 
     public override void Exit()
@@ -47,9 +72,7 @@ public class EnemyB_Attack : EnemyState
     {
         if (collision.transform.root.name == "Player")
         {
-            if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
-                machine.TransitionTo(damagedID);
-            else
+            if (PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack)
                 machine.TransitionTo(collisionID);
         }
     }
@@ -58,9 +81,7 @@ public class EnemyB_Attack : EnemyState
     {
         if (other.transform.root.name == "Player")
         {
-            if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
-                machine.TransitionTo(damagedID);
-            else
+            if (PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack)
                 machine.TransitionTo(collisionID);
         }
     }

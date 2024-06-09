@@ -44,6 +44,7 @@ public class General_MoveTarget : EnemyState
         base.Enter();
 
         // ˆÚ“®ˆ—
+        patrol.Agent.enabled = true;
         patrol.enabled = true;
         patrol.Agent.velocity = Vector3.zero;
         patrol.SetAgentParam(moveSpeed, acceleration, angularSpeed);
@@ -54,7 +55,7 @@ public class General_MoveTarget : EnemyState
     public override void MainFunc()
     {
         base.MainFunc();
-        if (!machine.IsUpdate) return;
+        if (!continueProcessing) return;
 
         if (enemy.IsFindPlayer)
         {
@@ -75,8 +76,8 @@ public class General_MoveTarget : EnemyState
     public override void Exit()
     {
         base.Exit();
-
         patrol.Stop();
+        patrol.Agent.enabled = false;
         targetIdx++;
         if (targetIdx >= targetNum)
         {

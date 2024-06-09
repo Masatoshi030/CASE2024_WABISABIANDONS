@@ -50,13 +50,12 @@ public class EnemyState : State
     public override void MainFunc()
     {
         base.MainFunc();
-        if (!machine.IsUpdate) return;
 
         enemy.CalcPressure(-pressureAmount * Time.deltaTime);
         if(enemy.Pressre <= 0.0)
         {
-            machine.TransitionTo(pressureZeroID);
             machine.IsUpdate = false;
+            machine.TransitionTo(pressureZeroID);
         }
     }
 }

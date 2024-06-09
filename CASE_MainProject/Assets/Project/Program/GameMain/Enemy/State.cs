@@ -6,6 +6,8 @@ public class State : MonoBehaviour
 {
     protected const float pad = 10.0f;
 
+    protected bool continueProcessing = true;
+
     GameObject controller;
     public GameObject Controller { get => controller; set => controller = value; }
     // ステートマシンコンポーネント
@@ -27,6 +29,7 @@ public class State : MonoBehaviour
 
     public virtual void Enter()
     {
+        continueProcessing = true;
         // 開始処理
     }
 
@@ -37,6 +40,7 @@ public class State : MonoBehaviour
 
     public virtual void Exit()
     {
+        continueProcessing = false;
         // 終了時処理
     }
 

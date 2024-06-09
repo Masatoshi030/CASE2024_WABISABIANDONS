@@ -18,6 +18,7 @@ public class General_Damaged : EnemyState
 
     public override void Enter()
     {
+        enemy.IsDamaged = false;
         base.Enter();
         if(enemy.Hp <= 0)
         {
@@ -30,9 +31,17 @@ public class General_Damaged : EnemyState
     public override void MainFunc()
     {
         base.MainFunc();
-        if (!machine.IsUpdate) return;
+        if(enemy.IsDamaged)
+        {
+            machine.TransitionTo(damagedID);
+            return;
+        }
 
-        if (bUpdate) if (machine.Cnt >= stiffnessTime) machine.TransitionTo(elapsedID);
+        if (machine.Cnt >= stiffnessTime)
+        {
+            machine.TransitionTo(elapsedID);
+            return;
+        }
     }
 
     public override void Exit()

@@ -45,6 +45,7 @@ public class StateMachine : MonoBehaviour
     float cnt;
     public float Cnt { get => cnt; }
 
+    [SerializeField, Header("XV‚Ì—L–³")]
     protected bool isUpdate = true;
     public bool IsUpdate { get => isUpdate; set => isUpdate = value; }
 
