@@ -37,11 +37,12 @@ public class EnemyC_Rolling : EnemyState_C
     public override void Enter()
     {
         base.Enter();
-
+        enemy.gameObject.GetComponent<NavMeshAgent>().enabled = false;
         rollSpeed = enemyC.DamageValue;
         direction = enemyC.DamageVector;
         direction.y = 0.0f;
         direction.Normalize();
+        enemy.transform.LookAt(enemy.transform.position + direction);
 
         Vector3 u = (Mathf.Abs(direction.z) < 0.0001f) ? Vector3.forward : Vector3.up;
         rollAxis = Vector3.Cross(direction, u);
@@ -56,7 +57,7 @@ public class EnemyC_Rolling : EnemyState_C
         angle -= rollSpeed;
         angle %= -360.0f;
         enemyC.gameObject.transform.Translate(direction * rollSpeed * Time.deltaTime);
-        rollingBody.transform.Rotate(rollAxis, -rollSpeed);
+        rollingBody.transform.Rotate(rollingBody.transform.forward * -1080 * Time.deltaTime);
 
         for(int i = 0; i <  implicateObjects.Count; i++)
         {　　
@@ -84,48 +85,43 @@ public class EnemyC_Rolling : EnemyState_C
                     normal = hits[i].normal;
                 }
             }
-            if(normal == Vector3.zero)
-            {
-                normal = collision.contacts[0].normal;
-            }
+            
+            normal = collision.contacts[0].normal;
+            
 
             Vector3 reflect = direction - 2 * normal * Vector3.Dot(direction, normal);
             reflect.y = 0.0f;
             reflect.Normalize();
-            // 衝突時の移動方向と衝突オブジェクトの法線の向きの内積を保存しておく
-            float dot = Vector3.Dot(direction, normal);
-            if (dot < 0)
+            
+            // 圧力の状態で変化
+            switch (enemyC.CState)
             {
-                // 圧力の状態で変化
-                switch (enemyC.CState)
-                {
-                    case EnemyC.PressureState.Empty: enemyC.CState = EnemyC.PressureState.Medium; break;
-                    case EnemyC.PressureState.Medium: enemyC.CState = EnemyC.PressureState.Full; break;
-                    case EnemyC.PressureState.Full:
-                        // 最大の場合
-                        foreach(GameObject obj in implicateObjects)
+                case EnemyC.PressureState.Empty: enemyC.CState = EnemyC.PressureState.Medium; break;
+                case EnemyC.PressureState.Medium: enemyC.CState = EnemyC.PressureState.Full; break;
+                case EnemyC.PressureState.Full:
+                    // 最大の場合
+                    foreach(GameObject obj in implicateObjects)
+                    {
+                        if (obj.GetComponent<Enemy>() != null)
                         {
-                            if (obj.GetComponent<Enemy>() != null)
+                            Vector3 velocity = obj.transform.position - enemy.transform.position;
+                            velocity.Normalize();
+                            velocity.y = 5.0f;
+                            Enemy enem = obj.GetComponent<Enemy>();
+                            enem.GetComponent<NavMeshAgent>().enabled = false;
+                            enem.EnemyRigidbody.AddForce(velocity * rollSpeed * 2.0f, ForceMode.Impulse);
+                            if(enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>())
                             {
-                                Vector3 velocity = obj.transform.position - enemy.transform.position;
-                                velocity.Normalize();
-                                velocity.y = 5.0f;
-                                Enemy enem = obj.GetComponent<Enemy>();
-                                enem.GetComponent<NavMeshAgent>().enabled = false;
-                                enem.EnemyRigidbody.AddForce(velocity * rollSpeed * 2.0f, ForceMode.Impulse);
-                                if(enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>())
-                                {
-                                    EnemyC_IntervalDeath deathState = enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>();
-                                    enem.Machine.TransitionTo(deathState.StateID);
-                                }
+                                EnemyC_IntervalDeath deathState = enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>();
+                                enem.Machine.TransitionTo(deathState.StateID);
                             }
                         }
-                        positions.Clear();
-                        angles.Clear();
-                        implicateObjects.Clear();
-                        machine.TransitionTo(collisionID);
-                        break;
-                }
+                    }
+                    positions.Clear();
+                    angles.Clear();
+                    implicateObjects.Clear();
+                    machine.TransitionTo(collisionID);
+                    break;
             }
             // 移動方向を反射ベクトルに変換
             direction = reflect;
