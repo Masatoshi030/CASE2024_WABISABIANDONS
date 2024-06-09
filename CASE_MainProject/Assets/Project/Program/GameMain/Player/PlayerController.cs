@@ -394,11 +394,6 @@ public class PlayerController : MonoBehaviour
             //Žæ“¾ƒtƒ‰ƒO
             other.GetComponent<GoldValveController>().GetGoldValve();
         }
-
-        //if (other.tag == "ValveSteam")
-        //{
-        //    SetValveJump(other.transform.up * 35.0f);
-        //}
     }
 
     public void SetValveJump(Vector3 _forceVec)

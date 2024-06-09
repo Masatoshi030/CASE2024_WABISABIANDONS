@@ -25,6 +25,9 @@ public class MoveGrouond : MonoBehaviour
     [SerializeField, ReadOnly]
     float moveTimer = 0.0f;
 
+    [SerializeField, Header("回転線形補間有効")]
+    bool bRotationLerp = false;
+
     private void Awake()
     {
         //デバッグ用終着地点を非表示に
@@ -62,7 +65,10 @@ public class MoveGrouond : MonoBehaviour
         //座標の線形補間
         moveGround.transform.position = Vector3.Lerp(groundStartPosition, endPoint.transform.position, moveTimer / moveTime);
 
-        //回転の線形補間
-        moveGround.transform.localRotation = Quaternion.Lerp(groundStartQuaternion, endPoint.transform.localRotation, moveTimer / moveTime);
+        if (bRotationLerp)
+        {
+            //回転の線形補間
+            moveGround.transform.localRotation = Quaternion.Lerp(groundStartQuaternion, endPoint.transform.localRotation, moveTimer / moveTime);
+        }
     }
 }

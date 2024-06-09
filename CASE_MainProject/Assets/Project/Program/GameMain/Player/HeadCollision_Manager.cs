@@ -32,38 +32,28 @@ public class HeadCollision_Manager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
+        if (other.tag == "Wall" || other.tag == "Ground" || other.tag == "Enemy" || other.tag == "Dummy" || other.tag == "Valve" || other.tag == "Goal" || other.tag == "BrokenWall")
         {
-            //敵に突撃した時の処理
-            if (other.tag == "Enemy")
+            if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
             {
-                Debug.Log("head");
-                Enemy enemy = other.GetComponent<Enemy>();
-
-                // 死亡フラグの判定
-                bool isDeath = enemy.Damage(20.0f, transform.up);
-
-                // エネミーのトリガーを呼び出し
-                enemy.Machine.TriggerEnterOpponent(other);
-
-                //衝突金属音
-                audioSource.PlayOneShot(soundClips[0]);
-
-                //ノックバック
-                PlayerController.instance.KnockBack();
-
-                //パーツ散開エフェクトを生成する
-                Instantiate(partsSplit_ParticleEffect, transform.position, Quaternion.identity);
-
-                //ヒットストップ
-                HitStopManager.instance.HitStopEffect(0.5f, 0.25f);
-
-                //小振動
-                DualSense_Manager.instance.SetRumble_Type1();
-
-                //倒したら
-                if (isDeath)
+                //敵に突撃した時の処理
+                if (other.tag == "Enemy")
                 {
+                    Debug.Log("head");
+                    Enemy enemy = other.GetComponent<Enemy>();
+
+                    // 死亡フラグの判定
+                    bool isDeath = enemy.Damage(20.0f, transform.up);
+
+                    // エネミーのトリガーを呼び出し
+                    enemy.Machine.TriggerEnterOpponent(other);
+
+                    //衝突金属音
+                    audioSource.PlayOneShot(soundClips[0]);
+
+                    //ノックバック
+                    PlayerController.instance.KnockBack();
+
                     //パーツ散開エフェクトを生成する
                     Instantiate(partsSplit_ParticleEffect, transform.position, Quaternion.identity);
 
@@ -72,58 +62,70 @@ public class HeadCollision_Manager : MonoBehaviour
 
                     //小振動
                     DualSense_Manager.instance.SetRumble_Type1();
+
+                    //倒したら
+                    if (isDeath)
+                    {
+                        //パーツ散開エフェクトを生成する
+                        Instantiate(partsSplit_ParticleEffect, transform.position, Quaternion.identity);
+
+                        //ヒットストップ
+                        HitStopManager.instance.HitStopEffect(0.5f, 0.25f);
+
+                        //小振動
+                        DualSense_Manager.instance.SetRumble_Type1();
+                    }
+                    //倒してない
+                    else
+                    {
+                        //ヒットストップ
+                        HitStopManager.instance.HitStopEffect(0.2f, 0.25f);
+
+                        //小振動
+                        DualSense_Manager.instance.SetLeftRumble(0.75f, 0.1f);
+                    }
                 }
-                //倒してない
-                else
+                // ギミック衝突時の処理
+                if (other.tag == "Valve")
                 {
-                    //ヒットストップ
-                    HitStopManager.instance.HitStopEffect(0.2f, 0.25f);
-
-                    //小振動
-                    DualSense_Manager.instance.SetLeftRumble(0.75f, 0.1f);
+                    other.GetComponent<Valve_Base>().SetCommand();
                 }
-            }
-            // ギミック衝突時の処理
-            if (other.tag == "Valve")
-            {
-                other.GetComponent<Valve_Base>().SetCommand();
-            }
 
-            if (other.tag == "BrokenWall")
-            {
-                if (PlayerController.instance.heldSteam / PlayerController.instance.maxHeldSteam > 0.9f)
+                if (other.tag == "BrokenWall")
                 {
-                    other.transform.parent.GetComponent<BrokenWallController>().SetBreak();
+                    if (PlayerController.instance.heldSteam / PlayerController.instance.maxHeldSteam > 0.9f)
+                    {
+                        other.transform.parent.GetComponent<BrokenWallController>().SetBreak();
 
-                    //ヒットストップ
-                    HitStopManager.instance.HitStopEffect(0.5f, 0.25f);
+                        //ヒットストップ
+                        HitStopManager.instance.HitStopEffect(0.5f, 0.25f);
 
-                    //小振動
-                    DualSense_Manager.instance.SetRumble_Type1();
+                        //小振動
+                        DualSense_Manager.instance.SetRumble_Type1();
+                    }
                 }
+
+                if (other.tag == "Goal")
+                {
+                    //ゴールのアニメーションを移行
+                    other.GetComponent<Animator>().SetBool("bGoal", true);
+
+                    //プレイヤーのゴール処理
+                    PlayerController.instance.OnGoal();
+                }
+
+                //突撃終了
+                PlayerController.instance.StopAttack();
+
+                //衝突音
+                audioSource.PlayOneShot(soundClips[1]);
+
+                //火花を生成する
+                Instantiate(hibana_ParticleEffect, transform.position, Quaternion.identity);
+
+                //小振動
+                DualSense_Manager.instance.SetLeftRumble(0.25f, 0.1f);
             }
-
-            //突撃終了
-            PlayerController.instance.StopAttack();
-
-            //衝突音
-            audioSource.PlayOneShot(soundClips[1]);
-
-            //火花を生成する
-            Instantiate(hibana_ParticleEffect, transform.position, Quaternion.identity);
-
-            //小振動
-            DualSense_Manager.instance.SetLeftRumble(0.25f, 0.1f);
-
-        }
-
-        if(other.tag == "Goal")
-        {
-            //ゴールのアニメーションを移行
-            other.GetComponent<Animator>().SetBool("bGoal", true);
-
-            //プレイヤーのゴール処理
-            PlayerController.instance.OnGoal();
         }
     }
 }
