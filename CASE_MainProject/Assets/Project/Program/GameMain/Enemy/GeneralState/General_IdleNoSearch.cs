@@ -42,4 +42,13 @@ public class General_IdleNoSearch : EnemyState
 
         enemy.IsSearchPlayer = true;
     }
+
+    public override void CollisionEnterSelf(Collision collision)
+    {
+        if(collision.transform.name == "Player" && !enemy.IsDamaged)
+        {
+            Debug.Log("Collision");
+            PlayerController.instance.Damage(5.0f);
+        }
+    }
 }

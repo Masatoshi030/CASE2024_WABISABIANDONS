@@ -26,6 +26,17 @@ public class GroundJudgeController : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Ground")
+        {
+            onGroundState = ON_GROUND_STATE.On;
+
+            //カーソルを接地判定
+            CursorController.instance.ChangeCursorState(CursorController.ON_CURSOR_STATE.Idle);
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "Ground")
