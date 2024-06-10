@@ -1065,6 +1065,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5249567584725752381, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: explosionSwitchObject
+      value: 
+      objectReference: {fileID: 5353650854146111151, guid: 323715d57e70aad45a66b37eb276f1ee,
+        type: 3}
     - target: {fileID: 5356101857455146502, guid: 924e2e14df82fd74388c58f934b12972,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1132,8 +1138,49 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6380851179128401316, guid: 924e2e14df82fd74388c58f934b12972,
         type: 3}
+      propertyPath: explosionPoint
+      value: 
+      objectReference: {fileID: 8283244815977112913, guid: 5572cf0773ce8154e9dab224a76c9ecb,
+        type: 3}
+    - target: {fileID: 6380851179128401316, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
       propertyPath: runSpeed_AirAttenuation
       value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6380851179128401316, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: explosionPoint_InstallationIntervalTime
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517305868436886935, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: SizeModule.separateAxes
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517305868436886935, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517305868436886935, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime1
+      value: 964
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517305868436886935, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[1].time
+      value: 0.15331572
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517305868436886935, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[0].value
+      value: 0.05405426
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517305868436886935, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[1].value
+      value: 0.6287369
       objectReference: {fileID: 0}
     - target: {fileID: 8879622227388247387, guid: 924e2e14df82fd74388c58f934b12972,
         type: 3}

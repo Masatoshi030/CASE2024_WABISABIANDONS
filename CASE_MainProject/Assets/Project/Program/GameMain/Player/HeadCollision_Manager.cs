@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class HeadCollision_Manager : MonoBehaviour
 {
-    [SerializeField,Header("オーディオソース参照先")]
+    [SerializeField, Header("オーディオソース参照先")]
     AudioSource audioSource;
 
     [SerializeField, Header("音声クリップリスト")]
@@ -17,11 +17,14 @@ public class HeadCollision_Manager : MonoBehaviour
     [SerializeField, Header("パーツ散開エフェクト")]
     GameObject partsSplit_ParticleEffect;
 
+    [SerializeField, Header("可燃ガス着火判定")]
+    GameObject explosionSwitchObject;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -112,6 +115,12 @@ public class HeadCollision_Manager : MonoBehaviour
 
                     //プレイヤーのゴール処理
                     PlayerController.instance.OnGoal();
+                }
+
+                //着火判定生成
+                if (other.tag == "Wall" || other.tag == "Ground")
+                {
+                    Instantiate(explosionSwitchObject, transform.position, Quaternion.identity);
                 }
 
                 //突撃終了

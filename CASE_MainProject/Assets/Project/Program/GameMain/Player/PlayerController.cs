@@ -63,6 +63,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("スチーム音　AudioSource")]
     AudioSource au_Steam;
 
+    [SerializeField, Header("可燃ガス有効")]
+    bool bCombustibleGas = false;
+
+    [SerializeField, Header("爆発ポイント")]
+    GameObject explosionPoint;
+
+    [SerializeField, Header("可燃ガスの爆発ポイント間隔")]
+    float explosionPoint_InstallationIntervalTime = 0.3f;
+
+    [SerializeField, Header("可燃ガスの爆発ポイント間隔タイマー")]
+    float explosionPoint_InstallationIntervalTimer = 0.0f;
+
     // プレイヤーのRigidbody
     Rigidbody myRigidbody;
 
@@ -244,6 +256,23 @@ public class PlayerController : MonoBehaviour
 
         //プレイヤーに力を加える
         myRigidbody.velocity = moveVelocity;
+
+        //=== 可燃ガス ===//
+        if(outSteamValue > 0.2f)
+        {
+            //間隔カウント
+            explosionPoint_InstallationIntervalTimer += Time.deltaTime;
+
+            //間隔タイマーが経つと爆発ポイントを設置
+            if(explosionPoint_InstallationIntervalTimer > explosionPoint_InstallationIntervalTime)
+            {
+                //爆発ポイントを生成
+                Instantiate(explosionPoint, transform.position, Quaternion.identity);
+
+                //間隔タイマーリセット
+                explosionPoint_InstallationIntervalTimer = 0.0f;
+            }
+        }
 
         //=== 突撃 ===//
 
