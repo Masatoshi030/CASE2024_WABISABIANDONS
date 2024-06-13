@@ -15,7 +15,19 @@ public class EnemyC_Manager : MonoBehaviour
     [SerializeField, Header("爆発SE")]
     AudioSource explisionSE;
 
-    private void Start()
+    [SerializeField, Header("反射マテリアル0")]
+    Material reflectMaterial0;
+    public Material Material0 { get => reflectMaterial0; }
+
+    [SerializeField, Header("反射マテリアル1")]
+    Material reflectMaterial1;
+    public Material Material1 { get => reflectMaterial1; }
+
+    [SerializeField, Header("反射マテリアル2")]
+    Material reflectMaterial2;
+    public Material Material2 { get => reflectMaterial2; }
+
+    private void Awake()
     {
         if(instance == null)
         {

@@ -69,31 +69,79 @@ public class EnemyC_Rolling : EnemyState_C
 
     public override void CollisionEnterSelf(Collision collision)
     {
-        if(collision.transform.tag == "Wall" || collision.transform.tag == "Ground")
+        if (collision.transform.tag == "Ground")
         {
-            if(collision.transform.tag == "Ground")
+            Ray ray = new Ray(enemy.EyeTransform.position, enemy.EyeTransform.forward);
+            RaycastHit[] hits = Physics.RaycastAll(ray, 3.0f);
+            foreach (RaycastHit hit in hits)
             {
+                if (hit.collider.gameObject == collision.gameObject)
+                {
+                    // 反射ベクトルの計算
+                    enemy.EnemyRigidbody.velocity = Vector3.zero;
+                    Vector3 normal = collision.contacts[0].normal;
 
+                    Debug.Log(collision.contactCount);
+
+                    Vector3 reflect = direction - 2 * normal * Vector3.Dot(direction, normal);
+                    reflect.y = 0.0f;
+                    reflect.Normalize();
+
+                    // 移動方向を反射ベクトルに変換
+                    direction = reflect;
+                    angle = 0.0f;
+                    enemy.transform.LookAt(enemy.transform.position + direction);
+
+                    float dot = Vector3.Dot(direction, normal);
+
+                    switch (enemyC.CState)
+                    {
+                        case EnemyC.PressureState.Low:
+                            enemyC.CState = EnemyC.PressureState.Med;
+                            enemyC.applyMesh.material = EnemyC_Manager.instance.Material1;
+                            EnemyC_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
+                            break;
+                        case EnemyC.PressureState.Med:
+                            enemyC.CState = EnemyC.PressureState.High;
+                            enemyC.applyMesh.material = EnemyC_Manager.instance.Material0;
+                            EnemyC_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
+                            break;
+                        case EnemyC.PressureState.High:
+                            // 最大の場合
+                            foreach (GameObject obj in implicateObjects)
+                            {
+                                if (obj.GetComponent<Enemy>() != null)
+                                {
+                                    Vector3 velocity = obj.transform.position - enemy.transform.position;
+                                    velocity.Normalize();
+                                    velocity.y = 5.0f;
+                                    Enemy enem = obj.GetComponent<Enemy>();
+                                    enem.GetComponent<NavMeshAgent>().enabled = false;
+                                    enem.EnemyRigidbody.AddForce(velocity * rollSpeed * 2.0f, ForceMode.Impulse);
+                                    if (enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>())
+                                    {
+                                        EnemyC_IntervalDeath deathState = enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>();
+                                        enem.Machine.TransitionTo(deathState.StateID);
+                                    }
+                                }
+                            }
+                            positions.Clear();
+                            angles.Clear();
+                            implicateObjects.Clear();
+                            machine.TransitionTo(collisionID);
+                            EnemyC_Manager.instance.CreateExplosionEffect(enemy.transform.position, Quaternion.identity);
+                            break;
+                    }
+                }
             }
-
+        }
+        else if (collision.transform.tag == "Wall")
+        {
             // 反射ベクトルの計算
             enemy.EnemyRigidbody.velocity = Vector3.zero;
             Vector3 normal = collision.contacts[0].normal;
 
             Debug.Log(collision.contactCount);
-
-            //Ray ray = new Ray(enemy.transform.position, enemy.transform.forward);
-            //Vector3 normal = Vector3.zero;
-            //RaycastHit[] hits = Physics.RaycastAll(ray, 5.0f);
-            //for (int i = 0; i < hits.Length; i++)
-            //{
-            //    if(hits[i].transform.gameObject == collision.gameObject)
-            //    {
-            //        normal = hits[i].normal;
-            //    }
-            //}
-
-
 
             Vector3 reflect = direction - 2 * normal * Vector3.Dot(direction, normal);
             reflect.y = 0.0f;
@@ -110,10 +158,12 @@ public class EnemyC_Rolling : EnemyState_C
             {
                 case EnemyC.PressureState.Low:
                     enemyC.CState = EnemyC.PressureState.Med;
+                    enemyC.applyMesh.material = EnemyC_Manager.instance.Material1;
                     EnemyC_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
                     break;
                 case EnemyC.PressureState.Med:
                     enemyC.CState = EnemyC.PressureState.High;
+                    enemyC.applyMesh.material = EnemyC_Manager.instance.Material0;
                     EnemyC_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
                     break;
                 case EnemyC.PressureState.High:
@@ -143,9 +193,8 @@ public class EnemyC_Rolling : EnemyState_C
                     break;
             }
         }
-
         // 敵にぶつかった場合巻き込む
-        if(collision.transform.tag == "Enemy")
+        else if(collision.transform.tag == "Enemy")
         {
             EnemyC_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
             enemy.EnemyRigidbody.velocity = Vector3.zero;
