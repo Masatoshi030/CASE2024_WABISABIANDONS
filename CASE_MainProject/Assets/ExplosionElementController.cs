@@ -31,6 +31,13 @@ public class ExplosionElementController : MonoBehaviour
     [SerializeField, Header("爆発エフェクト生成済み")]
     bool bExplosionInstantiated = false;
 
+    AudioSource audioSource;
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
 
     private void Update()
     {
@@ -69,6 +76,9 @@ public class ExplosionElementController : MonoBehaviour
 
             //爆発生成済み
             bExplosionInstantiated = true;
+
+            //爆発音
+            audioSource.PlayOneShot(audioSource.clip);
         }
     }
 
