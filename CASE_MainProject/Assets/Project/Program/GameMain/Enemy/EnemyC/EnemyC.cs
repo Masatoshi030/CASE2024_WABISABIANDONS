@@ -17,6 +17,9 @@ public class EnemyC : Enemy
     protected PressureState pressureState = PressureState.Low;
     public PressureState CState { get => pressureState; set => pressureState = value;}
 
+    [SerializeField, Header("マテリアル適用先")]
+    public MeshRenderer applyMesh;
+
     // 受けたダメージの保存
     float damageValue;
     public float DamageValue { get => damageValue; }
@@ -32,6 +35,12 @@ public class EnemyC : Enemy
     protected void Start()
     {
         base.Start();
+        switch (pressureState)
+        {
+            case PressureState.Low: applyMesh.material =  EnemyC_Manager.instance.Material2; break;
+            case PressureState.Med: applyMesh.material = EnemyC_Manager.instance.Material1; break;
+            case PressureState.High: applyMesh.material = EnemyC_Manager.instance.Material0; break;
+        }
     }
 
     public override bool Damage(float damage, Vector3 direction)
