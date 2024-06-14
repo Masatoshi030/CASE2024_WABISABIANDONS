@@ -943,6 +943,11 @@ MonoBehaviour:
   outMaxSteamValue: 0.1
   naturalAddPressure: 10
   au_Steam: {fileID: 4174861317411024326}
+  bCombustibleGas: 0
+  explosionPoint: {fileID: 8283244815977112913, guid: 5572cf0773ce8154e9dab224a76c9ecb,
+    type: 3}
+  explosionPoint_InstallationIntervalTime: 0.1
+  explosionPoint_InstallationIntervalTimer: 0
   runInput: {x: 0, y: 0}
   attackState: 0
   attackSpeed: 100
@@ -984,6 +989,8 @@ MonoBehaviour:
   hibana_ParticleEffect: {fileID: 2977903860043195035, guid: 23e09a88e9623034c944773e0b0aca3f,
     type: 3}
   partsSplit_ParticleEffect: {fileID: 2662798393433424169, guid: 67a75510c4adef44694d95c14e605700,
+    type: 3}
+  explosionSwitchObject: {fileID: 5353650854146111151, guid: 323715d57e70aad45a66b37eb276f1ee,
     type: 3}
 --- !u!1001 &8284758405488211059
 PrefabInstance:
@@ -1031,7 +1038,12 @@ PrefabInstance:
     - target: {fileID: 2921500011784151524, guid: 2d53852ecea23094ebc5814ccc50a77f,
         type: 3}
       propertyPath: InitialModule.startLifetime.scalar
-      value: 2
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2921500011784151524, guid: 2d53852ecea23094ebc5814ccc50a77f,
+        type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime1
+      value: 964
       objectReference: {fileID: 0}
     - target: {fileID: 2921500011784151524, guid: 2d53852ecea23094ebc5814ccc50a77f,
         type: 3}
@@ -1041,7 +1053,7 @@ PrefabInstance:
     - target: {fileID: 2921500011784151524, guid: 2d53852ecea23094ebc5814ccc50a77f,
         type: 3}
       propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[1].time
-      value: 0.35068053
+      value: 0.15331572
       objectReference: {fileID: 0}
     - target: {fileID: 2921500011784151524, guid: 2d53852ecea23094ebc5814ccc50a77f,
         type: 3}
@@ -1050,8 +1062,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2921500011784151524, guid: 2d53852ecea23094ebc5814ccc50a77f,
         type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[0].value
+      value: 0.05405426
+      objectReference: {fileID: 0}
+    - target: {fileID: 2921500011784151524, guid: 2d53852ecea23094ebc5814ccc50a77f,
+        type: 3}
       propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[1].value
-      value: 0.31793064
+      value: 0.6287369
       objectReference: {fileID: 0}
     - target: {fileID: 2921500011784151524, guid: 2d53852ecea23094ebc5814ccc50a77f,
         type: 3}
