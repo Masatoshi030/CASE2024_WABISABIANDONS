@@ -425,6 +425,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.transform.root.tag == "MoveGround")
+        {
+            transform.parent = collision.transform;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.transform.root.tag == "MoveGround")
+        {
+            transform.parent = null;
+        }
+    }
+
     public void SetValveJump(Vector3 _forceVec)
     {
         //ë¨ìxÉ[Éç

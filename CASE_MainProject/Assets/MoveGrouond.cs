@@ -31,7 +31,7 @@ public class MoveGrouond : MonoBehaviour
     private void Awake()
     {
         //デバッグ用終着地点を非表示に
-        endPoint.GetComponent<MeshRenderer>().enabled = false;
+        endPoint.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
     }
 
     // Start is called before the first frame update
