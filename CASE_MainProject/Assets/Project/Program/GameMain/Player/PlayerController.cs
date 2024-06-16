@@ -131,6 +131,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("噴出蒸気")]
     ParticleSystem compressor_SteamEffect;
 
+    [SerializeField, Header("ジャンプ時蒸気")]
+    GameObject jump_SteamEffect;
+
     [SerializeField, Header("ノックバック力")]
     float knockBackPower = 5.0f;
 
@@ -360,6 +363,9 @@ public class PlayerController : MonoBehaviour
 
                 //初速をつける
                 moveVelocity = new Vector3(moveVelocity.x, jumpPower, moveVelocity.z);
+
+                //蒸気エフェクト
+                Instantiate(jump_SteamEffect, transform.position, Quaternion.identity);
             }
         }
         //上昇中
