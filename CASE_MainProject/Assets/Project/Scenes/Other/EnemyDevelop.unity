@@ -273,6 +273,9 @@ MonoBehaviour:
     type: 3}
   explisionSE: {fileID: -3904813653726153462, guid: 30edabee38f67d4408c749fc318b285a,
     type: 3}
+  reflectMaterial0: {fileID: 2100000, guid: 8780bcab9f4febd4a8444f166633b64c, type: 2}
+  reflectMaterial1: {fileID: 2100000, guid: 40f648466c228d045bf7911b4d8a8ef6, type: 2}
+  reflectMaterial2: {fileID: 2100000, guid: b8b763e20c648d849b428e891e3ce3f1, type: 2}
 --- !u!1 &185152480
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,6 +388,52 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3931487709765786523, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931487709765786523, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931487709765786523, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.09998006
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931487709765786523, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.08715578
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931487709765786523, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.9961947
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931487709765786523, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931487709765786523, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931487709765786523, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -190
+      objectReference: {fileID: 0}
+    - target: {fileID: 5249567584725752381, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: explosionSwitchObject
+      value: 
+      objectReference: {fileID: 5353650854146111151, guid: 323715d57e70aad45a66b37eb276f1ee,
+        type: 3}
     - target: {fileID: 5356101857455146502, guid: 924e2e14df82fd74388c58f934b12972,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -442,6 +491,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6380851179128401316, guid: 924e2e14df82fd74388c58f934b12972,
         type: 3}
+      propertyPath: explosionPoint
+      value: 
+      objectReference: {fileID: 8283244815977112913, guid: 5572cf0773ce8154e9dab224a76c9ecb,
+        type: 3}
+    - target: {fileID: 6380851179128401316, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
       propertyPath: runSpeed_Steam
       value: 800
       objectReference: {fileID: 0}
@@ -459,6 +514,26 @@ PrefabInstance:
         type: 3}
       propertyPath: jumpContinuationPower_Steam
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517305868436886935, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: ShapeModule.type
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517305868436886935, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: VelocityModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517305868436886935, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517305868436886935, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8879622227388247387, guid: 924e2e14df82fd74388c58f934b12972,
         type: 3}
@@ -4197,6 +4272,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3223340047780562801, guid: a73bd69e981e9194bb2893702e64f5b0,
+        type: 3}
+      propertyPath: pressureState
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6146470108570316022, guid: a73bd69e981e9194bb2893702e64f5b0,
         type: 3}
