@@ -9,6 +9,8 @@ public class EnemyB_Attack : EnemyState
     [SerializeField, Header("攻撃時の生成オブジェクト")]
     GameObject attackObject;
     [SerializeField, Header("攻撃オブジェクトの速度")]
+    float attackSpeed;
+    [SerializeField, Header("攻撃オブジェクトのパワー")]
     float attackPower;
     [SerializeField, Header("回転速度")]
     float rotationSpeed = 0.8f;
@@ -54,6 +56,10 @@ public class EnemyB_Attack : EnemyState
         {
             if(enemy.IsFindPlayer)
             {
+                GameObject attackObj = Instantiate(attackObject, enemy.transform.position, Quaternion.identity);
+                attackObj.transform.LookAt(PlayerController.instance.transform.position);
+                attackObj.GetComponent<DrillComponent>().AttackPower = attackPower;
+                attackObj.GetComponent<Rigidbody>().velocity = attackObj.transform.forward * attackSpeed;
                 machine.TransitionTo(successID);
             }
             else
