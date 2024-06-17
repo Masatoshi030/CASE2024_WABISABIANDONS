@@ -9,7 +9,7 @@ public class Valve_Base : Publisher
     { open, close }
 
     [SerializeField, Header("バルブタイプ"), Toolbar(typeof(Valve_Type))]
-    Valve_Type type = Valve_Type.open;
+    Valve_Type type = Valve_Type.close;
 
     private int typeNunber = 0;  //バルブの種類を送信
     private int moveNunber = 1;
