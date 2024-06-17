@@ -52,7 +52,11 @@ public class EnemyB_Attack : EnemyState
         else if (machine.Cnt >= attackInterval)
         {
             GameObject attackObj = Instantiate(attackObject, enemy.transform.position, Quaternion.identity);
-            attackObj.transform.LookAt(PlayerController.instance.transform.position);
+            attackObj.transform.forward = enemy.EyeTransform.forward;
+            if(enemy.ToPlayerAngle < 20.0f)
+            {
+                attackObj.transform.LookAt(PlayerController.instance.transform.position);
+            }
             attackObj.GetComponent<DrillComponent>().AttackPower = attackPower;
             attackObj.GetComponent<Rigidbody>().velocity = attackObj.transform.forward * attackSpeed;
             machine.TransitionTo(elapsedID);
