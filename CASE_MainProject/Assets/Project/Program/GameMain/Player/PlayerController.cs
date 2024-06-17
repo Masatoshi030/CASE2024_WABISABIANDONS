@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+
+    [SerializeField, Header("ターゲットポイントデバッグ")]
+    GameObject targetPointMaker;
+
     //プレイヤーのシングルトンインスタンス
     public static PlayerController instance;
 
@@ -69,11 +73,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("爆発ポイント")]
     GameObject explosionPoint;
 
-    [SerializeField, Header("可燃ガスの爆発ポイント間隔")]
-    float explosionPoint_InstallationIntervalTime = 0.3f;
+    [SerializeField, Header("可燃ガスの爆発ポイント間隔距離")]
+    float explosionPoint_InstallationIntervalDistance = 0.3f;
 
-    [SerializeField, Header("可燃ガスの爆発ポイント間隔タイマー")]
-    float explosionPoint_InstallationIntervalTimer = 0.0f;
+    [SerializeField, Header("前回の可燃ガスの爆発ポイント間隔座標"), ReadOnly]
+    Vector3 explosionPoint_InstallationIntervalLastPosition = Vector3.zero;
+
+    [SerializeField, Header("蒸気生成ポイント")]
+    GameObject steamInstantiatePoint;
 
     // プレイヤーのRigidbody
     Rigidbody myRigidbody;
@@ -217,6 +224,11 @@ public class PlayerController : MonoBehaviour
         else
         {
             heldSteam += naturalAddPressure * Time.deltaTime;
+
+            if(heldSteam > maxHeldSteam)
+            {
+                heldSteam = maxHeldSteam;
+            }
         }
 
         //=== 蒸気出力量 ===//
@@ -261,25 +273,27 @@ public class PlayerController : MonoBehaviour
         myRigidbody.velocity = moveVelocity;
 
         //=== 可燃ガス ===//
-        if(outSteamValue > 0.2f)
-        {
-            //間隔カウント
-            explosionPoint_InstallationIntervalTimer += Time.deltaTime;
 
-            //間隔タイマーが経つと爆発ポイントを設置
-            if(explosionPoint_InstallationIntervalTimer > explosionPoint_InstallationIntervalTime)
+        if (outSteamValue > 0.2f)
+        {
+
+            //前回の設置座標と今の座標との差分が設定間隔よりも遠いかどうか
+            float offsetDistance = Vector3.Distance(explosionPoint_InstallationIntervalLastPosition, transform.position);
+
+            if (offsetDistance > explosionPoint_InstallationIntervalDistance)
             {
                 //爆発ポイントを生成
-                Instantiate(explosionPoint, transform.position, Quaternion.identity);
+                Instantiate(explosionPoint, steamInstantiatePoint.transform.position, Quaternion.identity);
 
-                //間隔タイマーリセット
-                explosionPoint_InstallationIntervalTimer = 0.0f;
+                //座標を記録
+                explosionPoint_InstallationIntervalLastPosition = transform.position;
             }
         }
 
-        //=== 突撃 ===//
 
-        OnAttack();
+            //=== 突撃 ===//
+
+            OnAttack();
 
         //=== 一定間隔処理 ===//
 
