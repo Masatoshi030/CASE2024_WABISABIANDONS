@@ -9,6 +9,12 @@ public class PlayerController : MonoBehaviour
     //プレイヤーのシングルトンインスタンス
     public static PlayerController instance;
 
+    
+
+    //=== 移動 ===//
+    [SerializeField, ReadOnly]
+    Vector2 runInput;
+
     [SerializeField, Header("移動加速度")]
     float runSpeed = 1.0f;
 
@@ -27,11 +33,23 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("移動方向に向く軸（Shaft）")]
     Transform moveRotationShaft;
 
+    [SerializeField, Header("移動する力"), ReadOnly]
+    Vector3 moveVelocity = Vector3.zero;
+
+    // カメラの前方ベクトルをプレイヤーの進む方向とする
+    Quaternion horizontalRotation;
+
+
+
+    //=== ジャンプ ===//
     [SerializeField, Header("ジャンプ力")]
     float jumpPower = 5.0f;
 
     [SerializeField, Header("長押し加算ジャンプ力")]
     float jumpContinuationPower = 0.01f;
+
+    [SerializeField, Header("ジャンプ時蒸気エフェクト")]
+    GameObject jump_SteamEffect;
 
     [SerializeField, Header("ジャンプ継続最大時間")]
     float jumpMaxTime = 1.0f;
@@ -43,9 +61,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("ジャンプの状態（ステート）"), Toolbar(typeof(JUMP_STATE), "JumpState")]
     JUMP_STATE jumpState = JUMP_STATE.Idle;
 
+    // プレイヤーのRigidbody
+    Rigidbody myRigidbody;
+
     [SerializeField, Header("接地判定")]
     GroundJudgeController myGroundJudgeController;
 
+
+
+    //=== 蒸気 ===//
     [SerializeField, Header("蒸気貯蔵量")]
     public float heldSteam = 100.0f;
 
@@ -64,6 +88,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("スチーム音　AudioSource")]
     AudioSource au_Steam;
 
+
+
+    //=== 可燃ガス ===//
     [SerializeField, Header("可燃ガス有効")]
     bool bCombustibleGas = false;
 
@@ -79,15 +106,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("蒸気生成ポイント")]
     GameObject steamInstantiatePoint;
 
-    // プレイヤーのRigidbody
-    Rigidbody myRigidbody;
+    [SerializeField, Header("噴出蒸気")]
+    ParticleSystem compressor_SteamEffect;
 
-    // カメラの前方ベクトルをプレイヤーの進む方向とする
-    Quaternion horizontalRotation;
 
-    [SerializeField, ReadOnly]
-    Vector2 runInput;
 
+    //=== 突撃 ===//
     public enum ATTACK_STATE
     { Idle, Aim, Attack, KnockBack};
     [SerializeField, Header("突撃状態（ステート）"), Toolbar(typeof(ATTACK_STATE), "AttackState")]
@@ -96,12 +120,41 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("突撃初速")]
     float attackSpeed = 5.0f;
 
+    [SerializeField, Header("突撃する力"), ReadOnly]
+    Vector3 attackVelocity = Vector3.zero;
+
+    [SerializeField, Header("突撃の時の姿勢制御軸")]
+    GameObject attackShaft;
+
     [SerializeField, Header("突進上方向修正")]
     float attackUpCorrectionPower = 1.0f;
+
+    [SerializeField, Header("突撃ゲージ")]
+    AttackGaugeController attackGauge;
+
+    [SerializeField, Header("突撃ゲージが溜まる速度")]
+    float attackGauge_AddSpeed = 2.0f;
 
     //突撃ターゲット座標
     Vector3 AttackTargetPosition;
 
+    //突撃ゲージの溜めた値
+    float gaugeAttackValue = 0.0f;
+
+    [SerializeField, Header("突撃可能フラグ")]
+    public bool bAttackPossible = true;
+
+
+
+    //=== 死亡 ===//
+    [SerializeField, Header("破片エフェクト")]
+    GameObject partsEffect;
+
+    [SerializeField, Header("爆発エフェクト")]
+    GameObject explosionEffect;
+
+
+    //=== バルブ蒸気ぶっ飛び ===//
     [SerializeField, Header("バルブぶっ飛び時間")]
     float valveFlyTime = 1.0f;
 
@@ -117,26 +170,22 @@ public class PlayerController : MonoBehaviour
     public VALVE_FLY_STATE valveFlyState = VALVE_FLY_STATE.Idle;
 
 
+
+    //=== GoldValve ===//
+    [SerializeField, Header("GoldValveカウント")]
+    int heldGoldValve = 0;
+
+    [SerializeField, Header("GoldValveAudioSource")]
+    AudioSource goldValveAudioSouce;
+
+
+
+
     [SerializeField, Header("キャラクターアニメーション")]
     Animator characterAnimation;
 
     [SerializeField, Header("メインプレイヤーカメラオブジェクト"), ReadOnly]
     GameObject mainPlayerCamera_Obj;
-
-    [SerializeField, Header("移動する力"), ReadOnly]
-    Vector3 moveVelocity = Vector3.zero;
-
-    [SerializeField, Header("突撃する力"), ReadOnly]
-    Vector3 attackVelocity = Vector3.zero;
-
-    [SerializeField, Header("突撃の時の姿勢制御軸")]
-    GameObject attackShaft;
-
-    [SerializeField, Header("噴出蒸気")]
-    ParticleSystem compressor_SteamEffect;
-
-    [SerializeField, Header("ジャンプ時蒸気")]
-    GameObject jump_SteamEffect;
 
     [SerializeField, Header("ノックバック力")]
     float knockBackPower = 5.0f;
@@ -149,23 +198,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("VolumesAnimation"), ReadOnly]
     Animator volumeAnimation;
 
-    [SerializeField, Header("GoldValveカウント")]
-    int heldGoldValve = 0;
-
-    [SerializeField, Header("GoldValveAudioSource")]
-    AudioSource goldValveAudioSouce;
-
     [SerializeField, Header("動作ロック")]
     bool bLock = false;
-
-    [SerializeField, Header("突撃ゲージ")]
-    AttackGaugeController attackGauge;
-
-    [SerializeField, Header("突撃ゲージが溜まる速度")]
-    float attackGauge_AddSpeed = 2.0f;
-
-    //突撃ゲージの溜めた値
-    float gaugeAttackValue = 0.0f;
 
     [SerializeField, Header("プレイヤーのレイヤーマスク")]
     int playerLayerMask = 6;
@@ -224,7 +258,18 @@ public class PlayerController : MonoBehaviour
 
             if(heldSteam > maxHeldSteam)
             {
-                heldSteam = maxHeldSteam;
+                //操作をロック
+                bLock = true;
+
+                //プレイヤーのBodyを非表示に
+                characterAnimation.gameObject.SetActive(false);
+
+                //破片エフェクト生成
+                Instantiate(partsEffect, transform.position, Quaternion.identity);
+
+                //爆発エフェクト生成
+                Instantiate(explosionEffect, transform.position, Quaternion.identity);
+
             }
         }
 
@@ -526,13 +571,16 @@ public class PlayerController : MonoBehaviour
             attackShaft.transform.Rotate(90.0f, 0.0f, 0.0f);
         }
 
-        if (attackState == ATTACK_STATE.Attack || attackState == ATTACK_STATE.KnockBack)
+        //地面に着地すると終了
+        if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.On)
         {
-            //地面に着地すると終了
-            if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.On)
+            if (attackState == ATTACK_STATE.Attack || attackState == ATTACK_STATE.KnockBack)
             {
                 StopAttack();
             }
+
+            //突撃可能フラグを有効にする
+            bAttackPossible = true;
         }
 
         //狙っている時
@@ -541,71 +589,80 @@ public class PlayerController : MonoBehaviour
             attackGauge.AddValue(Time.deltaTime * attackGauge_AddSpeed);
         }
 
-        //空中にいる状態で
-        if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.Off)
+        //突撃が可能であれば
+        if (bAttackPossible)
         {
-            //右トリガーを押すと
-            if (DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState == DualSenseUnity.ButtonState.NewDown)
+            //空中にいる状態で
+            if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.Off)
             {
-                //攻撃状態へ移行
-                attackState = ATTACK_STATE.Aim;
-
-                //突撃アニメーション開始
-                characterAnimation.SetBool("bAttack", true);
-
-                //突撃ポストエフェクト有効
-                volumeAnimation.SetBool("bAttack", true);
-
-                //突撃ゲージを出現
-                attackGauge.gameObject.SetActive(true);
-
-                //全ての方向の力を０にする
-                myRigidbody.velocity = Vector3.zero;
-
-                //重力を無効にする
-                myRigidbody.useGravity = false;
-
-                //スロー
-                Time.timeScale = 0.1f;
-            }
-
-            //右トリガーを離す
-            if (DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState == DualSenseUnity.ButtonState.NewUp)
-            {
-                if (attackState == ATTACK_STATE.Aim)
+                //右トリガーを押すと
+                if (DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState == DualSenseUnity.ButtonState.NewDown)
                 {
                     //攻撃状態へ移行
-                    attackState = ATTACK_STATE.Attack;
+                    attackState = ATTACK_STATE.Aim;
 
-                    //突撃ゲージから溜めた結果を取得
-                    gaugeAttackValue = attackGauge.GetValue_Normalize();
+                    //突撃アニメーション開始
+                    characterAnimation.SetBool("bAttack", true);
 
-                    //突撃ゲージを隠す
-                    attackGauge.SetValue(0.0f);
-                    attackGauge.gameObject.SetActive(false);
+                    //突撃ポストエフェクト有効
+                    volumeAnimation.SetBool("bAttack", true);
 
+                    //突撃ゲージを出現
+                    attackGauge.gameObject.SetActive(true);
 
-                    //スクリーンの中心（カーソルを合わせたオブジェクト）に向かうベクトルを計算する
+                    //全ての方向の力を０にする
+                    myRigidbody.velocity = Vector3.zero;
 
-                    //カメラの前方ベクトルを初期値とする　※もしターゲットが検出されなくても前方に飛べるようにする。
-                    AttackTargetPosition = mainPlayerCamera_Obj.transform.forward;
+                    //重力を無効にする
+                    myRigidbody.useGravity = false;
 
-                    Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
-                    RaycastHit hit;
+                    //感度をリセット
+                    PlayerVirtualCameraController.instance.OnAim(100, 100);
 
-                    int LayerMask = ~(1 << playerLayerMask);
+                    //スロー
+                    Time.timeScale = 0.1f;
+                }
 
-                    // Rayが何かに当たったかどうかを確認
-                    if (Physics.Raycast(ray, out hit, 1000.0f, LayerMask))
+                //右トリガーを離す
+                if (DualSense_Manager.instance.GetInputState().RightTrigger.ActiveState == DualSenseUnity.ButtonState.NewUp)
+                {
+                    if (attackState == ATTACK_STATE.Aim)
                     {
-                        AttackTargetPosition = hit.point;
+                        //攻撃状態へ移行
+                        attackState = ATTACK_STATE.Attack;
+
+                        //突撃ゲージから溜めた結果を取得
+                        gaugeAttackValue = attackGauge.GetValue_Normalize();
+
+                        //突撃ゲージを隠す
+                        attackGauge.SetValue(0.0f);
+                        attackGauge.gameObject.SetActive(false);
+
+                        //感度をリセット
+                        PlayerVirtualCameraController.instance.OnAimReset();
+
+                        //突撃可能フラグを無効にする
+                        bAttackPossible = false;
+
+                        //スクリーンの中心（カーソルを合わせたオブジェクト）に向かうベクトルを計算する
+
+                        //カメラの前方ベクトルを初期値とする　※もしターゲットが検出されなくても前方に飛べるようにする。
+                        AttackTargetPosition = mainPlayerCamera_Obj.transform.forward;
+
+                        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+                        RaycastHit hit;
+
+                        int LayerMask = ~(1 << playerLayerMask);
+
+                        // Rayが何かに当たったかどうかを確認
+                        if (Physics.Raycast(ray, out hit, 1000.0f, LayerMask))
+                        {
+                            AttackTargetPosition = hit.point;
+                        }
+
+                        //スロー終了
+                        Time.timeScale = 1.0f;
                     }
-
-
-
-
-                    //スロー終了
-                    Time.timeScale = 1.0f;
                 }
             }
         }

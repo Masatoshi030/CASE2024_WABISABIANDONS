@@ -66,6 +66,9 @@ public class HeadCollision_Manager : MonoBehaviour
                     //小振動
                     DualSense_Manager.instance.SetRumble_Type1();
 
+                    //突撃可能フラグを有効にする
+                    PlayerController.instance.bAttackPossible = true;
+
                     //倒したら
                     if (isDeath)
                     {
