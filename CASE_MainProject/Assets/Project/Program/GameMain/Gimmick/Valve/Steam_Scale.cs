@@ -43,16 +43,16 @@ public class Steam_Scale : Subscriber
 
     void Start()
     {
+        Debug.Log("認識");
+
         switch (type)
         {
             case Valve_Base.Valve_Type.open:
                 change_localScale = transform.localScale;
-                change_localScale.y = nothing_Steam;
+                change_localScale.y = nothing_Steam;  //スチームが出ていない状態
                 Debug.Log("0に設定");
-
                 valveOpenCloseAnimator.SetBool("bOpen", false);
                 SetActiveSteam(1.0f, false);
-
                 break;
 
             case Valve_Base.Valve_Type.close:
@@ -60,8 +60,8 @@ public class Steam_Scale : Subscriber
                 change_localScale.y = steam_Scale; //スチームが出ている状態
                 Debug.Log("最大値の設定");
 
-                valveOpenCloseAnimator.SetBool("bOpen", true);
-                SetActiveSteam(1.0f, true);
+               valveOpenCloseAnimator.SetBool("bOpen", true);
+               SetActiveSteam(1.0f, true);
                 break;
         }
 
@@ -72,6 +72,8 @@ public class Steam_Scale : Subscriber
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("最大値の設定");
+
         //状態
         switch (state)
         {
@@ -169,6 +171,7 @@ public class Steam_Scale : Subscriber
         {
             //バルブの開閉を取得
             case 0:
+                Debug.Log("識別前");
                 type = GetValue<T, Valve_Base.Valve_Type>(value);
                 Debug.Log("識別完了");
                 break;
