@@ -13,6 +13,9 @@ public class MoveGrouond : MonoBehaviour
     [SerializeField, Header("移動時間　※何秒で終着地点へ行くか")]
     float moveTime = 1.0f;
 
+   [SerializeField, Header("到着後の停止時間　※到着後何秒後に戻り始めるか")]
+    float stopTime = 0.0f;
+
     [SerializeField, Header("自分のSteamScale")]
     Steam_Scale mySteam_Scale;
 
@@ -39,6 +42,8 @@ public class MoveGrouond : MonoBehaviour
     {
         groundStartPosition = moveGround.transform.position;
         groundStartQuaternion = moveGround.transform.localRotation;
+
+        mySteam_Scale.steam_Limit = moveTime + stopTime;
     }
 
     // Update is called once per frame

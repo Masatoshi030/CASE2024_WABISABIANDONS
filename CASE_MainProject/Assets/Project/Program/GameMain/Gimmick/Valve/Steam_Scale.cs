@@ -26,7 +26,7 @@ public class Steam_Scale : Subscriber
     bool steam_Timer = true;
 
     [SerializeField, Header("動作時間")]
-    float steam_Limit;
+    public float steam_Limit;
 
     [SerializeField, Header("バルブの開閉アニメーション")]
     Animator valveOpenCloseAnimator;
