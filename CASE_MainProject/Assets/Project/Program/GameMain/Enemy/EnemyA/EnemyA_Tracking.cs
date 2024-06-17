@@ -59,6 +59,7 @@ public class EnemyA_Tracking : EnemyState
         if (machine.Cnt >= trackingInterval)
         {
             machine.TransitionTo(failedID);
+            return;
         }
         else if (enemy.IsDamaged)
         {

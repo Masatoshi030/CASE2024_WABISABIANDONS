@@ -17,9 +17,7 @@ public class EnemyB_Attack : EnemyState
 
     [Space(pad), Header("--‘JˆÚæƒŠƒXƒg--")]
     [SerializeField, Header("Ž‹–ì“à‚Ì‘JˆÚID")]
-    public int successID;
-    [SerializeField, Header("Ž‹–ìŠO‚Ì‘JˆÚID")]
-    public int failedID;
+    public int elapsedID;
     [SerializeField, Header("”í’eŽž‚Ì‘JˆÚ")]
     public int damagedID;
     [SerializeField, Header("Õ“ËŽž‚Ì‘JˆÚ")]
@@ -46,26 +44,18 @@ public class EnemyB_Attack : EnemyState
 
         enemy.transform.Rotate(0.0f, angle * Time.deltaTime, 0.0f);
 
-        if(enemy.IsDamaged)
+        if (enemy.IsDamaged)
         {
             machine.TransitionTo(damagedID);
             return;
         }
-
-        if(machine.Cnt >= attackInterval)
+        else if (machine.Cnt >= attackInterval)
         {
-            if(enemy.IsFindPlayer)
-            {
-                GameObject attackObj = Instantiate(attackObject, enemy.transform.position, Quaternion.identity);
-                attackObj.transform.LookAt(PlayerController.instance.transform.position);
-                attackObj.GetComponent<DrillComponent>().AttackPower = attackPower;
-                attackObj.GetComponent<Rigidbody>().velocity = attackObj.transform.forward * attackSpeed;
-                machine.TransitionTo(successID);
-            }
-            else
-            {
-                machine.TransitionTo(failedID);
-            }
+            GameObject attackObj = Instantiate(attackObject, enemy.transform.position, Quaternion.identity);
+            attackObj.transform.LookAt(PlayerController.instance.transform.position);
+            attackObj.GetComponent<DrillComponent>().AttackPower = attackPower;
+            attackObj.GetComponent<Rigidbody>().velocity = attackObj.transform.forward * attackSpeed;
+            machine.TransitionTo(elapsedID);
         }
     }
 
