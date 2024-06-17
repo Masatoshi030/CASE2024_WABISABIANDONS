@@ -6,9 +6,6 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    [SerializeField, Header("ターゲットポイントデバッグ")]
-    GameObject targetPointMaker;
-
     //プレイヤーのシングルトンインスタンス
     public static PlayerController instance;
 
