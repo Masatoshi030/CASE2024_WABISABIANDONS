@@ -29,7 +29,10 @@ public class Subscriber : Connection
     {
         for(int i = 0; i < observers.Count; i++)
         {
-            observers[i].ReceiveMsg<T>(this, msgType, msg);
+            if(observers[i] != null)
+            {
+                observers[i].ReceiveMsg<T>(this, msgType, msg);
+            }
         }
     }
 }
