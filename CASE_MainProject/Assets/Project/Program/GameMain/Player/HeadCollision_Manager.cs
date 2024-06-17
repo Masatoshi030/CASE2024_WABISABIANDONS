@@ -96,15 +96,26 @@ public class HeadCollision_Manager : MonoBehaviour
 
                 if (other.tag == "BrokenWall")
                 {
-                    if (PlayerController.instance.heldSteam / PlayerController.instance.maxHeldSteam > 0.9f)
+                    if (other.transform.parent.GetComponent<BrokenWallController>().bBroken == false)
                     {
-                        other.transform.parent.GetComponent<BrokenWallController>().SetBreak();
+                        if (PlayerController.instance.heldSteam / PlayerController.instance.maxHeldSteam > 0.9f)
+                        {
+                            other.transform.parent.GetComponent<BrokenWallController>().SetBreak();
 
-                        //ヒットストップ
-                        HitStopManager.instance.HitStopEffect(0.5f, 0.25f);
+                            //ヒットストップ
+                            HitStopManager.instance.HitStopEffect(0.05f, 0.5f);
 
-                        //小振動
-                        DualSense_Manager.instance.SetRumble_Type1();
+                            //小振動
+                            DualSense_Manager.instance.SetLeftRumble(1.0f, 0.1f);
+
+                            //衝突音
+                            audioSource.PlayOneShot(soundClips[1]);
+
+                            //火花を生成する
+                            Instantiate(hibana_ParticleEffect, transform.position, Quaternion.identity);
+
+                            return;
+                        }
                     }
                 }
 

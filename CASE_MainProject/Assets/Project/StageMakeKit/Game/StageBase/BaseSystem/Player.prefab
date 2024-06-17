@@ -734,14 +734,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7194135061811936492}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5917088272555709382}
   m_Father: {fileID: 1664696895489853387}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &7360480184796934021
 GameObject:
   m_ObjectHideFlags: 0
@@ -946,8 +946,9 @@ MonoBehaviour:
   bCombustibleGas: 0
   explosionPoint: {fileID: 8283244815977112913, guid: 5572cf0773ce8154e9dab224a76c9ecb,
     type: 3}
-  explosionPoint_InstallationIntervalTime: 0.1
-  explosionPoint_InstallationIntervalTimer: 0
+  explosionPoint_InstallationIntervalDistance: 1.5
+  explosionPoint_InstallationIntervalLastPosition: {x: 0, y: 0, z: 0}
+  steamInstantiatePoint: {fileID: 265461820022363149}
   runInput: {x: 0, y: 0}
   attackState: 0
   attackSpeed: 100
@@ -1262,6 +1263,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d53852ecea23094ebc5814ccc50a77f, type: 3}
+--- !u!1 &265461820022363149 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8166789734544367742, guid: 2d53852ecea23094ebc5814ccc50a77f,
+    type: 3}
+  m_PrefabInstance: {fileID: 8284758405488211059}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1437959996558894733 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6993517511527568126, guid: 2d53852ecea23094ebc5814ccc50a77f,

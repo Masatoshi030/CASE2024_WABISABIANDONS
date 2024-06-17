@@ -271,19 +271,21 @@ public class PlayerController : MonoBehaviour
 
         //=== 可燃ガス ===//
 
-        if (outSteamValue > 0.2f)
+        if (bCombustibleGas)
         {
-
-            //前回の設置座標と今の座標との差分が設定間隔よりも遠いかどうか
-            float offsetDistance = Vector3.Distance(explosionPoint_InstallationIntervalLastPosition, transform.position);
-
-            if (offsetDistance > explosionPoint_InstallationIntervalDistance)
+            if (outSteamValue > 0.2f)
             {
-                //爆発ポイントを生成
-                Instantiate(explosionPoint, steamInstantiatePoint.transform.position, Quaternion.identity);
+                //前回の設置座標と今の座標との差分が設定間隔よりも遠いかどうか
+                float offsetDistance = Vector3.Distance(explosionPoint_InstallationIntervalLastPosition, transform.position);
 
-                //座標を記録
-                explosionPoint_InstallationIntervalLastPosition = transform.position;
+                if (offsetDistance > explosionPoint_InstallationIntervalDistance)
+                {
+                    //爆発ポイントを生成
+                    Instantiate(explosionPoint, steamInstantiatePoint.transform.position, Quaternion.identity);
+
+                    //座標を記録
+                    explosionPoint_InstallationIntervalLastPosition = transform.position;
+                }
             }
         }
 
