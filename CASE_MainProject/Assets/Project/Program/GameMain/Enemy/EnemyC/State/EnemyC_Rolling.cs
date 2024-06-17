@@ -37,14 +37,13 @@ public class EnemyC_Rolling : EnemyState_C
     public override void Enter()
     {
         base.Enter();
+        enemy.IsVelocityZero = false;
         enemy.gameObject.GetComponent<NavMeshAgent>().enabled = false;
         rollSpeed = enemyC.DamageValue;
         direction = enemy.DamageVector;
         direction.y = 0.0f;
         direction.Normalize();
         enemy.transform.LookAt(enemy.transform.localPosition + direction * 20.0f);
-
-        Debug.Log(direction);
     }
 
     public override void MainFunc()
@@ -141,8 +140,6 @@ public class EnemyC_Rolling : EnemyState_C
             enemy.EnemyRigidbody.velocity = Vector3.zero;
             Vector3 normal = collision.contacts[0].normal;
 
-            Debug.Log(collision.contactCount);
-
             Vector3 reflect = direction - 2 * normal * Vector3.Dot(direction, normal);
             reflect.y = 0.0f;
             reflect.Normalize();
@@ -151,8 +148,6 @@ public class EnemyC_Rolling : EnemyState_C
             direction = reflect;
             angle = 0.0f;
             enemy.transform.LookAt(enemy.transform.position + direction);
-
-            float dot = Vector3.Dot(direction, normal);
 
             switch (enemyC.CState)
             {
@@ -220,6 +215,10 @@ public class EnemyC_Rolling : EnemyState_C
                 }
             }
         }
+        else if(collision.transform.tag == "GoldValve")
+        {
+            collision.transform.GetComponent<GoldValveController>().GetGoldValve();
+        }
     }
 
     public override void TriggerEnterSelf(Collider other)
@@ -252,6 +251,10 @@ public class EnemyC_Rolling : EnemyState_C
             {
                 Debug.Log("ìoò^çœÇ›");
             }
+        }
+        else if (other.transform.tag == "GoldValve")
+        {
+            other.transform.GetComponent<GoldValveController>().GetGoldValve();
         }
     }
 }

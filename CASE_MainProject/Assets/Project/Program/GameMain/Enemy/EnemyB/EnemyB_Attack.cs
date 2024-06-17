@@ -9,15 +9,15 @@ public class EnemyB_Attack : EnemyState
     [SerializeField, Header("攻撃時の生成オブジェクト")]
     GameObject attackObject;
     [SerializeField, Header("攻撃オブジェクトの速度")]
+    float attackSpeed;
+    [SerializeField, Header("攻撃オブジェクトのパワー")]
     float attackPower;
     [SerializeField, Header("回転速度")]
     float rotationSpeed = 0.8f;
 
     [Space(pad), Header("--遷移先リスト--")]
     [SerializeField, Header("視野内の遷移ID")]
-    public int successID;
-    [SerializeField, Header("視野外の遷移ID")]
-    public int failedID;
+    public int elapsedID;
     [SerializeField, Header("被弾時の遷移")]
     public int damagedID;
     [SerializeField, Header("衝突時の遷移")]
@@ -44,22 +44,18 @@ public class EnemyB_Attack : EnemyState
 
         enemy.transform.Rotate(0.0f, angle * Time.deltaTime, 0.0f);
 
-        if(enemy.IsDamaged)
+        if (enemy.IsDamaged)
         {
             machine.TransitionTo(damagedID);
             return;
         }
-
-        if(machine.Cnt >= attackInterval)
+        else if (machine.Cnt >= attackInterval)
         {
-            if(enemy.IsFindPlayer)
-            {
-                machine.TransitionTo(successID);
-            }
-            else
-            {
-                machine.TransitionTo(failedID);
-            }
+            GameObject attackObj = Instantiate(attackObject, enemy.transform.position, Quaternion.identity);
+            attackObj.transform.LookAt(PlayerController.instance.transform.position);
+            attackObj.GetComponent<DrillComponent>().AttackPower = attackPower;
+            attackObj.GetComponent<Rigidbody>().velocity = attackObj.transform.forward * attackSpeed;
+            machine.TransitionTo(elapsedID);
         }
     }
 

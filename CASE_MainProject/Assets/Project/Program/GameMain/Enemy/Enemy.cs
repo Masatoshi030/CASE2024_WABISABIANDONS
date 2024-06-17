@@ -91,11 +91,11 @@ public class Enemy : Subscriber
             target = GameObject.Find("Player");
         }
         eyeTransform = transform.Find("EyeTransform");
+        rb = GetComponent<Rigidbody>();
     }
 
     protected void Start()
     {
-        rb = GetComponent<Rigidbody>();
         // ƒpƒ‰ƒ[ƒ^‚Ì‰Šú‰»
         enemyHp = maxHp;
         enemyPressure = maxPressure;
