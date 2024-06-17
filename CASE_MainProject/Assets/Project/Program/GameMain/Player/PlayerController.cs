@@ -436,11 +436,21 @@ public class PlayerController : MonoBehaviour
         {
             //アイテムカウントを増やす
             heldGoldValve++;
+
             //取得音再生
             goldValveAudioSouce.PlayOneShot(goldValveAudioSouce.clip);
 
             //取得フラグ
             other.GetComponent<GoldValveController>().GetGoldValve();
+        }
+
+        if(other.tag == "DamageSteam")
+        {
+            //ダメージ
+            heldSteam += 10.0f;
+
+            //ノックバック
+            KnockBack();
         }
     }
 
