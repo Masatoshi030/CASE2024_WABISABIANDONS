@@ -171,7 +171,8 @@ public class EnemyC_Rolling : EnemyState_C
                             velocity.Normalize();
                             velocity.y = 5.0f;
                             Enemy enem = obj.GetComponent<Enemy>();
-                            enem.GetComponent<NavMeshAgent>().enabled = false;
+                            if (enem.GetComponent<NavMeshAgent>())
+                                enem.GetComponent<NavMeshAgent>().enabled = false;
                             enem.EnemyRigidbody.AddForce(velocity * rollSpeed * 2.0f, ForceMode.Impulse);
                             if (enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>())
                             {

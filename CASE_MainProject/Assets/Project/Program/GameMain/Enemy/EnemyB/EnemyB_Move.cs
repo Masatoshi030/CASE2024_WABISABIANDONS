@@ -82,6 +82,7 @@ public class EnemyB_Move : EnemyState
     public override void Exit()
     {
         base.Exit();
+        subCnt = 0.0f;
         
         if (!bReturn)
         {
