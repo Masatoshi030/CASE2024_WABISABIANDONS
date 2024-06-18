@@ -312,5 +312,16 @@ public class EnemyC_Rolling : EnemyState_C
                 EnemyC_Manager.instance.CreateExplosionEffect(enemy.transform.position, Quaternion.identity);
             }
         }
+        else if(other.transform.tag == "Player")
+        {
+            if(PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack)
+            {
+                PlayerController.instance.Damage(10.0f + 5.0f * (int)enemyC.CState);
+            }
+            else
+            {
+
+            }
+        }
     }
 }
