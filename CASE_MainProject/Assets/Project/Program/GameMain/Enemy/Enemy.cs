@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : Subscriber
 {
@@ -83,6 +84,10 @@ public class Enemy : Subscriber
     [SerializeField, Header("コライダー")]
     protected Collider enemyCollider;
     public Collider EnemyCollider { get => enemyCollider; }
+    [SerializeField, Header("NavMeshAgent")]
+    protected NavMeshAgent enemyAgent;
+
+    public NavMeshAgent EnemyAgent { get=> enemyAgent; }
 
     protected void Awake()
     {
@@ -92,6 +97,8 @@ public class Enemy : Subscriber
         }
         eyeTransform = transform.Find("EyeTransform");
         rb = GetComponent<Rigidbody>();
+        if(GetComponent<NavMeshAgent>())
+            enemyAgent = GetComponent<NavMeshAgent>();
     }
 
     protected void Start()

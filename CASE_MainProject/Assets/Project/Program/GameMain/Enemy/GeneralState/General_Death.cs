@@ -8,6 +8,7 @@ public class General_Death : EnemyState
     {
         base.Enter();
         enemy.EnemyRigidbody.velocity = Vector3.zero;
+        enemy.SendMsg<int>(0, 0);
         Destroy(enemy.gameObject);
         Destroy(gameObject);
     }
