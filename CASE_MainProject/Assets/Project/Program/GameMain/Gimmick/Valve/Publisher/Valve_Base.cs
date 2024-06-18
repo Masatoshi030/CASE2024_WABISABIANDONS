@@ -34,4 +34,9 @@ public class Valve_Base : Publisher
             Debug.Log("ì“®");
         }
     }
+
+    public void SetGimmickCommand()
+    {
+        SendMsg<bool>(moveNunber, true);
+    }
 }
