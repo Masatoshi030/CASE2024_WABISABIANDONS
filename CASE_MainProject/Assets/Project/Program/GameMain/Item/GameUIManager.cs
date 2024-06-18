@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public class GameUIManager : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class GameUIManager : MonoBehaviour
 
     [SerializeField, Header("ポーズ")]
     GameObject pauseObj;
+
+    [SerializeField, Header("パネルフェードアニメーション")]
+    Animator panelFadeAnimator;
 
     // Start is called before the first frame update
     void Start()
@@ -52,5 +56,20 @@ public class GameUIManager : MonoBehaviour
         {
             Time.timeScale = 1.0f;
         }
+    }
+
+    public async void SetFade(bool _enable, float _waitTime)
+    {
+        // 指定時間待機
+        await Task.Delay((int)(_waitTime * 1000));
+
+        //フェード開始
+        panelFadeAnimator.SetBool("bEnable", _enable);
+
+        // 指定時間待機
+        await Task.Delay((int)(_waitTime * 1000));
+
+        //シーンリロード
+        this.GetComponent<SceneChanger>().Reload();
     }
 }

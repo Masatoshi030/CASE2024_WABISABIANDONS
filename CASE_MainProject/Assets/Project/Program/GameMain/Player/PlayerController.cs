@@ -270,6 +270,9 @@ public class PlayerController : MonoBehaviour
                 //爆発エフェクト生成
                 Instantiate(explosionEffect, transform.position, Quaternion.identity);
 
+                //フェード
+                GameUIManager.instance.SetFade(true, 2.0f);
+
             }
         }
 
@@ -313,6 +316,7 @@ public class PlayerController : MonoBehaviour
 
         //プレイヤーに力を加える
         myRigidbody.velocity = moveVelocity;
+
 
         //=== 可燃ガス ===//
 
