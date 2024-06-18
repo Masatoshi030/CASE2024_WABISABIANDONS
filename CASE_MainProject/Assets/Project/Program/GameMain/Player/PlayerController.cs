@@ -244,9 +244,11 @@ public class PlayerController : MonoBehaviour
         //=== 重力 ===//
         moveVelocity.y = myRigidbody.velocity.y;
 
+
         //=== ジャンプ ===//
 
         OnJump();
+
 
         //=== 蒸気貯蔵 ===//
         if (outSteamValue > 0.0f)
@@ -254,27 +256,30 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            //自然加圧
             heldSteam += naturalAddPressure * Time.deltaTime;
-
-            if(heldSteam > maxHeldSteam)
-            {
-                //操作をロック
-                bLock = true;
-
-                //プレイヤーのBodyを非表示に
-                characterAnimation.gameObject.SetActive(false);
-
-                //破片エフェクト生成
-                Instantiate(partsEffect, transform.position, Quaternion.identity);
-
-                //爆発エフェクト生成
-                Instantiate(explosionEffect, transform.position, Quaternion.identity);
-
-                //フェード
-                GameUIManager.instance.SetFade(true, 2.0f);
-
-            }
         }
+
+        //死亡処理
+        if (heldSteam > maxHeldSteam)
+        {
+            //操作をロック
+            bLock = true;
+
+            //プレイヤーのBodyを非表示に
+            characterAnimation.gameObject.SetActive(false);
+
+            //破片エフェクト生成
+            Instantiate(partsEffect, transform.position, Quaternion.identity);
+
+            //爆発エフェクト生成
+            Instantiate(explosionEffect, transform.position, Quaternion.identity);
+
+            //フェード
+            GameUIManager.instance.SetFade(true, 2.0f);
+
+        }
+
 
         //=== 蒸気出力量 ===//
 
@@ -339,9 +344,10 @@ public class PlayerController : MonoBehaviour
         }
 
 
-            //=== 突撃 ===//
+        //=== 突撃 ===//
 
             OnAttack();
+
 
         //=== 一定間隔処理 ===//
 
