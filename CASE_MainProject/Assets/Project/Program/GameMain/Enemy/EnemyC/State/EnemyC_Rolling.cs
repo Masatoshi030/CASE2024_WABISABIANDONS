@@ -17,6 +17,9 @@ public class EnemyC_Rolling : EnemyState_C
     Vector3 rollAxis;
     float angle;
 
+    [SerializeField, Header("バルブボーナス(value * 巻き込み数)")]
+    uint valveBonus = 5;
+
     [SerializeField, Header("巻き込みオブジェクト")]
     List<GameObject> implicateObjects;
     Dictionary<GameObject, Vector3> positions = new Dictionary<GameObject, Vector3>();
@@ -104,28 +107,7 @@ public class EnemyC_Rolling : EnemyState_C
                             break;
                         case EnemyC.PressureState.High:
                             // 最大の場合
-                            foreach (GameObject obj in implicateObjects)
-                            {
-                                if (obj.GetComponent<Enemy>() != null)
-                                {
-                                    Vector3 velocity = obj.transform.position - enemy.transform.position;
-                                    velocity.Normalize();
-                                    velocity.y = 5.0f;
-                                    Enemy enem = obj.GetComponent<Enemy>();
-                                    enem.GetComponent<NavMeshAgent>().enabled = false;
-                                    enem.EnemyRigidbody.AddForce(velocity * rollSpeed * 2.0f, ForceMode.Impulse);
-                                    if (enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>())
-                                    {
-                                        EnemyC_IntervalDeath deathState = enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>();
-                                        enem.Machine.TransitionTo(deathState.StateID);
-                                    }
-                                }
-                            }
-                            positions.Clear();
-                            angles.Clear();
-                            implicateObjects.Clear();
-                            machine.TransitionTo(collisionID);
-                            EnemyC_Manager.instance.CreateExplosionEffect(enemy.transform.position, Quaternion.identity);
+                            ExplosionMyBody();
                             break;
                     }
                 }
@@ -159,29 +141,7 @@ public class EnemyC_Rolling : EnemyState_C
                     break;
                 case EnemyC.PressureState.High:
                     // 最大の場合
-                    foreach (GameObject obj in implicateObjects)
-                    {
-                        if (obj.GetComponent<Enemy>() != null)
-                        {
-                            Vector3 velocity = obj.transform.position - enemy.transform.position;
-                            velocity.Normalize();
-                            velocity.y = 5.0f;
-                            Enemy enem = obj.GetComponent<Enemy>();
-                            if (enem.GetComponent<NavMeshAgent>())
-                                enem.GetComponent<NavMeshAgent>().enabled = false;
-                            enem.EnemyRigidbody.AddForce(velocity * rollSpeed * 2.0f, ForceMode.Impulse);
-                            if (enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>())
-                            {
-                                EnemyC_IntervalDeath deathState = enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>();
-                                enem.Machine.TransitionTo(deathState.StateID);
-                            }
-                        }
-                    }
-                    positions.Clear();
-                    angles.Clear();
-                    implicateObjects.Clear();
-                    machine.TransitionTo(collisionID);
-                    EnemyC_Manager.instance.CreateExplosionEffect(enemy.transform.position, Quaternion.identity);
+                    ExplosionMyBody();
                     break;
             }
         }
@@ -197,18 +157,30 @@ public class EnemyC_Rolling : EnemyState_C
                 // ステートの取得が成功
                 if (enem.Machine.StateObject.GetComponent<EnemyC_Caught>())
                 {
+                    // 捕捉状態のステートを取得
                     EnemyC_Caught caughtState = enem.Machine.StateObject.GetComponent<EnemyC_Caught>();
                     caughtState.Caught = true;
+
+                    // バルブを落とさない状態にする
+                    enem.IsDropValves = false;
+
+                    // 取得したステートのIDを元に遷移
                     enem.Machine.TransitionTo(caughtState.StateID);
+
+                    // コライダーの非アクティブ化
                     enem.EnemyCollider.enabled = false;
                     if (enem.EnemyAgent != null)
                         enem.EnemyAgent.enabled = false;
+
                     // 衝突オブジェクトリストに追加
                     implicateObjects.Add(collision.gameObject);
+
                     // 衝突時のベクトルの差分を求める
                     Vector3 sub = collision.transform.position - enemyC.transform.position;
+
                     // 差分を辞書に登録
                     positions.Add(collision.gameObject, sub);
+
                     // 衝突時の回転角度を保存しておく
                     angles.Add(collision.gameObject, angle);
                 }
@@ -216,36 +188,18 @@ public class EnemyC_Rolling : EnemyState_C
         }
         else if (collision.transform.tag == "GoldValve")
         {
+            // 取得状態に変更
             collision.transform.GetComponent<GoldValveController>().GetGoldValve();
         }
         else if (collision.transform.tag == "Valve")
         {
+            // バルブギミックのコンポーンと取得
             if (collision.transform.GetComponent<Valve_Base>())
             {
+                // ギミックの作動
                 collision.transform.GetComponent<Valve_Base>().SetGimmickCommand();
-                foreach (GameObject obj in implicateObjects)
-                {
-                    if (obj.GetComponent<Enemy>() != null)
-                    {
-                        Vector3 velocity = obj.transform.position - enemy.transform.position;
-                        velocity.Normalize();
-                        velocity.y = 5.0f;
-                        Enemy enem = obj.GetComponent<Enemy>();
-                        if (enem.GetComponent<NavMeshAgent>())
-                            enem.GetComponent<NavMeshAgent>().enabled = false;
-                        enem.EnemyRigidbody.AddForce(velocity * rollSpeed * 2.0f, ForceMode.Impulse);
-                        if (enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>())
-                        {
-                            EnemyC_IntervalDeath deathState = enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>();
-                            enem.Machine.TransitionTo(deathState.StateID);
-                        }
-                    }
-                }
-                positions.Clear();
-                angles.Clear();
-                implicateObjects.Clear();
-                machine.TransitionTo(collisionID);
-                EnemyC_Manager.instance.CreateExplosionEffect(enemy.transform.position, Quaternion.identity);
+
+                ExplosionMyBody();
             }
         }
     }
@@ -265,6 +219,10 @@ public class EnemyC_Rolling : EnemyState_C
                 {
                     EnemyC_Caught caughtState = enem.Machine.StateObject.GetComponent<EnemyC_Caught>();
                     caughtState.Caught = true;
+
+                    // バルブ非ドロップ状態
+                    enem.IsDropValves = false;
+
                     enem.Machine.TransitionTo(caughtState.StateID);
                     enem.EnemyCollider.enabled = false;
                     // 衝突オブジェクトリストに追加
@@ -287,30 +245,65 @@ public class EnemyC_Rolling : EnemyState_C
             if (other.transform.GetComponent<Valve_Base>())
             {
                 other.transform.GetComponent<Valve_Base>().SetGimmickCommand();
-                foreach (GameObject obj in implicateObjects)
-                {
-                    if (obj.GetComponent<Enemy>() != null)
-                    {
-                        Vector3 velocity = obj.transform.position - enemy.transform.position;
-                        velocity.Normalize();
-                        velocity.y = 5.0f;
-                        Enemy enem = obj.GetComponent<Enemy>();
-                        if (enem.GetComponent<NavMeshAgent>())
-                            enem.GetComponent<NavMeshAgent>().enabled = false;
-                        enem.EnemyRigidbody.AddForce(velocity * rollSpeed * 2.0f, ForceMode.Impulse);
-                        if (enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>())
-                        {
-                            EnemyC_IntervalDeath deathState = enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>();
-                            enem.Machine.TransitionTo(deathState.StateID);
-                        }
-                    }
-                }
-                positions.Clear();
-                angles.Clear();
-                implicateObjects.Clear();
-                machine.TransitionTo(collisionID);
-                EnemyC_Manager.instance.CreateExplosionEffect(enemy.transform.position, Quaternion.identity);
+                ExplosionMyBody();
+            }
+        }
+        else if(other.transform.tag == "Player")
+        {
+            if(PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack)
+            {
+                PlayerController.instance.Damage(10.0f + 5.0f * (int)enemyC.CState);
+            }
+            else
+            {
+
             }
         }
     }
+
+    void ExplosionMyBody()
+    {
+        // バルブのスポーン数
+        uint spawnNum = 0;
+        uint Count = 0;
+
+        foreach (GameObject obj in implicateObjects)
+        {
+            if (obj.GetComponent<Enemy>() != null)
+            {
+                Vector3 velocity = obj.transform.position - enemy.transform.position;
+                velocity.Normalize();
+                velocity.y = 5.0f;
+                Enemy enem = obj.GetComponent<Enemy>();
+
+                // ドロップするバルブの取得
+                spawnNum += enem.DropValveNum;
+                if (enem.DropValveNum > 0)
+                {
+                    Count++;
+                }
+
+                if (enem.GetComponent<NavMeshAgent>())
+                    enem.GetComponent<NavMeshAgent>().enabled = false;
+                enem.EnemyRigidbody.AddForce(velocity * rollSpeed * 2.0f, ForceMode.Impulse);
+                if (enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>())
+                {
+                    EnemyC_IntervalDeath deathState = enem.Machine.StateObject.GetComponent<EnemyC_IntervalDeath>();
+                    enem.Machine.TransitionTo(deathState.StateID);
+                }
+            }
+        }
+        // スポーンさせるバルブにボーナスを加算
+        spawnNum = spawnNum + (valveBonus * Count);
+        Debug.Log(spawnNum);
+        DropValveManager.instance.CreateValves(spawnNum, enemy.transform.position, enemy.IsAutoGet);
+
+        positions.Clear();
+        angles.Clear();
+        implicateObjects.Clear();
+        EnemyC_Manager.instance.CreateExplosionEffect(enemy.transform.position, Quaternion.identity);
+        machine.TransitionTo(collisionID);
+    }
+
 }
+

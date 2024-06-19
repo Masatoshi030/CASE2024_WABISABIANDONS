@@ -14,7 +14,7 @@ public class GoldValveController : MonoBehaviour
     [SerializeField, Header("Žæ“¾ƒtƒ‰ƒO")]
     bool bGetFlag = false;
 
-    Vector3 startPosition;
+    public Vector3 startPosition;
     private void Start()
     {
         startPosition = transform.position;
