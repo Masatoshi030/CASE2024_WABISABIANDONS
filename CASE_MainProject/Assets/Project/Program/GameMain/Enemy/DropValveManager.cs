@@ -10,7 +10,7 @@ public class DropValveManager : MonoBehaviour
     GameObject valveEmitter;
 
     [SerializeField, Header("‘¬“x")]
-    float speed;
+    float speed = 1.0f;
 
     private void Awake()
     {

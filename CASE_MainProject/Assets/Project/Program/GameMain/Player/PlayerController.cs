@@ -564,6 +564,8 @@ public class PlayerController : MonoBehaviour
 
         //突撃方向の反対ベクトルの斜め上にノックバックする
         myRigidbody.velocity = (Vector3.up - moveRotationShaft.transform.forward) * knockBackPower;
+
+        heldSteam += _damage;
     }
 
     void OnAttack()
