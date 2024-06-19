@@ -37,9 +37,24 @@ public class Enemy : Subscriber
     protected float viewAngle;
     public float ViewAngle { get => viewAngle; }
 
+    [SerializeField, Header("索敵するか")]
+    bool isSearchPlayerOrigine = true;
+
     // 索敵処理の有無
     protected bool isSearchPlayer = true;
     public bool IsSearchPlayer {set=> isSearchPlayer = value; }
+    [SerializeField, Header("バルブを落とすか")]
+    protected bool isDropValves = true;
+    public bool IsDropValves { get => isDropValves; set => isDropValves = value; }
+
+    [SerializeField, Header("落とすバルブの数")]
+    protected uint dropValveNum = 0;
+    public uint DropValveNum { get => dropValveNum; }
+
+    [SerializeField, Header("自動取得の有無")]
+    protected bool isAutoGet = false;
+
+    public bool IsAutoGet { get => isAutoGet; }
 
     // プレイヤー発見の有無
     [SerializeField, Header("発見した"), ReadOnly]
@@ -54,7 +69,6 @@ public class Enemy : Subscriber
     protected float toPlayerAngle = 0.0f;
     public float ToPlayerAngle { get => toPlayerAngle; }
 
-    [SerializeField, Header("攻撃可能か"), ReadOnly]
     protected bool isAttackEnable = false;
     public bool IsAttackEnable { get => isAttackEnable; set => isAttackEnable = value; }
 
@@ -120,12 +134,18 @@ public class Enemy : Subscriber
         }
         // 無敵をなくす
         isInvincible = false;
-        if (isSearchPlayer)
+        if (isSearchPlayer && isSearchPlayerOrigine)
         {
             (bool find, float dis, float degree) = FindPlayerAtFOV();
             isFindPlayer = find;
             toPlayerDistance = dis;
             toPlayerAngle = degree;
+        }
+        else
+        {
+            isFindPlayer = false;
+            toPlayerDistance = 0.0f;
+            toPlayerAngle = 0.0f;
         }
         // ステートマシンのメイン処理
         if (enemyStateMachine.IsUpdate)
