@@ -101,7 +101,7 @@ public class HeadCollision_Manager : MonoBehaviour
                 {
                     if (other.transform.parent.GetComponent<BrokenWallController>().bBroken == false)
                     {
-                        if (PlayerController.instance.heldSteam / PlayerController.instance.maxHeldSteam > 0.9f)
+                        if (PlayerController.instance.heldSteam / PlayerController.instance.maxHeldSteam > 0.7f)
                         {
                             other.transform.parent.GetComponent<BrokenWallController>().SetBreak();
 

@@ -294,7 +294,19 @@ public class EnemyC_Rolling : EnemyState_C
             }
         }
         // スポーンさせるバルブにボーナスを加算
-        spawnNum = spawnNum + (valveBonus * Count);
+        if(Count > 4)
+        {
+            // 基本のボーナスバルブ+2個
+            spawnNum = spawnNum + ((valveBonus + 2) * Count);
+        }
+        else if(Count > 2)
+        {
+            spawnNum = spawnNum + ((valveBonus + 1) * Count);
+        }
+        else
+        {
+            spawnNum = spawnNum + (valveBonus * Count);
+        }
         Debug.Log(spawnNum);
         DropValveManager.instance.CreateValves(spawnNum, enemy.transform.position, enemy.IsAutoGet);
 

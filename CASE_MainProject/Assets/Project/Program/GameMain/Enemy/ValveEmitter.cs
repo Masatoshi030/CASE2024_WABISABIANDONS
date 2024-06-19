@@ -14,8 +14,10 @@ public class ValveEmitter : MonoBehaviour
         float subAngle = 0.0f;
         float upVelocityPower = 2.0f;
         float sideVelocityPower = velocitySpeed;
-        float duration = 1.0f;
 
+        // 2ïbÇ≈éÊÇËêÿÇÍÇÈÇÊÇ§Ç…Ç∑ÇÈ
+        float duration = 1.0f;
+        float timerAdd = 1.0f / spawnNum;
         if(isAuto)
         {
             for (int i = 0; i < spawnNum; i++)
@@ -31,11 +33,7 @@ public class ValveEmitter : MonoBehaviour
                 autoValve.waitTime = duration;
                 autoValve.isAuto = true;
                 
-                duration += 0.125f;
-                if(duration >= 5.0f)
-                {
-                    duration = 5.0f;
-                }
+                duration += timerAdd;
                 if (i != 0 && i % 12 == 0)
                 {
                     subAngle += 10.0f;
@@ -54,7 +52,7 @@ public class ValveEmitter : MonoBehaviour
                 Vector3 force = transform.forward;
                 force.y += upVelocityPower;
                 obj.GetComponent<Rigidbody>().AddForce(force * velocitySpeed, ForceMode.Impulse);
-                duration += 0.125f;
+                duration += timerAdd;
                 if (i != 0 && i % 12 == 0)
                 {
                     subAngle += 10.0f;
