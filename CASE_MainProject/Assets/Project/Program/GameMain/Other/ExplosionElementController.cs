@@ -31,6 +31,9 @@ public class ExplosionElementController : MonoBehaviour
     [SerializeField, Header("爆発エフェクト生成済み")]
     bool bExplosionInstantiated = false;
 
+    [SerializeField, Header("破片エフェクト")]
+    GameObject partsSplitEffect;
+
     AudioSource audioSource;
 
     private void Start()
@@ -89,6 +92,12 @@ public class ExplosionElementController : MonoBehaviour
             if (other.tag == "Explosion")
             {
                 other.GetComponent<ExplosionElementController>().SetExplosion();
+            }
+
+            if(other.tag == "Enemy")
+            {
+                other.GetComponent<Enemy>().Damage(20.0f, Vector3.zero);
+                Instantiate(partsSplitEffect, other.transform.position, Quaternion.identity);
             }
         }
     }
