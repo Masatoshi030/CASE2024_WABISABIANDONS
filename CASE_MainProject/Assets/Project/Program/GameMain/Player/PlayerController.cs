@@ -298,6 +298,9 @@ public class PlayerController : MonoBehaviour
             //蒸気音量調節
             au_Steam.volume = outSteamValue;
 
+            //蒸気の状態でポストエフェクトをブレンド
+            volumeAnimation.SetFloat("fPressure", heldSteam / maxHeldSteam);
+
             if (heldSteam < 0.0f)
             {
                 heldSteam = 0.0f;
