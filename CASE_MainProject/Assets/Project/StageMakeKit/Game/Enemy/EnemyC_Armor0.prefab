@@ -154,6 +154,7 @@ MonoBehaviour:
   direction: {x: 0, y: 0, z: 0}
   rollingBody: {fileID: 0}
   rollAxis: {x: 1, y: 0, z: 0}
+  valveBonus: 5
   implicateObjects: []
   collisionID: 0
 --- !u!114 &28667631184135382
@@ -386,6 +387,11 @@ PrefabInstance:
       propertyPath: stateObject
       value: 
       objectReference: {fileID: 452376587426198988}
+    - target: {fileID: 8040213490182358239, guid: e1692f143236d274d95f42ea8a1949dd,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 8780bcab9f4febd4a8444f166633b64c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
