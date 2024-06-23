@@ -9,7 +9,7 @@ public class GameSetting : MonoBehaviour
     [SerializeField, Header("‰Â”RƒKƒX—LŒø")]
     public bool bCombustibleGasEnable = false;
 
-    private void Start()
+    private void Awake()
     {
         if (instance == null)
         {
