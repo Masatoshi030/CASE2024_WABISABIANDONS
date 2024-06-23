@@ -56,6 +56,9 @@ public class TItleCamera : MonoBehaviour
             transform.rotation = Quaternion.Slerp(StartAngle, lastFrameAngle, backLinear.Evaluate(backTimer / backSpeed));
         }
 
-        this.GetComponent<SceneChanger>().SceneChange("Select");
+        if (DualSense_Manager.instance.GetInputState().CircleButton == DualSenseUnity.ButtonState.NewDown)
+        {
+            this.GetComponent<SceneChanger>().SceneChange("Select");
+        }
     }
 }

@@ -41,7 +41,7 @@ public class DebugManager : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{
-			this.GetComponent<SceneChanger>().SceneChange("StageDebugSelect");
+			this.GetComponent<SceneChanger>().SceneChange("Select");
 		}
 	}
 }

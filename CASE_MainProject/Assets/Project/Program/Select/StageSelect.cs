@@ -173,8 +173,37 @@ public class StageSelect : MonoBehaviour
         }
 
         //決定ボタン
-        if (DualSense_Manager.instance.GetInputState().DPadDownButton == DualSenseUnity.ButtonState.Down)
+        if (DualSense_Manager.instance.GetInputState().OptionsButton == DualSenseUnity.ButtonState.Down)
         {
+
+            string stageName = "";
+
+            //ワールド数
+            switch(nowPage)
+            {
+                case 0:
+                    stageName = "A";
+                    break;
+                case 1:
+                    stageName = "B";
+                    break;
+                case 2:
+                    stageName = "C";
+                    break;
+                case 3:
+                    stageName = "D";
+                    break;
+                default:
+                    stageName = "A";
+                    break;
+            }
+
+            //ステージ数
+            stageName += "_" + (nowSelect + 1).ToString();
+
+            Debug.Log(stageName);
+
+            this.GetComponent<SceneChanger>().SceneChange(stageName);
         }
     }
 
