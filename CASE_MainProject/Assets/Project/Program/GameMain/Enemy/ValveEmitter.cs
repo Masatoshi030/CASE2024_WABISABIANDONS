@@ -7,7 +7,7 @@ public class ValveEmitter : MonoBehaviour
     [SerializeField, Header("作成するオブジェクト")]
     GameObject instanceObject;
 
-    public void Create(uint spawnNum, float velocitySpeed, bool isAuto)
+    public void Create(uint spawnNum, float velocitySpeed,float maxGetTime, bool isAuto)
     {
         // 30度刻みで生成する
         float originVelocitySpeed = velocitySpeed;
@@ -15,9 +15,9 @@ public class ValveEmitter : MonoBehaviour
         float upVelocityPower = 2.0f;
         float sideVelocityPower = velocitySpeed;
 
-        // 2秒で取り切れるようにする
-        float duration = 1.0f;
-        float timerAdd = 1.0f / spawnNum;
+        // 1.1秒で取り切れるようにする(プレイヤーまでの距離補完含め(2.1秒))
+        float duration = 0.1f;
+        float timerAdd = maxGetTime / spawnNum;
         if(isAuto)
         {
             for (int i = 0; i < spawnNum; i++)

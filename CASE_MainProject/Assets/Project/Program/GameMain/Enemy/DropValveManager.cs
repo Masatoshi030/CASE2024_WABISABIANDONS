@@ -28,6 +28,21 @@ public class DropValveManager : MonoBehaviour
     {
         GameObject obj = Instantiate(valveEmitter, spawnPosition, Quaternion.identity);
         obj.transform.SetParent(transform);
-        obj.GetComponent<ValveEmitter>().Create(spawnNum, speed, isAuto);
+        if(spawnNum > 36)
+        {
+            obj.GetComponent<ValveEmitter>().Create(spawnNum, speed, 2.0f, isAuto);
+        }
+        else if(spawnNum > 24)
+        {
+            obj.GetComponent<ValveEmitter>().Create(spawnNum, speed, 1.5f, isAuto);
+        }
+        else if(spawnNum > 12)
+        {
+            obj.GetComponent<ValveEmitter>().Create(spawnNum, speed, 1.0f, isAuto);
+        }
+        else
+        {
+            obj.GetComponent<ValveEmitter>().Create(spawnNum, speed, 0.5f, isAuto);
+        }
     }
 }
