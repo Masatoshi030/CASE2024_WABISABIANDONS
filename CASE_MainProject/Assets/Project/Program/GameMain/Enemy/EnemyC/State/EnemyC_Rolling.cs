@@ -252,7 +252,7 @@ public class EnemyC_Rolling : EnemyState_C
         {
             if(PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack)
             {
-                PlayerController.instance.Damage(10.0f + 5.0f * (int)enemyC.CState);
+                PlayerController.instance.Damage(20.0f + 5.0f * (int)enemyC.CState);
             }
             else
             {
