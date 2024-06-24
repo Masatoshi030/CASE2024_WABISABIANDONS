@@ -22,7 +22,9 @@ public class AutoValveGet : MonoBehaviour
         cnt += Time.deltaTime;
         if(cnt >= waitTime && isAuto)
         {
+            gameObject.GetComponent<GoldValveController>().startPosition = transform.position;
             gameObject.GetComponent<GoldValveController>().GetGoldValve();
+            this.enabled = false;
         }
         if(cnt >= 0.5f)
         {
