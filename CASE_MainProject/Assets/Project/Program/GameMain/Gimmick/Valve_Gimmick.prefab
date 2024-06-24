@@ -114,8 +114,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7612560347446639850}
-  - component: {fileID: 644288273782398857}
-  - component: {fileID: 4296672520560661462}
   m_Layer: 0
   m_Name: Valve_Gimmick
   m_TagString: Valve
@@ -142,42 +140,6 @@ Transform:
   - {fileID: 1710662071696106812}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &644288273782398857
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2144608498140207688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ebb5c98157bfba4d9d865438853f5cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  subscribers:
-  - {fileID: 5477750957913964152}
-  type: 0
---- !u!135 &4296672520560661462
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2144608498140207688}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.26
-  m_Center: {x: 0, y: 0.16, z: 0}
 --- !u!1 &4215876435117981866
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,7 +271,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   observers:
-  - {fileID: 644288273782398857}
+  - {fileID: 0}
   state: 0
   steam_Speed: 1
   steam_Scale: 1
@@ -516,6 +478,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_OpenValve
       objectReference: {fileID: 0}
+    - target: {fileID: 1954470533621766756, guid: 2214023d83f8bfc458722b9a655cda4d,
+        type: 3}
+      propertyPath: m_TagString
+      value: Valve
+      objectReference: {fileID: 0}
     - target: {fileID: 4838224964896453447, guid: 2214023d83f8bfc458722b9a655cda4d,
         type: 3}
       propertyPath: m_Materials.Array.size
@@ -554,7 +521,57 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4534245995304517182}
+    - targetCorrespondingSourceObject: {fileID: 1954470533621766756, guid: 2214023d83f8bfc458722b9a655cda4d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2396622321413585256}
+    - targetCorrespondingSourceObject: {fileID: 1954470533621766756, guid: 2214023d83f8bfc458722b9a655cda4d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1507351866278773093}
   m_SourcePrefab: {fileID: 100100000, guid: 2214023d83f8bfc458722b9a655cda4d, type: 3}
+--- !u!1 &4809951075101444078 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1954470533621766756, guid: 2214023d83f8bfc458722b9a655cda4d,
+    type: 3}
+  m_PrefabInstance: {fileID: 6476120861665418634}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2396622321413585256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4809951075101444078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ebb5c98157bfba4d9d865438853f5cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  subscribers:
+  - {fileID: 5477750957913964152}
+  type: 1
+--- !u!135 &1507351866278773093
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4809951075101444078}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.006
+  m_Center: {x: -0.000000044703484, y: -0.002, z: 0.000000007450581}
 --- !u!1 &6133520395260485851 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2214023d83f8bfc458722b9a655cda4d,
