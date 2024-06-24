@@ -28,7 +28,8 @@ public class GasSpotController : MonoBehaviour
     private void Awake()
     {
         //é¿çsÇ∑ÇÈÇ∆è¡Ç¶ÇÈ
-        spawnAreaSettingObject.GetComponent<MeshRenderer>().enabled = false;
+        if(this.enabled)
+            spawnAreaSettingObject.GetComponent<MeshRenderer>().enabled = false;
     }
 
     // Start is called before the first frame update

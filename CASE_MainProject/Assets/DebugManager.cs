@@ -38,5 +38,10 @@ public class DebugManager : MonoBehaviour
 			frameCount = 0;
 			oldTime = Time.realtimeSinceStartup;
 		}
+
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			this.GetComponent<SceneChanger>().SceneChange("Select");
+		}
 	}
 }

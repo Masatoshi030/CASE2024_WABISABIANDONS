@@ -170,9 +170,13 @@ public class GetImagesInCanvas : MonoBehaviour
 
                 case 1:
 
+                    this.GetComponent<SceneChanger>().Reload();
+
                     break;
 
                 case 2:
+
+                    this.GetComponent<SceneChanger>().SceneChange("Select");
 
                     break;
             }

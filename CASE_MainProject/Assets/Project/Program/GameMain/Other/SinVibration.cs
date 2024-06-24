@@ -5,7 +5,7 @@ using UnityEngine;
 public class SinVibration : MonoBehaviour
 {
 
-    [SerializeField, Header("U“®‚Ì‘å‚«‚³"), Range(0.0f, 1.0f)]
+    [SerializeField, Header("U“®‚Ì‘å‚«‚³"), Range(0.0f, 10.0f)]
     public float Intensity = 0.1f;
 
     [SerializeField, Header("U“®‚Ì‘¬‚³"), Range(0.0f, 100.0f)]

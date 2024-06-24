@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
 
 
     //=== 可燃ガス ===//
-    [SerializeField, Header("可燃ガス有効")]
+    [SerializeField, Header("可燃ガス有効"), ReadOnly]
     bool bCombustibleGas = false;
 
     [SerializeField, Header("爆発ポイント")]
@@ -218,6 +218,9 @@ public class PlayerController : MonoBehaviour
             Destroy(gameObject);
         }
 
+        //可燃ガスの設定
+        bCombustibleGas = GameSetting.instance.bCombustibleGasEnable;
+
         //自分自身のRigidbodyを取得
         myRigidbody = GetComponent<Rigidbody>();
 
@@ -278,6 +281,9 @@ public class PlayerController : MonoBehaviour
             //フェード
             GameUIManager.instance.SetFade(true, 2.0f);
 
+            //振動処理
+            DualSense_Manager.instance.SetLeftRumble(1.0f, 0.5f);
+
         }
 
 
@@ -297,6 +303,9 @@ public class PlayerController : MonoBehaviour
 
             //蒸気音量調節
             au_Steam.volume = outSteamValue;
+
+            //蒸気の状態でポストエフェクトをブレンド
+            volumeAnimation.SetFloat("fPressure", heldSteam / maxHeldSteam);
 
             if (heldSteam < 0.0f)
             {
