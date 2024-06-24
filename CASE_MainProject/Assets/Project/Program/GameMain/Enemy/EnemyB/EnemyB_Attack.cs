@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EnemyB_Attack : EnemyState
@@ -53,12 +54,16 @@ public class EnemyB_Attack : EnemyState
         {
             GameObject attackObj = Instantiate(attackObject, enemy.transform.position, Quaternion.identity);
             attackObj.transform.forward = enemy.EyeTransform.forward;
-            if(enemy.ToPlayerAngle < 20.0f)
+            if(Mathf.Abs(enemy.ToPlayerAngle) < 20.0f)
             {
                 attackObj.transform.LookAt(PlayerController.instance.transform.position);
             }
+            // ã‰º‚ÌVelocity‚¾‚¯‡‚í‚¹‚é
+            float verticalVelocity = PlayerController.instance.transform.position.y - attackObj.transform.position.y;
             attackObj.GetComponent<DrillComponent>().AttackPower = attackPower;
-            attackObj.GetComponent<Rigidbody>().velocity = attackObj.transform.forward * attackSpeed;
+            Vector3 velocity = attackObj.transform.forward * attackSpeed;
+            velocity.y = verticalVelocity;
+            attackObj.GetComponent<Rigidbody>().velocity = velocity;
             machine.TransitionTo(elapsedID);
         }
     }
