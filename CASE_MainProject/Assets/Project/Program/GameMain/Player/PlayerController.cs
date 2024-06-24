@@ -531,6 +531,7 @@ public class PlayerController : MonoBehaviour
         if (collision.transform.root.tag == "MoveGround")
         {
             transform.parent = null;
+            transform.rotation = Quaternion.identity;
         }
     }
 
