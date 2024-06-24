@@ -160,6 +160,10 @@ public class GetImagesInCanvas : MonoBehaviour
 
         if(DualSense_Manager.instance.GetInputState().CircleButton== DualSenseUnity.ButtonState.NewDown)
         {
+
+            //ŽžŠÔ‚ð–ß‚·
+            Time.timeScale = 1.0f;
+
             switch (selectButton)
             {
                 case 0:
