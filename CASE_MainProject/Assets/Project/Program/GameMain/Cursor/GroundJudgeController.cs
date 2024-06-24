@@ -15,6 +15,11 @@ public class GroundJudgeController : MonoBehaviour
         Toolbar(typeof(ON_GROUND_STATE), "OnGroundState")]
     public ON_GROUND_STATE onGroundState = ON_GROUND_STATE.Off;
 
+    private void Awake()
+    {
+        onGroundState = ON_GROUND_STATE.Off;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Ground")

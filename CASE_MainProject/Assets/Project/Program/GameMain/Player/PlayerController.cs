@@ -36,6 +36,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("移動する力"), ReadOnly]
     Vector3 moveVelocity = Vector3.zero;
 
+    [SerializeField, Header("移動ロック")]
+    bool bMoveLock = false;
+
     // カメラの前方ベクトルをプレイヤーの進む方向とする
     Quaternion horizontalRotation;
 
@@ -329,7 +332,10 @@ public class PlayerController : MonoBehaviour
         }
 
         //プレイヤーに力を加える
-        myRigidbody.velocity = moveVelocity;
+        if (bMoveLock == false)
+        {
+            myRigidbody.velocity = moveVelocity;
+        }
 
 
         //=== 可燃ガス ===//
@@ -640,8 +646,11 @@ public class PlayerController : MonoBehaviour
                     //感度をリセット
                     PlayerVirtualCameraController.instance.OnAim(100, 100);
 
+                    //移動ロック
+                    bMoveLock = true;
+
                     //スロー
-                    Time.timeScale = 0.1f;
+                    //Time.timeScale = 0.1f;
                 }
 
                 //右トリガーを離す
@@ -682,7 +691,7 @@ public class PlayerController : MonoBehaviour
                         }
 
                         //スロー終了
-                        Time.timeScale = 1.0f;
+                        //Time.timeScale = 1.0f;
                     }
                 }
             }
@@ -701,6 +710,9 @@ public class PlayerController : MonoBehaviour
 
         //重力を無効にする
         myRigidbody.useGravity = true;
+
+        //移動ロック
+        bMoveLock = false;
     }
 
     public void KnockBack()
