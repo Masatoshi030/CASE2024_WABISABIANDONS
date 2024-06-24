@@ -45,7 +45,7 @@ public class PlayerUIController : MonoBehaviour
             //マテリアル適用
             gageImage.material = gageColorMaterialList[0];
         }
-        else if (steamGauge.fillAmount < 0.8f)
+        else if (steamGauge.fillAmount < 0.7f)
         {
             //マテリアル適用
             gageImage.material = gageColorMaterialList[1];

@@ -91,6 +91,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("スチーム音　AudioSource")]
     AudioSource au_Steam;
 
+    [SerializeField, Header("蒸気量で大きさを変える機能を有効")]
+    bool bSteamScaleEnable = true;
+
+    [SerializeField, Header("蒸気のパンパン度合いで大きさが変わる軸")]
+    GameObject steamScaleShaft;
+
+    [SerializeField, Header("パンパンの時の最大スケール")]
+    Vector3 steamMaxScale = new Vector3(1, 1, 1);
+
 
 
     //=== 可燃ガス ===//
@@ -763,6 +772,12 @@ public class PlayerController : MonoBehaviour
             //    //トリガー抵抗を無効にする
             //    DualSense_Manager.instance.SetLeftTriggerNoEffect();
             //}
+
+            if (bSteamScaleEnable)
+            {
+                //蒸気のパンパン度合いでプレイヤーのスケールを変える
+                steamScaleShaft.transform.localScale = Vector3.Lerp(new Vector3(1.0f, 1.0f, 1.0f), steamMaxScale, heldSteam / maxHeldSteam);
+            }
 
             //左トリガーの抵抗設定
             DualSense_Manager.instance.SetLeftTriggerEffect_Position(0.6f, 0.7f, 1.0f);
