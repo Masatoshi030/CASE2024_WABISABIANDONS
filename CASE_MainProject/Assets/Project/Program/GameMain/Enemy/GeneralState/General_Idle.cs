@@ -29,11 +29,13 @@ public class General_Idle : EnemyState
         if(enemy.IsFindPlayer)
         {
             machine.TransitionTo(searchSuccessID);
+            enemy.SendMsg<int>(0, 0);
         }
         else if(enemy.IsDamaged)
         {
             enemy.IsDamaged = false;
             machine.TransitionTo(damagedID);
+            enemy.SendMsg<int>(1, 0);
         }
         else if(machine.Cnt >= waitInterval)
         {

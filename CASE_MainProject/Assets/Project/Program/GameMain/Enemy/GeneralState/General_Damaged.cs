@@ -20,7 +20,8 @@ public class General_Damaged : EnemyState
     {
         enemy.IsDamaged = false;
         base.Enter();
-        if(enemy.Hp <= 0)
+        enemy.SendMsg<int>(0, 0);
+        if (enemy.Hp <= 0)
         {
             machine.TransitionTo(noHitPointID);
             bUpdate = false;
