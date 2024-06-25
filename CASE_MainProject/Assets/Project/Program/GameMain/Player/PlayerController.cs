@@ -184,13 +184,18 @@ public class PlayerController : MonoBehaviour
 
 
     //=== GoldValve ===//
-    [SerializeField, Header("GoldValveカウント")]
+    [SerializeField, Header("ゴールドバルブカウント")]
     int heldGoldValve = 0;
 
-    [SerializeField, Header("GoldValveAudioSource")]
-    AudioSource goldValveAudioSouce;
+    [SerializeField, Header("ゴールドバルブの効果音")]
+    AudioClip goldValveSoundClip;
+
+    [SerializeField, Header("ゴールドバルブの効果音マネージャー")]
+    SoundEffectManager goldValveSoundEffectManager;
 
 
+    //=== BGM・SE ===//
+    BGMManager mainBGMManager;
 
 
     [SerializeField, Header("キャラクターアニメーション")]
@@ -245,6 +250,9 @@ public class PlayerController : MonoBehaviour
         //突撃ゲージの参照
         attackGauge = GameObject.Find("AttackGauge").GetComponent<AttackGaugeController>();
         attackGauge.gameObject.SetActive(false);
+
+        //mainBGMManagerを取得
+        mainBGMManager = GameObject.Find("mainBGMManager").GetComponent<BGMManager>();
     }
 
     // Update is called once per frame
@@ -263,6 +271,7 @@ public class PlayerController : MonoBehaviour
         //=== ジャンプ ===//
 
         OnJump();
+
 
 
         //=== 蒸気貯蔵 ===//
@@ -295,6 +304,9 @@ public class PlayerController : MonoBehaviour
 
             //振動処理
             DualSense_Manager.instance.SetLeftRumble(1.0f, 0.5f);
+
+            //BGMをフェード終了
+            mainBGMManager.SetFadeStop(2.0f);
 
         }
 
@@ -513,12 +525,6 @@ public class PlayerController : MonoBehaviour
         }
         if(other.tag == "GoldValve")
         {
-            //アイテムカウントを増やす
-            heldGoldValve++;
-
-            //取得音再生
-            goldValveAudioSouce.PlayOneShot(goldValveAudioSouce.clip);
-
             //取得フラグ
             other.GetComponent<GoldValveController>().GetGoldValve();
         }
@@ -531,6 +537,15 @@ public class PlayerController : MonoBehaviour
             //ノックバック
             KnockBack();
         }
+    }
+
+    public void GetGoldValve()
+    {
+        //アイテムカウントを増やす
+        heldGoldValve++;
+
+        //取得音再生
+        goldValveSoundEffectManager.PlaySoundEffect(goldValveSoundClip);
     }
 
     private void OnCollisionEnter(Collision collision)

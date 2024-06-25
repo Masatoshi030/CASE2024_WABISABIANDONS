@@ -22,6 +22,8 @@ public class GoldValveController : MonoBehaviour
 
     public void GetGoldValve()
     {
+        PlayerController.instance.GetGoldValve();
+
         bGetFlag = true;
     }
 
