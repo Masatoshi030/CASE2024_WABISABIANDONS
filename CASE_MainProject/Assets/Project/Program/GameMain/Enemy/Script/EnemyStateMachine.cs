@@ -32,9 +32,9 @@ public class EnemyStateMachine : StateMachine
             }
         }
         // 初期ステートを設定
-        currentState = stateDatas[IDDatas[initStateID]];
+        currentState = stateDatas[initStateID];
         currentState.state.Enter();
-        enemy.StateName = stateDatas[IDDatas[initStateID]].name;
+        enemy.StateName = stateDatas[initStateID].name;
     }
 
     public override bool TransitionTo(int key)
@@ -47,7 +47,7 @@ public class EnemyStateMachine : StateMachine
 
     public override void AddState(State state)
     {
-        if(!idDatas.Contains(state.StateID))
+        if(!stateDatas.ContainsKey(state.StateID))
         {
             if (state is EnemyState)
             {
@@ -59,8 +59,7 @@ public class EnemyStateMachine : StateMachine
                 data.id = state.StateID;
                 data.name = state.StateName;
                 es.Initialize();
-                stateDatas.Add(data);
-                idDatas.Add(data.id);
+                stateDatas.Add(data.id, data);
             }
         }
     }

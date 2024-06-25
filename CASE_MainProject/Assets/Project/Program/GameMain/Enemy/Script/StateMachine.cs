@@ -34,12 +34,9 @@ public class StateMachine : MonoBehaviour
 
     // 状態リスト
     [SerializeField, Header("状態データ")]
-    protected List<StateData> stateDatas = new List<StateData>();
-    public List<StateData> StateDatas { get => stateDatas; }
+    protected Dictionary<int,StateData> stateDatas = new Dictionary<int, StateData>();
+    public Dictionary<int, StateData> StateDatas { get => stateDatas; }
 
-    // IDリスト
-    protected List<int> idDatas = new List<int>();
-    public List<int> IDDatas { get => idDatas; }
 
     [SerializeField, Header("経過時間"), ReadOnly]
     float cnt;
@@ -74,7 +71,7 @@ public class StateMachine : MonoBehaviour
             }
         }
         // 初期ステートを設定
-        currentState = stateDatas[IDDatas[initStateID]];
+        currentState = stateDatas[initStateID];
         currentState.state.Enter();
     }
 
@@ -106,9 +103,9 @@ public class StateMachine : MonoBehaviour
      */
     public virtual bool TransitionTo(int id)
     {
-            if(idDatas.Contains(id))
+            if(stateDatas.ContainsKey(id))
             {
-                nextState = stateDatas[IDDatas[id]];
+                nextState = stateDatas[id];
                 cnt = 0.0f;
                 currentState.state.Exit();
                 currentState = nextState;
@@ -118,7 +115,7 @@ public class StateMachine : MonoBehaviour
             }
             else
             {
-                Debug.Log(controller.name + " ステート更新エラー StateID : " + id);
+                Debug.Log(transform.name + " ステート更新エラー StateID : " + id);
                 return false;
             }
     }

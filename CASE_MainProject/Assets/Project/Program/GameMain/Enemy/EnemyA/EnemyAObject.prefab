@@ -162,11 +162,15 @@ MonoBehaviour:
   eyeTransform: {fileID: 0}
   viewDistance: 7.5
   viewAngle: 100
+  isSearchPlayerOrigine: 1
+  isDropValves: 1
+  dropValveNum: 0
+  isAutoGet: 0
   isFindPlayer: 0
-  isAttackEnable: 0
   rb: {fileID: 0}
   animator: {fileID: 105601624895424436}
   enemyCollider: {fileID: 0}
+  enemyAgent: {fileID: 0}
 --- !u!114 &1698645172402941505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,8 +205,8 @@ MonoBehaviour:
     id: 0
     name: 
     state: {fileID: 0}
-  stateDatas: []
   cnt: 0
+  isUpdate: 1
 --- !u!1 &8461667381499058315
 GameObject:
   m_ObjectHideFlags: 0
