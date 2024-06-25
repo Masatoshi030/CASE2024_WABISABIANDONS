@@ -12,7 +12,7 @@ public class EnemySpawnObserver : Publisher
 
     public override void ReceiveMsg<T>(Connection sender, int msgType, T msg)
     {
-        if(msgType == 0)
+        if(msgType == 1)
         {
             isGetMsg = true;
         }
@@ -27,7 +27,7 @@ public class EnemySpawnObserver : Publisher
             {
                 isGetMsg = false;
                 myCnt = 0.0f;
-                SendMsg<int>(0, 0);
+                SendMsg<int>(1, 0);
             }
         }
     }

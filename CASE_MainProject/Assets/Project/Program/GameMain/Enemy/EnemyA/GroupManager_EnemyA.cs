@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GroupManager_EnemyA : Publisher
+public class GroupManager_EnemyA : GroupManager
 {
     public override void ReceiveMsg<T>(Connection sender, int msgType, T msg)
     {
         // Ž€–S’Ê’m‚ðŽæ“¾
         if (msgType == 0)
         {
-            if (GetComponent<Enemy>() != null)
+            if (isAttachedEnemy)
             {
                 Enemy enemy = GetComponent<Enemy>();
                 if (enemy.Machine.StateObject.GetComponent<EnemyA_Tracking>() != null)

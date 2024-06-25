@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class GroupManager : Publisher
 {
-
+    [SerializeField, Header("エネミーへのアタッチか")]
+    protected bool isAttachedEnemy = false;
 }
