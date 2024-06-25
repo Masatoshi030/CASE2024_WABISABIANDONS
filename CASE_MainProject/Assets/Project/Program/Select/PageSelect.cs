@@ -14,12 +14,19 @@ public class PageSelect : MonoBehaviour
     [SerializeField, Header("横十字キーのクールタイム")]
     float buttonCoolTime;
 
+    [SerializeField, Header("効果音再生ソース")]
+    AudioSource myAudioSource;
+
+    [SerializeField, Header("ページめくり音")]
+    AudioClip pageSwitchSound;
+
     public static int serectPage;
     private Animator anim;
 
     // Start関数
     void Start()
     {
+
         serectPage = 0;
         anim= gameObject.GetComponent<Animator>();
 
@@ -37,7 +44,7 @@ public class PageSelect : MonoBehaviour
     {
         noTouchTime += Time.deltaTime;
 
-        //下ボタン処理
+        //右ボタン処理
         if (DualSense_Manager.instance.GetInputState().DPadRightButton == DualSenseUnity.ButtonState.Down)
         {
             //クールタイムが上がっていたらボタン入力処理
@@ -46,6 +53,9 @@ public class PageSelect : MonoBehaviour
                 //Bool型のパラメーターであるbPageMoveをTrueにする
                 anim.SetTrigger("tPageMove");
 
+                //ページ切り替え音再生
+                myAudioSource.PlayOneShot(pageSwitchSound);
+
                 DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
                 serectPage++;
             }
@@ -53,7 +63,7 @@ public class PageSelect : MonoBehaviour
             noTouchTime = 0.0f;
         }
 
-        //下ボタン処理
+        //左ボタン処理
         if (DualSense_Manager.instance.GetInputState().DPadLeftButton == DualSenseUnity.ButtonState.Down)
         {
             //クールタイムが上がっていたらボタン入力処理
@@ -61,6 +71,9 @@ public class PageSelect : MonoBehaviour
             {
                 //Bool型のパラメーターであるbPageMoveをTrueにする
                 anim.SetTrigger("tPageMove");
+
+                //ページ切り替え音再生
+                myAudioSource.PlayOneShot(pageSwitchSound);
 
                 DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
                 serectPage--;

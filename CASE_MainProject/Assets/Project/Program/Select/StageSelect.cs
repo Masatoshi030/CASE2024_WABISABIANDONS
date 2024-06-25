@@ -22,6 +22,15 @@ public class StageSelect : MonoBehaviour
     [SerializeField, Header("ページ設定")]
     GameObject[] papers;
 
+    [SerializeField, Header("効果音再生ソース")]
+    AudioSource myAudioSource;
+
+    [SerializeField, Header("カーソル移動効果音")]
+    AudioClip cursorMoveSound;
+
+    [SerializeField, Header("ステージ決定音")]
+    AudioClip stageEnterSound;
+
     //定義
     static int clearPage;                //現在のクリアページ
     static int clearSelectPage;    //現在のクリアセレクト数
@@ -38,6 +47,7 @@ public class StageSelect : MonoBehaviour
     // Start関数
     void Start()
     {
+
         //ステージのセレクトUI格納
         for (int i = minPage; i < maxPage; i++)
         {
@@ -66,6 +76,7 @@ public class StageSelect : MonoBehaviour
             if (noTouchTime > buttonCoolTime)
             {
                 DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
+                myAudioSource.PlayOneShot(cursorMoveSound);
                 nowSelect++;
                 timeElapsed = 0.0f;
             }
@@ -75,6 +86,7 @@ public class StageSelect : MonoBehaviour
             if (timeElapsed > timeOut)
             {
                 DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
+                myAudioSource.PlayOneShot(cursorMoveSound);
                 nowSelect++;
                 timeElapsed = 0.0f;
             }
@@ -96,6 +108,7 @@ public class StageSelect : MonoBehaviour
             if (noTouchTime > buttonCoolTime)
             {
                 DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
+                myAudioSource.PlayOneShot(cursorMoveSound);
                 nowSelect--;
                 timeElapsed = 0.0f;
             }
@@ -106,7 +119,7 @@ public class StageSelect : MonoBehaviour
             if (timeElapsed > timeOut)
             {
                 DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
-
+                myAudioSource.PlayOneShot(cursorMoveSound);
                 nowSelect--;
                 timeElapsed = 0.0f;
             }
@@ -204,6 +217,9 @@ public class StageSelect : MonoBehaviour
             Debug.Log(stageName);
 
             this.GetComponent<SceneChanger>().SceneChange(stageName);
+
+            //決定オン再生
+            myAudioSource.PlayOneShot(stageEnterSound);
         }
     }
 
