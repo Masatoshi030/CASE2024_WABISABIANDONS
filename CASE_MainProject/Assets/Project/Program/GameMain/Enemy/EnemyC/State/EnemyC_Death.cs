@@ -6,7 +6,7 @@ public class EnemyC_Death : EnemyState_C
 {
     public override void Enter()
     {
-        enemy.SendMsg<int>(0, 0);
+        enemy.SendMsg<int>(1, 0);
         Destroy(enemy.gameObject);
         Destroy(gameObject);
     }

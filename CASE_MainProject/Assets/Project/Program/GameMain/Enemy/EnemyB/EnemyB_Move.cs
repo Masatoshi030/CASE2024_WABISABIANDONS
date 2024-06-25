@@ -60,6 +60,7 @@ public class EnemyB_Move : EnemyState
         else if(enemy.IsFindPlayer)
         {
             machine.TransitionTo(searchSuccessID);
+            enemy.SendMsg<int>(0, 0);
             return;
         }
         float value = machine.Cnt;

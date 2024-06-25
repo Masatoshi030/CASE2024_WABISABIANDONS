@@ -59,12 +59,14 @@ public class General_MoveInterval : EnemyState
         if (enemy.IsFindPlayer)
         {
             machine.TransitionTo(serchSuccessID);
+            enemy.SendMsg<int>(0, 0);
             return;
         }
         else if(enemy.IsDamaged)
         {
             enemy.IsDamaged = false;
             machine.TransitionTo(damagedID);
+            enemy.SendMsg<int>(1, 0);
             return;
         }
         else if(machine.Cnt >= moveInterval)

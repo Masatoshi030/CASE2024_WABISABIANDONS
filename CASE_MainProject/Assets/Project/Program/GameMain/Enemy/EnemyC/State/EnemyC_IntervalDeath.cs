@@ -23,7 +23,7 @@ public class EnemyC_IntervalDeath : EnemyState
 
         if(machine.Cnt >= waitInterval)
         {
-            enemy.SendMsg<int>(0, 0);
+            enemy.SendMsg<int>(1, 0);
             Destroy(enemy.gameObject);
             Destroy(gameObject);
         }
