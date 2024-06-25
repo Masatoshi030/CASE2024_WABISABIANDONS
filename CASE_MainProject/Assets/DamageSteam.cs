@@ -30,9 +30,9 @@ public class DamageSteam : MonoBehaviour
     SinVibration mySinVibration;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-
+        steamCollider.GetComponent<MeshRenderer>().enabled = false;
     }
 
     // Update is called once per frame

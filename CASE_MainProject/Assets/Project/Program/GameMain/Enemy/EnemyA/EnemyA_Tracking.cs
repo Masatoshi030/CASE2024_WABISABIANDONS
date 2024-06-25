@@ -39,7 +39,6 @@ public class EnemyA_Tracking : EnemyState
     public override void Enter()
     {
         base.Enter();
-
         enemy.IsVelocityZero = true;
         patrol.enabled = true;
         patrol.Agent.enabled = true;

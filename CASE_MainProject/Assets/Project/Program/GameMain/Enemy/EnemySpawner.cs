@@ -45,7 +45,7 @@ public class EnemySpawner : Subscriber
     {
         switch (msgType)
         {
-            case 0:
+            case 1:
                 // ƒXƒ|[ƒ“ˆË—Š
                 isSpawn = true;
                 spawnObject = Instantiate(spawnPrefab, spawnStartPoint.position, spawnStartPoint.rotation);

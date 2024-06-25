@@ -183,6 +183,10 @@ public class EnemyC_Rolling : EnemyState_C
 
                     // Õ“Ë‚Ì‰ñ“]Šp“x‚ğ•Û‘¶‚µ‚Ä‚¨‚­
                     angles.Add(collision.gameObject, angle);
+                    if(enem.GetComponent<EnemyC>() == null)
+                    {
+                        enem.UnSubscribeAll();
+                    }
                 }
             }
         }
@@ -233,6 +237,10 @@ public class EnemyC_Rolling : EnemyState_C
                     positions.Add(other.gameObject, sub);
                     // Õ“Ë‚Ì‰ñ“]Šp“x‚ğ•Û‘¶‚µ‚Ä‚¨‚­
                     angles.Add(other.gameObject, angle);
+                    if (enem.GetComponent<EnemyC>() == null)
+                    {
+                        enem.UnSubscribeAll();
+                    }
                 }
             }
         }
@@ -252,7 +260,7 @@ public class EnemyC_Rolling : EnemyState_C
         {
             if(PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack)
             {
-                PlayerController.instance.Damage(10.0f + 5.0f * (int)enemyC.CState);
+                PlayerController.instance.Damage(20.0f + 5.0f * (int)enemyC.CState);
             }
             else
             {

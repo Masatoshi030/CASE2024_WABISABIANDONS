@@ -25,6 +25,15 @@ public class Subscriber : Connection
         observers.Remove(observer);
     }
 
+    public void UnSubscribeAll()
+    {
+        for(int i = 0; i < observers.Count; i++)
+        {
+            observers[i].UnSubscribe(this);
+            observers.RemoveAt(i);
+        }
+    }
+
     public override void SendMsg<T>(int msgType, T msg)
     {
         for(int i = 0; i < observers.Count; i++)

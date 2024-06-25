@@ -9,7 +9,7 @@ public class General_Death : EnemyState
         base.Enter();
         enemy.EnemyRigidbody.velocity = Vector3.zero;
         enemy.SendMsg<int>(0, 0);
-        if(enemy.IsDropValves)
+        if (enemy.IsDropValves)
         {
             DropValveManager.instance.CreateValves(enemy.DropValveNum, enemy.transform.position, enemy.IsAutoGet);
         }

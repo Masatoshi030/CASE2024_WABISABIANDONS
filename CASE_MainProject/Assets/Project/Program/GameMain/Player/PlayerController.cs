@@ -36,6 +36,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("移動する力"), ReadOnly]
     Vector3 moveVelocity = Vector3.zero;
 
+    [SerializeField, Header("移動ロック")]
+    bool bMoveLock = false;
+
     // カメラの前方ベクトルをプレイヤーの進む方向とする
     Quaternion horizontalRotation;
 
@@ -87,6 +90,15 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, Header("スチーム音　AudioSource")]
     AudioSource au_Steam;
+
+    [SerializeField, Header("蒸気量で大きさを変える機能を有効")]
+    bool bSteamScaleEnable = true;
+
+    [SerializeField, Header("蒸気のパンパン度合いで大きさが変わる軸")]
+    GameObject steamScaleShaft;
+
+    [SerializeField, Header("パンパンの時の最大スケール")]
+    Vector3 steamMaxScale = new Vector3(1, 1, 1);
 
 
 
@@ -172,13 +184,18 @@ public class PlayerController : MonoBehaviour
 
 
     //=== GoldValve ===//
-    [SerializeField, Header("GoldValveカウント")]
+    [SerializeField, Header("ゴールドバルブカウント")]
     int heldGoldValve = 0;
 
-    [SerializeField, Header("GoldValveAudioSource")]
-    AudioSource goldValveAudioSouce;
+    [SerializeField, Header("ゴールドバルブの効果音")]
+    AudioClip goldValveSoundClip;
+
+    [SerializeField, Header("ゴールドバルブの効果音マネージャー")]
+    SoundEffectManager goldValveSoundEffectManager;
 
 
+    //=== BGM・SE ===//
+    BGMManager mainBGMManager;
 
 
     [SerializeField, Header("キャラクターアニメーション")]
@@ -233,6 +250,9 @@ public class PlayerController : MonoBehaviour
         //突撃ゲージの参照
         attackGauge = GameObject.Find("AttackGauge").GetComponent<AttackGaugeController>();
         attackGauge.gameObject.SetActive(false);
+
+        //mainBGMManagerを取得
+        mainBGMManager = GameObject.Find("mainBGMManager").GetComponent<BGMManager>();
     }
 
     // Update is called once per frame
@@ -251,6 +271,7 @@ public class PlayerController : MonoBehaviour
         //=== ジャンプ ===//
 
         OnJump();
+
 
 
         //=== 蒸気貯蔵 ===//
@@ -283,6 +304,9 @@ public class PlayerController : MonoBehaviour
 
             //振動処理
             DualSense_Manager.instance.SetLeftRumble(1.0f, 0.5f);
+
+            //BGMをフェード終了
+            mainBGMManager.SetFadeStop(2.0f);
 
         }
 
@@ -329,7 +353,10 @@ public class PlayerController : MonoBehaviour
         }
 
         //プレイヤーに力を加える
-        myRigidbody.velocity = moveVelocity;
+        if (bMoveLock == false)
+        {
+            myRigidbody.velocity = moveVelocity;
+        }
 
 
         //=== 可燃ガス ===//
@@ -498,12 +525,6 @@ public class PlayerController : MonoBehaviour
         }
         if(other.tag == "GoldValve")
         {
-            //アイテムカウントを増やす
-            heldGoldValve++;
-
-            //取得音再生
-            goldValveAudioSouce.PlayOneShot(goldValveAudioSouce.clip);
-
             //取得フラグ
             other.GetComponent<GoldValveController>().GetGoldValve();
         }
@@ -516,6 +537,15 @@ public class PlayerController : MonoBehaviour
             //ノックバック
             KnockBack();
         }
+    }
+
+    public void GetGoldValve()
+    {
+        //アイテムカウントを増やす
+        heldGoldValve++;
+
+        //取得音再生
+        goldValveSoundEffectManager.PlaySoundEffect(goldValveSoundClip);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -531,6 +561,7 @@ public class PlayerController : MonoBehaviour
         if (collision.transform.root.tag == "MoveGround")
         {
             transform.parent = null;
+            transform.rotation = Quaternion.identity;
         }
     }
 
@@ -640,8 +671,11 @@ public class PlayerController : MonoBehaviour
                     //感度をリセット
                     PlayerVirtualCameraController.instance.OnAim(100, 100);
 
+                    //移動ロック
+                    bMoveLock = true;
+
                     //スロー
-                    Time.timeScale = 0.1f;
+                    //Time.timeScale = 0.1f;
                 }
 
                 //右トリガーを離す
@@ -682,7 +716,7 @@ public class PlayerController : MonoBehaviour
                         }
 
                         //スロー終了
-                        Time.timeScale = 1.0f;
+                        //Time.timeScale = 1.0f;
                     }
                 }
             }
@@ -701,6 +735,9 @@ public class PlayerController : MonoBehaviour
 
         //重力を無効にする
         myRigidbody.useGravity = true;
+
+        //移動ロック
+        bMoveLock = false;
     }
 
     public void KnockBack()
@@ -750,6 +787,12 @@ public class PlayerController : MonoBehaviour
             //    //トリガー抵抗を無効にする
             //    DualSense_Manager.instance.SetLeftTriggerNoEffect();
             //}
+
+            if (bSteamScaleEnable)
+            {
+                //蒸気のパンパン度合いでプレイヤーのスケールを変える
+                steamScaleShaft.transform.localScale = Vector3.Lerp(new Vector3(1.0f, 1.0f, 1.0f), steamMaxScale, heldSteam / maxHeldSteam);
+            }
 
             //左トリガーの抵抗設定
             DualSense_Manager.instance.SetLeftTriggerEffect_Position(0.6f, 0.7f, 1.0f);
