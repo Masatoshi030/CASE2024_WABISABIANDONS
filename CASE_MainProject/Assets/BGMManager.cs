@@ -15,6 +15,13 @@ public class BGMManager : MonoBehaviour
     [SerializeField, Header("フェードのタイマー")]
     float fadeTimer = 0.0f;
 
+    [SerializeField, Header("プレイヤーの蒸気量でピッチを変える機能を有効")]
+    bool bSteamPitch = false;
+
+    [SerializeField, Header("プレイヤーの蒸気量が最大の時のピッチ")]
+    float steamMaxPitch = 1.2f;
+
+
     enum BGM_STATE
     { FadeIn, Play, FadeOut, End};
     [SerializeField, Header("音楽の再生状態"), Toolbar(typeof(BGM_STATE), "BGMState")]
@@ -67,6 +74,11 @@ public class BGMManager : MonoBehaviour
 
                 fadeTimer = 0.0f;
             }
+        }
+
+        if (bSteamPitch)
+        {
+            BGM_AudioSource.pitch = Mathf.Lerp(1.0f, steamMaxPitch, PlayerController.instance.heldSteam / PlayerController.instance.maxHeldSteam - 0.5f);
         }
     }
 
