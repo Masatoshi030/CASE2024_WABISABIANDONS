@@ -5,10 +5,10 @@ using UnityEngine;
 public class MoveGrouond : MonoBehaviour
 {
     [SerializeField, Header("移動床オブジェクト")]
-    GameObject moveGround;
+    public GameObject startPoint;
 
     [SerializeField, Header("移動床終着地点")]
-    GameObject endPoint;
+    public GameObject endPoint;
 
     [SerializeField, Header("移動時間　※何秒で終着地点へ行くか")]
     float moveTime = 1.0f;
@@ -40,8 +40,8 @@ public class MoveGrouond : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        groundStartPosition = moveGround.transform.position;
-        groundStartQuaternion = moveGround.transform.localRotation;
+        groundStartPosition = startPoint.transform.position;
+        groundStartQuaternion = startPoint.transform.localRotation;
 
         mySteam_Scale.steam_Limit = moveTime + stopTime;
     }
@@ -68,12 +68,12 @@ public class MoveGrouond : MonoBehaviour
         }
 
         //座標の線形補間
-        moveGround.transform.position = Vector3.Lerp(groundStartPosition, endPoint.transform.position, moveTimer / moveTime);
+        startPoint.transform.position = Vector3.Lerp(groundStartPosition, endPoint.transform.position, moveTimer / moveTime);
 
         if (bRotationLerp)
         {
             //回転の線形補間
-            moveGround.transform.localRotation = Quaternion.Lerp(groundStartQuaternion, endPoint.transform.localRotation, moveTimer / moveTime);
+            startPoint.transform.localRotation = Quaternion.Lerp(groundStartQuaternion, endPoint.transform.localRotation, moveTimer / moveTime);
         }
     }
 }
