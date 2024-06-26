@@ -70,6 +70,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("接地判定")]
     GroundJudgeController myGroundJudgeController;
 
+    [SerializeField, Header("ジャンプ効果音のソース")]
+    AudioSource au_Jump;
+
+    [SerializeField, Header("ジャンプの効果音")]
+    AudioClip jumpSound;
+
 
 
     //=== 蒸気 ===//
@@ -195,7 +201,9 @@ public class PlayerController : MonoBehaviour
 
 
     //=== BGM・SE ===//
+
     BGMManager mainBGMManager;
+
 
 
     [SerializeField, Header("キャラクターアニメーション")]
@@ -265,6 +273,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //=== 重力 ===//
+
         moveVelocity.y = myRigidbody.velocity.y;
 
 
@@ -326,7 +335,7 @@ public class PlayerController : MonoBehaviour
             heldSteam -= outSteamValue * outMaxSteamValue;
 
             //蒸気音量調節
-            au_Steam.volume = outSteamValue;
+            au_Steam.volume = outSteamValue * 0.5f;
 
             //蒸気の状態でポストエフェクトをブレンド
             volumeAnimation.SetFloat("fPressure", heldSteam / maxHeldSteam);
@@ -470,6 +479,10 @@ public class PlayerController : MonoBehaviour
 
                 //蒸気エフェクト
                 Instantiate(jump_SteamEffect, transform.position, Quaternion.identity);
+
+                //ジャンプ音再生
+                au_Jump.pitch = 1.0f + Random.Range(-0.25f, 2.0f);
+                au_Jump.PlayOneShot(jumpSound);
             }
         }
         //上昇中
