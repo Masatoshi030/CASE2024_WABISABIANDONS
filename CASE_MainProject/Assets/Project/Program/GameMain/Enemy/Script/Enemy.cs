@@ -103,6 +103,13 @@ public class Enemy : Subscriber
 
     public NavMeshAgent EnemyAgent { get=> enemyAgent; }
 
+    [SerializeField, Header("矢印オブジェクト")]
+    GameObject allowObject;
+
+    public GameObject AllowObject { get => allowObject; }
+
+    bool bUseAllow;
+
     protected void Awake()
     {
         if(target == null)
@@ -124,6 +131,15 @@ public class Enemy : Subscriber
         enemyStateMachine = GetComponent<EnemyStateMachine>();
         enemyStateMachine.EnemyComponent = this;
         enemyStateMachine.Initialize();
+        if(allowObject != null)
+        {
+            bUseAllow = true;
+            allowObject.SetActive(false);
+        }
+        else
+        {
+            bUseAllow = false;
+        }
     }
 
     protected void Update()

@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 2943064176968665533}
   - component: {fileID: 1698645172402941505}
   - component: {fileID: 4767522527822636387}
+  - component: {fileID: 3206581622667928825}
   m_Layer: 0
   m_Name: EnemyAObject
   m_TagString: Enemy
@@ -63,7 +64,7 @@ Transform:
   m_GameObject: {fileID: 6903049452059307811}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.3, y: 0.839, z: -23.4}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -133,7 +134,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1
+  m_StoppingDistance: 0.2
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -167,10 +168,11 @@ MonoBehaviour:
   dropValveNum: 0
   isAutoGet: 0
   isFindPlayer: 0
-  rb: {fileID: 0}
+  rb: {fileID: 3580489059307986953}
   animator: {fileID: 105601624895424436}
-  enemyCollider: {fileID: 0}
-  enemyAgent: {fileID: 0}
+  enemyCollider: {fileID: 5557486220418456821}
+  enemyAgent: {fileID: 727272565781508872}
+  allowObject: {fileID: 0}
 --- !u!114 &1698645172402941505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,13 +202,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateObject: {fileID: 0}
-  initStateID: 1
+  initStateID: 2
   currentState:
     id: 0
     name: 
     state: {fileID: 0}
+  stateDatas: []
   cnt: 0
   isUpdate: 1
+--- !u!114 &3206581622667928825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6903049452059307811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e841655bfa9382d499575e7aabd2a54b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemy: {fileID: 2943064176968665533}
+  managedAllow: {fileID: 0}
 --- !u!1 &8461667381499058315
 GameObject:
   m_ObjectHideFlags: 0
@@ -232,7 +249,7 @@ Transform:
   m_GameObject: {fileID: 8461667381499058315}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.4, z: 0.84}
+  m_LocalPosition: {x: 0, y: 0.9, z: 0.84}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

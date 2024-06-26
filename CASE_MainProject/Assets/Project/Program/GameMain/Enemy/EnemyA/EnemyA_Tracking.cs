@@ -48,6 +48,7 @@ public class EnemyA_Tracking : EnemyState
         Direction.Normalize();
         Direction *= moveDistance;
         patrol.ExcuteCustom(enemy.gameObject.transform.position + Direction);
+        enemy.AllowObject.SetActive(true);
     }
 
     public override void MainFunc()
@@ -75,7 +76,7 @@ public class EnemyA_Tracking : EnemyState
     public override void Exit()
     {
         base.Exit();
-
+        enemy.AllowObject.SetActive(false);
         patrol.Stop();
         patrol.Agent.enabled = false;
     }
