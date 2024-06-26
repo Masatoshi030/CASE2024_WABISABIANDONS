@@ -552,7 +552,7 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.transform.root.tag == "MoveGround")
         {
-            transform.parent = collision.transform;
+            transform.parent = collision.transform.parent.parent.GetComponent<MoveGrouond>().startPoint.transform;
         }
     }
 
