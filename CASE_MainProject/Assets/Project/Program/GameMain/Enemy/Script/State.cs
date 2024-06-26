@@ -1,9 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class State : MonoBehaviour
 {
+    [Serializable]
+    public struct StateKey
+    {
+        [SerializeField]public string stateName;
+        [SerializeField]public int stateID;
+        [SerializeField]public bool transitionEnable;
+    }
+
+
     protected const float pad = 10.0f;
 
     protected bool continueProcessing = true;

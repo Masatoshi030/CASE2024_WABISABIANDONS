@@ -133,6 +133,34 @@ public class StateMachine : MonoBehaviour
         return true;
     }
 
+    public virtual bool TransitionTo(State.StateKey key)
+    {
+        if(key.transitionEnable)
+        {
+            if (stateDatas.ContainsKey(key.stateID))
+            {
+                nextState = stateDatas[key.stateID];
+                cnt = 0.0f;
+                currentState.state.Exit();
+                currentState = nextState;
+                nextState = null;
+                currentState.state.Enter();
+                return true;
+            }
+            else
+            {
+                Debug.Log(transform.name + " ステート更新エラー State : " + key.stateName);
+                return false;
+            }
+        }
+        else
+        {
+            Debug.Log(transform.name + "ステート更新不可 transitionEnable = false");
+            cnt = 0.0f;
+            return false;
+        }
+    }
+
     public virtual void AddState(State state)
     {
         StateData data = new StateData();

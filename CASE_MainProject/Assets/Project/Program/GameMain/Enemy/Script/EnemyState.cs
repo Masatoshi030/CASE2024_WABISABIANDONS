@@ -13,10 +13,6 @@ public class EnemyState : State
     protected string enterAnimation;
     [SerializeField, Header("アニメーション速度")]
     protected float animSpeed = 1.0f;
-    [SerializeField, Header("使用蒸気量")]
-    protected float pressureAmount;
-    [SerializeField, Header("-圧力一定以下の遷移ID-")]
-    protected int pressureZeroID = 1;
 
     public override void Initialize()
     {
@@ -50,12 +46,5 @@ public class EnemyState : State
     public override void MainFunc()
     {
         base.MainFunc();
-
-        enemy.CalcPressure(-pressureAmount * Time.deltaTime);
-        if(enemy.Pressre <= 0.0)
-        {
-            machine.IsUpdate = false;
-            machine.TransitionTo(pressureZeroID);
-        }
     }
 }

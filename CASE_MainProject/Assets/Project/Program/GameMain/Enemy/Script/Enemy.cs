@@ -108,7 +108,21 @@ public class Enemy : Subscriber
 
     public GameObject AllowObject { get => allowObject; }
 
-    bool bUseAllow;
+    public void SetAllowActive(bool active)
+    {
+        if(allowObject != null)
+        {
+            allowObject.SetActive(active);
+        }
+    }
+    public void DestroyAllow()
+    {
+        if(allowObject != null)
+        {
+            Destroy(allowObject);
+        }
+    }
+
 
     protected void Awake()
     {
@@ -133,12 +147,7 @@ public class Enemy : Subscriber
         enemyStateMachine.Initialize();
         if(allowObject != null)
         {
-            bUseAllow = true;
             allowObject.SetActive(false);
-        }
-        else
-        {
-            bUseAllow = false;
         }
     }
 

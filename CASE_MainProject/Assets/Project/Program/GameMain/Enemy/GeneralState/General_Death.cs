@@ -13,6 +13,7 @@ public class General_Death : EnemyState
         {
             DropValveManager.instance.CreateValves(enemy.DropValveNum, enemy.transform.position, enemy.IsAutoGet);
         }
+        enemy.DestroyAllow();
         Destroy(enemy.gameObject);
         Destroy(gameObject);
     }

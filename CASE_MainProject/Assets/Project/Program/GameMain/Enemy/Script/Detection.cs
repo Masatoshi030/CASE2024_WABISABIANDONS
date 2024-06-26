@@ -22,9 +22,9 @@ public class Detection : Publisher
                 if (subscribers[i] != null)
                 {
                     Enemy enemy = (Enemy)subscribers[i];
-                    if(enemy.Machine.StateObject.GetComponent<EnemyA_WaitPlayer>() != null)
+                    if(enemy.Machine.StateObject.GetComponent<State_A_WaitDetection>() != null)
                     {
-                        EnemyA_WaitPlayer state = enemy.Machine.StateObject.GetComponent<EnemyA_WaitPlayer>();
+                        State_A_WaitDetection state = enemy.Machine.StateObject.GetComponent<State_A_WaitDetection>();
                         state.isDetection = true;
                     }
                 }

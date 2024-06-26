@@ -2,12 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyA_WaitPlayer : EnemyState
+// 検知用オブジェクトからの命令発行待ち状態
+public class State_A_WaitDetection : EnemyState
 {
-    [SerializeField, Header("プレイヤーの通過検知があったか")]
     public bool isDetection = false;
-
-    [SerializeField, Header("移動中")]
     bool isMove = false;
 
     [SerializeField, Header("検知時の移動方向")]
@@ -17,11 +15,11 @@ public class EnemyA_WaitPlayer : EnemyState
     float velocitySpeed;
 
     [Space(pad), Header("--遷移先リスト--")]
-    [SerializeField, Header("検知後の最終遷移先")]
-    int finalTransitionID;
+    [SerializeField, Header("検知後の最終遷移")]
+    StateKey detectedKey;
 
-    [SerializeField, Header("被弾時の遷移先")]
-    int damagedID;
+    [SerializeField, Header("ダメージ時の遷移")]
+    StateKey damagedKey;
 
     public override void Enter()
     {
@@ -32,20 +30,24 @@ public class EnemyA_WaitPlayer : EnemyState
     public override void MainFunc()
     {
         base.MainFunc();
+        
+        // 検知オブジェクトからの通知なしに自身でプレイヤーを発見
         if(enemy.IsFindPlayer && !isDetection)
         {
             isMove = true;
             enemy.EnemyRigidbody.velocity = detectionTransform.forward * velocitySpeed;
             isDetection = true;
         }
+        // 検知オブジェクトからの通知で発見
         else if(isDetection && !isMove)
         {
             isMove = true;
             enemy.EnemyRigidbody.velocity = detectionTransform.forward * velocitySpeed;
         }
+        // 被弾時の遷移
         else if(enemy.IsDamaged)
         {
-            machine.TransitionTo(damagedID);
+            machine.TransitionTo(damagedKey);
         }
     }
 
@@ -61,7 +63,7 @@ public class EnemyA_WaitPlayer : EnemyState
         {
             if (collision.transform.tag == "Ground")
             {
-                machine.TransitionTo(finalTransitionID);
+                machine.TransitionTo(detectedKey);
             }
         }
     }

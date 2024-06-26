@@ -23,7 +23,10 @@ public class EnemyC_IntervalDeath : EnemyState
 
         if(machine.Cnt >= waitInterval)
         {
+            // Cの死亡メッセージを通知(スポナーにビリヤードのスポーン依頼)
             enemy.SendMsg<int>(1, 0);
+
+            enemy.DestroyAllow();
             Destroy(enemy.gameObject);
             Destroy(gameObject);
         }

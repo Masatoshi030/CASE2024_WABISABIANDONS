@@ -45,6 +45,14 @@ public class EnemyStateMachine : StateMachine
         else return false;
     }
 
+    public override bool TransitionTo(State.StateKey key)
+    {
+        bool b = base.TransitionTo(key);
+        if (b) enemy.StateName = key.stateName;
+
+        return b;
+    }
+
     public override void AddState(State state)
     {
         if(!stateDatas.ContainsKey(state.StateID))
