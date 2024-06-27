@@ -109,6 +109,14 @@ public class State_A_Tackle : EnemyState
                 }
             }
         }
+        else if (collision.transform.tag == "Enemy")
+        {
+            Vector3 direction = (collision.transform.position - enemy.transform.position).normalized;
+            // åªç›ÇÃvelocityÇï€ë∂
+            Vector3 velocity = enemy.EnemyRigidbody.velocity;
+            velocity += direction * 5.0f;
+            enemy.EnemyRigidbody.velocity = velocity;
+        }
     }
 
     public override void TriggerEnterSelf(Collider other)
@@ -129,12 +137,13 @@ public class State_A_Tackle : EnemyState
                     PlayerController.instance.Damage(tacklePower);
                     bTackle = false;
                 }
+                enemy.EnemyRigidbody.velocity = Vector3.down * 20.0f;
             }
             if (other.transform.tag == "Wall" || other.transform.tag == "Ground")
             {
                 bTackle = false;
-                enemy.EnemyRigidbody.velocity = Vector3.zero;
                 enemy.EnemyCollider.isTrigger = false;
+                enemy.EnemyRigidbody.velocity = Vector3.down * 10.0f;
             }
         }
         else
@@ -142,7 +151,7 @@ public class State_A_Tackle : EnemyState
             if (other.transform.tag == "Wall" || other.transform.tag == "Ground")
             {
                 enemy.EnemyCollider.isTrigger = false;
-                enemy.EnemyRigidbody.velocity = Vector3.zero;
+                enemy.EnemyRigidbody.velocity = Vector3.down * 20.0f;
             }
         }
     }

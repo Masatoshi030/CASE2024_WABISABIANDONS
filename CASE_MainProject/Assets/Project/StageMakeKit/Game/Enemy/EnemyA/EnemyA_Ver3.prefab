@@ -77,6 +77,7 @@ GameObject:
   - component: {fileID: 5762152152302625678}
   - component: {fileID: 5984542090892115755}
   - component: {fileID: 849834220139690268}
+  - component: {fileID: 7681304179592356357}
   - component: {fileID: 4628465320795350436}
   - component: {fileID: 1665272262622042858}
   - component: {fileID: 6856722589510955800}
@@ -186,6 +187,7 @@ MonoBehaviour:
   rotationSpeed: 450
   rotationTime: 1
   allowLength: 10
+  allowMaterial: {fileID: 2100000, guid: 22696f8214ad3064782fd38f1a5d937a, type: 2}
   elapsedKey:
     stateName: tackle
     stateID: 5
@@ -211,7 +213,7 @@ MonoBehaviour:
   isAnimation: 0
   enterAnimation: 
   animSpeed: 1
-  stiffnessTime: 3
+  stiffnessTime: 0.5
   hp0Key:
     stateName: Death
     stateID: 0
@@ -247,10 +249,6 @@ MonoBehaviour:
   tackleUpVelocity: 6
   stiffnessTime: 2.5
   bTackle: 0
-  elapsedKey:
-    stateName: wait
-    stateID: 1
-    transitionEnable: 1
   tackledKey:
     stateName: wait
     stateID: 6
@@ -280,6 +278,41 @@ MonoBehaviour:
   elapsedKey:
     stateName: move
     stateID: 2
+    transitionEnable: 1
+  damagedKey:
+    stateName: damage
+    stateID: 4
+    transitionEnable: 1
+--- !u!114 &7681304179592356357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3373767461223409662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d6fc3a1f9c36e646971139159bc1b9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stateName: tracking
+  stateID: 7
+  isAnimation: 1
+  enterAnimation: Walk
+  animSpeed: 4
+  moveSpeed: 9
+  accelerationSpeed: 9
+  angularSpeed: 400
+  trackingTime: 3
+  trackSuccessDistance: 13
+  allowMaterial: {fileID: 2100000, guid: 3619bd425433b1d4b95aa67897796b94, type: 2}
+  successedKey:
+    stateName: found
+    stateID: 3
+    transitionEnable: 1
+  elapsedKey:
+    stateName: wait
+    stateID: 6
     transitionEnable: 1
   damagedKey:
     stateName: damage

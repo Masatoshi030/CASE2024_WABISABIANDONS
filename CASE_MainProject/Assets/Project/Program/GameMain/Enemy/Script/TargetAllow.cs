@@ -90,4 +90,9 @@ public class TargetAllow : MonoBehaviour
     {
         isDesignationPositions = false;
     }
+
+    public void SetMaterial(Material material)
+    {
+        lineRenderer.material = material;
+    }
 }

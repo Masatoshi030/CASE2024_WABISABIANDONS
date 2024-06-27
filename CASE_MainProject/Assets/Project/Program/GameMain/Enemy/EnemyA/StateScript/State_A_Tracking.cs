@@ -14,6 +14,8 @@ public class State_A_Tracking : EnemyState
     float trackingTime = 3.0f;
     [SerializeField, Header("追跡成功距離")]
     float trackSuccessDistance = 7.0f;
+    [SerializeField, Header("矢印に適用するマテリアル")]
+    Material allowMaterial;
 
     NavMeshPatrol patrol;
     float subCnt = 0.0f;
@@ -50,7 +52,9 @@ public class State_A_Tracking : EnemyState
         enemy.IsVelocityZero = true;
         subCnt = 0.0f;
         allowActive = true;
+
         enemy.SetAllowActive(allowActive);
+        enemy.AllowObject.GetComponent<TargetAllow>().SetMaterial(allowMaterial);
     }
 
     public override void MainFunc()

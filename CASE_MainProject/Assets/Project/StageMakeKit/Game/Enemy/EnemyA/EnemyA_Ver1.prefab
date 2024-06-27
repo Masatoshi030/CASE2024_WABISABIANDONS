@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 3200387660728463348}
   - component: {fileID: 6888038141806604885}
   - component: {fileID: 7913837210716694402}
+  - component: {fileID: 9151328907830017789}
   - component: {fileID: 7902016877345924673}
   - component: {fileID: 5094391588281884683}
   - component: {fileID: 2818278077690452022}
@@ -220,6 +221,7 @@ MonoBehaviour:
   rotationSpeed: 360
   rotationTime: 3
   allowLength: 10
+  allowMaterial: {fileID: 2100000, guid: da76c690584313e458e84f86bca06531, type: 2}
   elapsedKey:
     stateName: tackle
     stateID: 5
@@ -245,7 +247,7 @@ MonoBehaviour:
   isAnimation: 0
   enterAnimation: 
   animSpeed: 1
-  stiffnessTime: 3
+  stiffnessTime: 0.5
   hp0Key:
     stateName: Death
     stateID: 0
@@ -277,13 +279,10 @@ MonoBehaviour:
   animSpeed: 1
   tackleVelocity: 20
   tacklePower: 10
+  isCalcPlayerHeight: 0
   tackleUpVelocity: 5
   stiffnessTime: 3
   bTackle: 0
-  elapsedKey:
-    stateName: wait
-    stateID: 1
-    transitionEnable: 1
   tackledKey:
     stateName: wait
     stateID: 6
@@ -313,6 +312,41 @@ MonoBehaviour:
   elapsedKey:
     stateName: move
     stateID: 2
+    transitionEnable: 1
+  damagedKey:
+    stateName: damage
+    stateID: 4
+    transitionEnable: 1
+--- !u!114 &9151328907830017789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8321253918317477504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d6fc3a1f9c36e646971139159bc1b9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stateName: tracking
+  stateID: 7
+  isAnimation: 1
+  enterAnimation: Walk
+  animSpeed: 2.5
+  moveSpeed: 4
+  accelerationSpeed: 4
+  angularSpeed: 400
+  trackingTime: 3
+  trackSuccessDistance: 7
+  allowMaterial: {fileID: 2100000, guid: 3354453d7168d314abfc209c726d10ee, type: 2}
+  successedKey:
+    stateName: found
+    stateID: 3
+    transitionEnable: 1
+  elapsedKey:
+    stateName: wait
+    stateID: 6
     transitionEnable: 1
   damagedKey:
     stateName: damage

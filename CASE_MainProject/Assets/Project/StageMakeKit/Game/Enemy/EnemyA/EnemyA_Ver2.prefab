@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 6641198142232634311}
   - component: {fileID: 5473476027552726720}
   - component: {fileID: 789544647778783406}
+  - component: {fileID: 3729371001796050990}
   - component: {fileID: 8048529400348442256}
   - component: {fileID: 7128283808261493640}
   - component: {fileID: 5054110519953904151}
@@ -155,6 +156,7 @@ MonoBehaviour:
   rotationSpeed: 400
   rotationTime: 2
   allowLength: 10
+  allowMaterial: {fileID: 2100000, guid: 74431d13e5998a94596d60c97accf534, type: 2}
   elapsedKey:
     stateName: tackle
     stateID: 5
@@ -180,7 +182,7 @@ MonoBehaviour:
   isAnimation: 0
   enterAnimation: 
   animSpeed: 1
-  stiffnessTime: 3
+  stiffnessTime: 0.5
   hp0Key:
     stateName: Death
     stateID: 0
@@ -216,10 +218,6 @@ MonoBehaviour:
   tackleUpVelocity: 5
   stiffnessTime: 3
   bTackle: 0
-  elapsedKey:
-    stateName: wait
-    stateID: 1
-    transitionEnable: 1
   tackledKey:
     stateName: wait
     stateID: 6
@@ -249,6 +247,41 @@ MonoBehaviour:
   elapsedKey:
     stateName: move
     stateID: 2
+    transitionEnable: 1
+  damagedKey:
+    stateName: damage
+    stateID: 4
+    transitionEnable: 1
+--- !u!114 &3729371001796050990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 954390768142786723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d6fc3a1f9c36e646971139159bc1b9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stateName: tracking
+  stateID: 7
+  isAnimation: 1
+  enterAnimation: Walk
+  animSpeed: 3
+  moveSpeed: 6
+  accelerationSpeed: 6
+  angularSpeed: 400
+  trackingTime: 4
+  trackSuccessDistance: 10
+  allowMaterial: {fileID: 2100000, guid: 86ae8c3b27054144ab95c0a937220049, type: 2}
+  successedKey:
+    stateName: found
+    stateID: 3
+    transitionEnable: 1
+  elapsedKey:
+    stateName: wait
+    stateID: 6
     transitionEnable: 1
   damagedKey:
     stateName: damage

@@ -127,6 +127,7 @@ MonoBehaviour:
   angularSpeed: 400
   trackingTime: 5
   trackSuccessDistance: 7
+  allowMaterial: {fileID: 2100000, guid: 3354453d7168d314abfc209c726d10ee, type: 2}
   successedKey:
     stateName: found
     stateID: 3
@@ -159,6 +160,7 @@ MonoBehaviour:
   rotationSpeed: 360
   rotationTime: 2.5
   allowLength: 10
+  allowMaterial: {fileID: 2100000, guid: da76c690584313e458e84f86bca06531, type: 2}
   elapsedKey:
     stateName: tackle
     stateID: 4
@@ -186,13 +188,10 @@ MonoBehaviour:
   animSpeed: 1
   tackleVelocity: 15
   tacklePower: 10
+  isCalcPlayerHeight: 0
   tackleUpVelocity: 10
   stiffnessTime: 3
   bTackle: 0
-  elapsedKey:
-    stateName: tracking
-    stateID: 2
-    transitionEnable: 1
   tackledKey:
     stateName: wait
     stateID: 5

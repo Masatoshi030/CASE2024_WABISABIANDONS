@@ -13,6 +13,9 @@ public class State_A_Finding : EnemyState
     [SerializeField, Header("矢印の長さ")]
     float allowLength = 10.0f;
 
+    [SerializeField, Header("矢印に適用するマテリアル")]
+    Material allowMaterial;
+
     [Space(pad), Header("--遷移先リスト--")]
     [SerializeField, Header("経過時の遷移")]
     StateKey elapsedKey;
@@ -22,7 +25,10 @@ public class State_A_Finding : EnemyState
     public override void Enter()
     {
         base.Enter();
+        // 矢印の表示
         enemy.SetAllowActive(true);
+        enemy.AllowObject.GetComponent<TargetAllow>().SetMaterial(allowMaterial);
+
         enemy.IsVelocityZero = true;
     }
 
