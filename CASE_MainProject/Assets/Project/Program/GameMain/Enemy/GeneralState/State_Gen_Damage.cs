@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class State_A_Damage : EnemyState
+public class State_Gen_Damage : EnemyState
 {
     [SerializeField, Header("d’¼ŠÔ")]
     float stiffnessTime = 3.0f;
