@@ -23,10 +23,18 @@ public class AttackGaugeController : MonoBehaviour
     [SerializeField, Header("ゲージの段階マテリアルリスト")]
     Material[] gageStepMaterialList;
 
+    AudioSource au_Gage;
+
+    [SerializeField, Header("ゲージ溜め効果音")]
+    AudioClip gageSound;
+
+    float au_Gage_startPitch;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        au_Gage = this.GetComponent<AudioSource>();
+        au_Gage_startPitch = au_Gage.pitch;
     }
 
     // Update is called once per frame
@@ -37,6 +45,16 @@ public class AttackGaugeController : MonoBehaviour
 
     public void AddValue(float _value)
     {
+        //効果音
+        if(gageValue == 0.0f)
+        {
+            //ピッチを変える
+            au_Gage.pitch = au_Gage_startPitch + ((int)attackGageStep) * 0.5f;
+
+            //効果音を再生
+            au_Gage.PlayOneShot(gageSound);
+        }
+
         //加算
         gageValue += _value;
 
@@ -81,6 +99,8 @@ public class AttackGaugeController : MonoBehaviour
         //ゲージの色を変更
         gageImage.material = gageStepMaterialList[((int)attackGageStep)];
 
+        au_Gage.pitch = au_Gage_startPitch;
+
         //画像の長さに影響させる
         gageImage.fillAmount = gageValue / gaugeMaxValue;
     }
@@ -93,5 +113,10 @@ public class AttackGaugeController : MonoBehaviour
     public float GetValue_Normalize()
     {
         return gageValue / gaugeMaxValue;
+    }
+
+    public float GetGageStepValue()
+    {
+        return ((int)attackGageStep) + 1;
     }
 }

@@ -156,7 +156,7 @@ public class PlayerController : MonoBehaviour
     //突撃ターゲット座標
     Vector3 AttackTargetPosition;
 
-    //突撃ゲージの溜めた値
+    //突撃ゲージの溜めた値　段階数値
     float gaugeAttackValue = 0.0f;
 
     [SerializeField, Header("突撃可能フラグ")]
@@ -700,7 +700,7 @@ public class PlayerController : MonoBehaviour
                         attackState = ATTACK_STATE.Attack;
 
                         //突撃ゲージから溜めた結果を取得
-                        gaugeAttackValue = attackGauge.GetValue_Normalize();
+                        gaugeAttackValue = attackGauge.GetGageStepValue() / ((int)AttackGaugeController.ATTACK_GAGE_STEP.MaxStep);
 
                         //突撃ゲージを隠す
                         attackGauge.SetValue(0.0f);
