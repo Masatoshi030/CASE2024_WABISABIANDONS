@@ -101,7 +101,7 @@ public class HeadCollision_Manager : MonoBehaviour
                 {
                     if (other.transform.parent.GetComponent<BrokenWallController>().bBroken == false)
                     {
-                        if (PlayerController.instance.heldSteam / PlayerController.instance.maxHeldSteam > 0.3f)
+                        if (PlayerController.instance.gaugeAttackValue > 0.5f)
                         {
                             other.transform.parent.GetComponent<BrokenWallController>().SetBreak();
 
@@ -116,6 +116,9 @@ public class HeadCollision_Manager : MonoBehaviour
 
                             //‰Î‰Ô‚ğ¶¬‚·‚é
                             Instantiate(hibana_ParticleEffect, transform.position, Quaternion.identity);
+
+                            //­‚µˆø‚¢‚½ƒJƒƒ‰‚É‚·‚é
+                            CinemachineCameraSetting.instance.SetlittlePulledCamera(1.0f);
 
                             return;
                         }

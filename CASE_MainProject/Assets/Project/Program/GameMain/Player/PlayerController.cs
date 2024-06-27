@@ -157,7 +157,7 @@ public class PlayerController : MonoBehaviour
     Vector3 AttackTargetPosition;
 
     //突撃ゲージの溜めた値　段階数値
-    float gaugeAttackValue = 0.0f;
+    public float gaugeAttackValue = 0.0f;
 
     [SerializeField, Header("突撃可能フラグ")]
     public bool bAttackPossible = true;
@@ -170,6 +170,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, Header("爆発エフェクト")]
     GameObject explosionEffect;
+
 
 
     //=== バルブ蒸気ぶっ飛び ===//

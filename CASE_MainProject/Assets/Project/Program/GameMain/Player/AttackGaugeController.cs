@@ -15,6 +15,9 @@ public class AttackGaugeController : MonoBehaviour
     [SerializeField, Header("ゲージの最大値")]
     float gaugeMaxValue = 100.0f;
 
+    [SerializeField, Header("ゲージ溜まり速度の１ステップ減衰量")]
+    float gaugeAddSpeed_Attenuation = 0.75f;
+
     public enum ATTACK_GAGE_STEP
     { Step1, Step2, Step3, MaxStep };
     [SerializeField, Header("ゲージの段階"), Toolbar(typeof(ATTACK_GAGE_STEP), "AttackGageStep")]
@@ -56,7 +59,7 @@ public class AttackGaugeController : MonoBehaviour
         }
 
         //加算
-        gageValue += _value;
+        gageValue += _value / ((int)attackGageStep);
 
         //最大値頭打ち
         if (gageValue > gaugeMaxValue)
