@@ -12,18 +12,33 @@ public class GroupManager_EnemyA : GroupManager
             if (isAttachedEnemy)
             {
                 Enemy enemy = GetComponent<Enemy>();
-                if (enemy.Machine.StateObject.GetComponent<EnemyA_Tracking>() != null)
+                // 最新版エネミー用
+                if (enemy.Machine.StateObject.GetComponent<State_A_Tracking>() != null)
+                {
+                    State_A_Tracking state = enemy.Machine.StateObject.GetComponent<State_A_Tracking>();
+                    enemy.Machine.TransitionTo(state.StateID);
+                }
+                // 旧式エネミー用
+                else if (enemy.Machine.StateObject.GetComponent<EnemyA_Tracking>() != null)
                 {
                     EnemyA_Tracking state = enemy.Machine.StateObject.GetComponent<EnemyA_Tracking>();
                     enemy.Machine.TransitionTo(state.StateID);
                 }
+                
             }
             for (int i = 0; i < subscribers.Count; i++)
             {
                 if (subscribers[i] != null && subscribers[i] != sender)
                 {
                     Enemy enemy = (Enemy)subscribers[i];
-                    if(enemy.Machine.StateObject.GetComponent<EnemyA_Tracking>()!= null)
+                    // 最新版エネミー用
+                    if (enemy.Machine.StateObject.GetComponent<State_A_Tracking>() != null)
+                    {
+                        State_A_Tracking state = enemy.Machine.StateObject.GetComponent<State_A_Tracking>();
+                        enemy.Machine.TransitionTo(state.StateID);
+                    }
+                    // 旧式エネミー用
+                    else if (enemy.Machine.StateObject.GetComponent<EnemyA_Tracking>() != null)
                     {
                         EnemyA_Tracking state = enemy.Machine.StateObject.GetComponent<EnemyA_Tracking>();
                         enemy.Machine.TransitionTo(state.StateID);
