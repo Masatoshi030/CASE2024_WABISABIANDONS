@@ -29,6 +29,8 @@ public class State_A_Finding : EnemyState
         enemy.SetAllowActive(true);
         enemy.AllowObject.GetComponent<TargetAllow>().SetMaterial(allowMaterial);
 
+        // ŒŸ’m‚Ì’Ê’m
+        enemy.SendMsg<int>(0, 0);
         enemy.IsVelocityZero = true;
     }
 
