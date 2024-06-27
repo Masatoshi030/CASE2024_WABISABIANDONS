@@ -6,7 +6,7 @@ public class GroupManager_EnemyA : GroupManager
 {
     public override void ReceiveMsg<T>(Connection sender, int msgType, T msg)
     {
-        // 死亡通知を取得
+        // グループ内の敵への通知願いを取得
         if (msgType == 0)
         {
             if (isAttachedEnemy)
