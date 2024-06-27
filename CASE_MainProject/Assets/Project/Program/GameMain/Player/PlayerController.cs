@@ -162,6 +162,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("突撃可能フラグ")]
     public bool bAttackPossible = true;
 
+    [SerializeField, Header("突撃ゲージ溜め中の減圧量")]
+    float gageChargeDecompression = 0.025f;
+
 
 
     //=== 死亡 ===//
@@ -652,7 +655,11 @@ public class PlayerController : MonoBehaviour
         //狙っている時
         if (attackState == ATTACK_STATE.Aim)
         {
+            //ゲージを溜める
             attackGauge.AddValue(Time.deltaTime * attackGauge_AddSpeed);
+
+            //突撃ゲージを溜めている間減圧
+            heldSteam -= Time.deltaTime * attackGauge_AddSpeed * gageChargeDecompression;
         }
 
         //突撃が可能であれば
@@ -688,6 +695,7 @@ public class PlayerController : MonoBehaviour
                     //移動ロック
                     bMoveLock = true;
 
+
                     //スロー
                     //Time.timeScale = 0.1f;
                 }
@@ -702,6 +710,9 @@ public class PlayerController : MonoBehaviour
 
                         //突撃ゲージから溜めた結果を取得
                         gaugeAttackValue = attackGauge.GetGageStepValue() / ((int)AttackGaugeController.ATTACK_GAGE_STEP.MaxStep);
+
+                        //突撃ゲージを溜めた分減圧する
+                        //heldSteam -= attackGauge.GetGageStepValue() * 10.0f;
 
                         //突撃ゲージを隠す
                         attackGauge.SetValue(0.0f);
