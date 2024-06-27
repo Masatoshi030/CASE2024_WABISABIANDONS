@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class State_A_Finding : EnemyState
+public class State_B_Finding : EnemyState
 {
     [SerializeField, Header("‰ñ“]‘¬“x")]
     float rotationSpeed;
@@ -37,33 +38,33 @@ public class State_A_Finding : EnemyState
     public override void MainFunc()
     {
         base.MainFunc();
-        Quaternion yOnly = enemy.transform.rotation;
-        yOnly.x = 0.0f;
-        yOnly.z = 0.0f;
-        enemy.transform.rotation = yOnly;
-        float Distance = Vector3.Distance(enemy.EyeTransform.position, Enemy.Target.transform.position);
+
+        Quaternion verticalQuaternion = enemy.transform.rotation;
+        verticalQuaternion.x = 0.0f;
+        verticalQuaternion.z = 0.0f;
+        Vector3 direction = (Enemy.Target.transform.position - enemy.EyeTransform.position).normalized;
+        float Distance = Vector3.Distance(Enemy.Target.transform.position, enemy.EyeTransform.position);
         if(Distance < allowLength)
         {
-            enemy.AllowObject.GetComponent<TargetAllow>().StartDesignation(enemy.EyeTransform.position, enemy.EyeTransform.position + enemy.EyeTransform.forward * Distance);
+            enemy.AllowObject.GetComponent<TargetAllow>().StartDesignation(enemy.EyeTransform.position, enemy.EyeTransform.position + direction * Distance);
         }
         else
         {
-            enemy.AllowObject.GetComponent<TargetAllow>().StartDesignation(enemy.EyeTransform.position, enemy.EyeTransform.position + enemy.EyeTransform.forward * allowLength);
+            enemy.AllowObject.GetComponent<TargetAllow>().StartDesignation(enemy.EyeTransform.position, enemy.EyeTransform.position + direction * allowLength);
         }
-
-        // Œü‚«‚½‚¢•ûŒü
-        Vector3 direction = (Enemy.Target.transform.position - enemy.transform.position).normalized;
-
+        direction = (Enemy.Target.transform.position - enemy.transform.position).normalized;
         Quaternion rotation = Quaternion.LookRotation(direction, enemy.transform.up);
-        rotation *= Quaternion.Euler(0, 0, rotationSpeed * Time.deltaTime);
+        rotation *= Quaternion.Euler(0, rotationSpeed * Time.deltaTime, 0.0f);
+        rotation.x = 0.0f;
+        rotation.z = 0.0f;
 
         enemy.transform.rotation = Quaternion.Lerp(enemy.transform.rotation, rotation, Time.deltaTime * 10);
 
-        if(enemy.IsDamaged)
+        if (enemy.IsDamaged)
         {
             machine.TransitionTo(damagedKey);
         }
-        else if(machine.Cnt >= rotationTime)
+        else if (machine.Cnt >= rotationTime)
         {
             machine.TransitionTo(elapsedKey);
         }
