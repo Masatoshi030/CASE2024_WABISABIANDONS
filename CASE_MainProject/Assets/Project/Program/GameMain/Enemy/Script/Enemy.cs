@@ -61,6 +61,10 @@ public class Enemy : Subscriber
     protected bool isFindPlayer = false;
     public bool IsFindPlayer { get => isFindPlayer; }
 
+    [SerializeField, Header("攻撃中か"), ReadOnly]
+    protected bool isAttackNow = false;
+    public bool IsAttackNow { get => isAttackNow; set => isAttackNow = value; }
+
     // プレイヤーとの距離^2
     protected float toPlayerDistance = 0.0f;
     // プレイヤーとの2乗距離

@@ -23,7 +23,9 @@ public class ObjectFreeRotation : MonoBehaviour
         // transformを取得
         Transform myTransform = this.transform;
 
+        Vector3 rotation = new Vector3(RotationX, RotationY, RotationZ) * ObjectSpeed * Time.deltaTime;
+
         // ローカル座標基準で、現在の回転量へ加算する
-        myTransform.Rotate(RotationX * ObjectSpeed, RotationY * ObjectSpeed, RotationZ * ObjectSpeed);
+        myTransform.Rotate(rotation);
     }
 }

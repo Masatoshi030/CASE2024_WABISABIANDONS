@@ -32,6 +32,8 @@ public class State_Gen_Finding : EnemyState
         // ŒŸ’m‚Ì’Ê’m
         enemy.SendMsg<int>(0, 0);
         enemy.IsVelocityZero = true;
+        // ‘¼‚©‚ç‚Ì’Ê’m‚ğ‚³‚¦‚¬‚é‚½‚ßUŒ‚’†‚É‚·‚é
+        enemy.IsAttackNow = true;
     }
 
     public override void MainFunc()
@@ -72,6 +74,7 @@ public class State_Gen_Finding : EnemyState
     public override void Exit()
     {
         base.Exit();
+        enemy.IsAttackNow = false;
         enemy.SetAllowActive(false);
         enemy.AllowObject.GetComponent<TargetAllow>().EndDesignation();
         enemy.IsVelocityZero = false;
