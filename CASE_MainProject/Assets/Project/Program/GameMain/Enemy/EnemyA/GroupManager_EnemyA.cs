@@ -12,25 +12,8 @@ public class GroupManager_EnemyA : GroupManager
             if (isAttachedEnemy)
             {
                 Enemy enemy = GetComponent<Enemy>();
-                // 最新版エネミー用
-                if (enemy.Machine.StateObject.GetComponent<State_A_Tracking>() != null)
+                if(!enemy.IsAttackNow)
                 {
-                    State_A_Tracking state = enemy.Machine.StateObject.GetComponent<State_A_Tracking>();
-                    enemy.Machine.TransitionTo(state.StateID);
-                }
-                // 旧式エネミー用
-                else if (enemy.Machine.StateObject.GetComponent<EnemyA_Tracking>() != null)
-                {
-                    EnemyA_Tracking state = enemy.Machine.StateObject.GetComponent<EnemyA_Tracking>();
-                    enemy.Machine.TransitionTo(state.StateID);
-                }
-                
-            }
-            for (int i = 0; i < subscribers.Count; i++)
-            {
-                if (subscribers[i] != null && subscribers[i] != sender)
-                {
-                    Enemy enemy = (Enemy)subscribers[i];
                     // 最新版エネミー用
                     if (enemy.Machine.StateObject.GetComponent<State_A_Tracking>() != null)
                     {
@@ -42,6 +25,28 @@ public class GroupManager_EnemyA : GroupManager
                     {
                         EnemyA_Tracking state = enemy.Machine.StateObject.GetComponent<EnemyA_Tracking>();
                         enemy.Machine.TransitionTo(state.StateID);
+                    }
+                }
+            }
+            for (int i = 0; i < subscribers.Count; i++)
+            {
+                if (subscribers[i] != null && subscribers[i] != sender)
+                {
+                    Enemy enemy = (Enemy)subscribers[i];
+                    if(!enemy.IsAttackNow)
+                    {
+                        // 最新版エネミー用
+                        if (enemy.Machine.StateObject.GetComponent<State_A_Tracking>() != null)
+                        {
+                            State_A_Tracking state = enemy.Machine.StateObject.GetComponent<State_A_Tracking>();
+                            enemy.Machine.TransitionTo(state.StateID);
+                        }
+                        // 旧式エネミー用
+                        else if (enemy.Machine.StateObject.GetComponent<EnemyA_Tracking>() != null)
+                        {
+                            EnemyA_Tracking state = enemy.Machine.StateObject.GetComponent<EnemyA_Tracking>();
+                            enemy.Machine.TransitionTo(state.StateID);
+                        }
                     }
                 }
             }

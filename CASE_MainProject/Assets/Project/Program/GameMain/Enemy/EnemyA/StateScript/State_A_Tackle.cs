@@ -51,6 +51,9 @@ public class State_A_Tackle : EnemyState
         }
         enemy.EnemyRigidbody.velocity = velocity;
         enemy.EnemyCollider.isTrigger = true;
+
+        enemy.IsAttackNow = true;
+
         bTackle = true;
         subCnt = 0.0f;
     }
@@ -90,6 +93,7 @@ public class State_A_Tackle : EnemyState
     public override void Exit()
     {
         base.Exit();
+        enemy.IsAttackNow = false;
         bTackle = false;
     }
 
