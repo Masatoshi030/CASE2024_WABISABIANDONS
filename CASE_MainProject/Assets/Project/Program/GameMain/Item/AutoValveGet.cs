@@ -6,7 +6,7 @@ public class AutoValveGet : MonoBehaviour
 {
     public bool isAuto = false;
     public float waitTime = 1.0f;
-    float cnt = 0.0f;
+    public float cnt = 0.0f;
 
     [SerializeField, Header("RigidBody")]
     Rigidbody rb;
