@@ -5,16 +5,18 @@ using UnityEngine;
 public class Enemy_Manager : MonoBehaviour
 {
     public static Enemy_Manager instance;
+    [SerializeField, Header("火花エフェクト")]
+    GameObject sparkleEffect;
+    [SerializeField, Header("火花SE")]
+    AudioSource sparkleSE;
     [SerializeField, Header("衝突エフェクト")]
     GameObject collisionEffect;
     [SerializeField, Header("衝突SE")]
     AudioSource collisionSE;
-
     [SerializeField, Header("爆発エフェクト")]
     GameObject explosionEffect;
     [SerializeField, Header("爆発SE")]
     AudioSource explisionSE;
-
     [SerializeField, Header("蒸気エフェクト")]
     GameObject steamEffect;
     [SerializeField, Header("蒸気SE")]
@@ -32,11 +34,14 @@ public class Enemy_Manager : MonoBehaviour
     Material reflectMaterial2;
     public Material Material2 { get => reflectMaterial2; }
 
+    uint DefeatEnemyNum = 0;
+
     private void Awake()
     {
         if(instance == null)
         {
             instance = this;
+            DefeatEnemyNum = 0;
         }
         else
         {
@@ -63,5 +68,28 @@ public class Enemy_Manager : MonoBehaviour
         GameObject obj = Instantiate(steamEffect, position, quaternion);
         obj.GetComponent<AudioSource>().PlayOneShot(steamSE.clip);
         return obj;
+    }
+    
+    public GameObject CreateSparkleEffect(Vector3 position, Quaternion quaternion)
+    {
+        GameObject obj = Instantiate(sparkleEffect, position, quaternion);
+        obj.GetComponent<AudioSource>().PlayOneShot(sparkleSE.clip);
+        return obj;
+    }
+
+    public void AddDefeatEnemy()
+    {
+        DefeatEnemyNum++;
+    }
+
+    public uint GetDefeatEnemyNum()
+    {
+        return DefeatEnemyNum;
+    }
+
+
+    public void DestroyInstance()
+    {
+        Destroy(this);
     }
 }
