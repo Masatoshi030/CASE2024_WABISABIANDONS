@@ -20,6 +20,15 @@ public class EnemyC_Rolling : EnemyState_C
     [SerializeField, Header("バルブボーナス(value * 巻き込み数)")]
     uint valveBonus = 5;
 
+    [SerializeField, Header("セルフヒットストップ(壁)")]
+    float wallHitStopTime = 0.2f;
+    [SerializeField, Header("セルフヒットストップ(敵)")]
+    float enemyHitStopTime = 0.1f;
+
+    float hitStopCnt = 0.0f;
+    bool isWallHitStop = false;
+    bool isEnemyHitStop = false;
+
     [SerializeField, Header("巻き込みオブジェクト")]
     List<GameObject> implicateObjects;
     Dictionary<GameObject, Vector3> positions = new Dictionary<GameObject, Vector3>();
@@ -53,144 +62,181 @@ public class EnemyC_Rolling : EnemyState_C
     {
         base.MainFunc();
 
-        angle -= rollSpeed;
-        angle %= -360.0f;
-        //enemy.transform.Translate(enemy.transform.forward *  rollSpeed * Time.deltaTime);
-
-        enemy.transform.position += direction * rollSpeed * Time.deltaTime;
-
-        Vector3 rotateValue = new Vector3(0.0f, 0.0f, -rollSpeed);
-        rollingBody.transform.Rotate(rotateValue);
-
-        for (int i = 0; i < implicateObjects.Count; i++)
+        if(!isEnemyHitStop && !isWallHitStop)
         {
-            implicateObjects[i].transform.position = enemyC.transform.position + positions[implicateObjects[i]];
-            implicateObjects[i].transform.RotateAround(enemyC.transform.position, rollAxis, angle + angles[implicateObjects[i]]);
+            angle -= rollSpeed;
+            angle %= -360.0f;
+            //enemy.transform.Translate(enemy.transform.forward *  rollSpeed * Time.deltaTime);
+
+            enemy.transform.position += direction * rollSpeed * Time.deltaTime;
+
+            Vector3 rotateValue = new Vector3(0.0f, 0.0f, -rollSpeed);
+            rollingBody.transform.Rotate(rotateValue);
+
+            for (int i = 0; i < implicateObjects.Count; i++)
+            {
+                implicateObjects[i].transform.position = enemyC.transform.position + positions[implicateObjects[i]];
+                implicateObjects[i].transform.RotateAround(enemyC.transform.position, rollAxis, angle + angles[implicateObjects[i]]);
+            }
         }
+        else if( isEnemyHitStop)
+        {
+            hitStopCnt += Time.deltaTime;
+            if(hitStopCnt > enemyHitStopTime)
+            {
+                hitStopCnt = 0.0f;
+                isEnemyHitStop = false;
+            }
+        }
+        else if(isWallHitStop)
+        {
+            hitStopCnt += Time.deltaTime;
+            if(hitStopCnt > wallHitStopTime)
+            {
+                hitStopCnt = 0.0f;
+                isWallHitStop = false;
+            }
+        }
+        
     }
 
     public override void CollisionEnterSelf(Collision collision)
     {
-        if (collision.transform.tag == "Ground")
+        if(!isWallHitStop && !isEnemyHitStop)
         {
-            Ray ray = new Ray(enemy.EyeTransform.position, enemy.EyeTransform.forward);
-            RaycastHit[] hits = Physics.RaycastAll(ray, 1.0f);
-            foreach (RaycastHit hit in hits)
+            if (collision.transform.tag == "Ground")
             {
-                if (hit.collider.gameObject == collision.gameObject)
+                Ray ray = new Ray(enemy.EyeTransform.position, enemy.EyeTransform.forward);
+                RaycastHit[] hits = Physics.RaycastAll(ray, 1.0f);
+                foreach (RaycastHit hit in hits)
                 {
-                    // 反射ベクトルの計算
-                    enemy.EnemyRigidbody.velocity = Vector3.zero;
-                    Vector3 normal = collision.contacts[0].normal;
-
-                    Vector3 reflect = direction - 2 * normal * Vector3.Dot(direction, normal);
-                    reflect.y = 0.0f;
-                    reflect.Normalize();
-
-                    // 移動方向を反射ベクトルに変換
-                    direction = reflect;
-                    enemy.transform.LookAt(enemy.transform.position + direction);
-
-                    float dot = Vector3.Dot(direction, normal);
-
-                    switch (enemyC.CState)
+                    if (hit.collider.gameObject == collision.gameObject)
                     {
-                        case EnemyC.PressureState.Low:
-                            enemyC.CState = EnemyC.PressureState.Med;
-                            enemyC.applyMesh.material = Enemy_Manager.instance.Material1;
-                            Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
-                            break;
-                        case EnemyC.PressureState.Med:
-                            enemyC.CState = EnemyC.PressureState.High;
-                            enemyC.applyMesh.material = Enemy_Manager.instance.Material0;
-                            Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
-                            break;
-                        case EnemyC.PressureState.High:
-                            // 最大の場合
-                            ExplosionMyBody();
-                            break;
+                        // 反射ベクトルの計算
+                        enemy.EnemyRigidbody.velocity = Vector3.zero;
+                        Vector3 normal = collision.contacts[0].normal;
+
+                        Vector3 reflect = direction - 2 * normal * Vector3.Dot(direction, normal);
+                        reflect.y = 0.0f;
+                        reflect.Normalize();
+
+                        // 移動方向を反射ベクトルに変換
+                        direction = reflect;
+                        enemy.transform.LookAt(enemy.transform.position + direction);
+
+                        float dot = Vector3.Dot(direction, normal);
+
+                        switch (enemyC.CState)
+                        {
+                            case EnemyC.PressureState.Low:
+                                isWallHitStop = true;
+                                hitStopCnt = 0.0f;
+                                enemyC.CState = EnemyC.PressureState.Med;
+                                enemyC.applyMesh.material = Enemy_Manager.instance.Material1;
+                                Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
+                                break;
+                            case EnemyC.PressureState.Med:
+                                isWallHitStop = true;
+                                hitStopCnt = 0.0f;
+                                enemyC.CState = EnemyC.PressureState.High;
+                                enemyC.applyMesh.material = Enemy_Manager.instance.Material0;
+                                Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
+                                break;
+                            case EnemyC.PressureState.High:
+                                // 最大の場合
+                                ExplosionMyBody();
+                                break;
+                        }
                     }
                 }
             }
-        }
-        else if (collision.transform.tag == "Wall")
-        {
-            // 反射ベクトルの計算
-            enemy.EnemyRigidbody.velocity = Vector3.zero;
-            Vector3 normal = collision.contacts[0].normal;
-
-            Vector3 reflect = direction - 2 * normal * Vector3.Dot(direction, normal);
-            reflect.y = 0.0f;
-            reflect.Normalize();
-
-            // 移動方向を反射ベクトルに変換
-            direction = reflect;
-            enemy.transform.LookAt(enemy.transform.position + direction);
-
-            switch (enemyC.CState)
+            else if (collision.transform.tag == "Wall")
             {
-                case EnemyC.PressureState.Low:
-                    enemyC.CState = EnemyC.PressureState.Med;
-                    enemyC.applyMesh.material = Enemy_Manager.instance.Material1;
-                    Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
-                    break;
-                case EnemyC.PressureState.Med:
-                    enemyC.CState = EnemyC.PressureState.High;
-                    enemyC.applyMesh.material = Enemy_Manager.instance.Material0;
-                    Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
-                    break;
-                case EnemyC.PressureState.High:
-                    // 最大の場合
-                    ExplosionMyBody();
-                    break;
-            }
-        }
-        // 敵にぶつかった場合巻き込む
-        else if (collision.transform.tag == "Enemy")
-        {
-            Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
-            enemy.EnemyRigidbody.velocity = Vector3.zero;
-            // オブジェクトが未登録
-            if (!implicateObjects.Contains(collision.gameObject))
-            {
-                Enemy enem = collision.gameObject.GetComponent<Enemy>();
-                // ステートの取得が成功
-                if (enem.Machine.StateObject.GetComponent<EnemyC_Caught>())
+                // 反射ベクトルの計算
+                enemy.EnemyRigidbody.velocity = Vector3.zero;
+                Vector3 normal = collision.contacts[0].normal;
+
+                Vector3 reflect = direction - 2 * normal * Vector3.Dot(direction, normal);
+                reflect.y = 0.0f;
+                reflect.Normalize();
+
+                // 移動方向を反射ベクトルに変換
+                direction = reflect;
+                enemy.transform.LookAt(enemy.transform.position + direction);
+
+                switch (enemyC.CState)
                 {
-                    // 捕捉状態のステートを取得
-                    EnemyC_Caught caughtState = enem.Machine.StateObject.GetComponent<EnemyC_Caught>();
-                    caughtState.Caught = true;
-
-                    // バルブを落とさない状態にする
-                    enem.IsDropValves = false;
-
-                    // 取得したステートのIDを元に遷移
-                    enem.Machine.TransitionTo(caughtState.StateID);
-
-                    // コライダーの非アクティブ化
-                    enem.EnemyCollider.enabled = false;
-                    if (enem.EnemyAgent != null)
-                        enem.EnemyAgent.enabled = false;
-
-                    // 衝突オブジェクトリストに追加
-                    implicateObjects.Add(collision.gameObject);
-
-                    // 衝突時のベクトルの差分を求める
-                    Vector3 sub = collision.transform.position - enemyC.transform.position;
-
-                    // 差分を辞書に登録
-                    positions.Add(collision.gameObject, sub);
-
-                    // 衝突時の回転角度を保存しておく
-                    angles.Add(collision.gameObject, angle);
-                    if(enem.GetComponent<EnemyC>() == null)
+                    case EnemyC.PressureState.Low:
+                        isWallHitStop = true;
+                        hitStopCnt = 0.0f;
+                        enemyC.CState = EnemyC.PressureState.Med;
+                        enemyC.applyMesh.material = Enemy_Manager.instance.Material1;
+                        Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
+                        break;
+                    case EnemyC.PressureState.Med:
+                        isWallHitStop = true;
+                        hitStopCnt = 0.0f;
+                        enemyC.CState = EnemyC.PressureState.High;
+                        enemyC.applyMesh.material = Enemy_Manager.instance.Material0;
+                        Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
+                        break;
+                    case EnemyC.PressureState.High:
+                        // 最大の場合
+                        ExplosionMyBody();
+                        break;
+                }
+            }
+            // 敵にぶつかった場合巻き込む
+            else if (collision.transform.tag == "Enemy")
+            {
+                Enemy_Manager.instance.CreateSparkleEffect(enemy.transform.position, Quaternion.identity);
+                enemy.EnemyRigidbody.velocity = Vector3.zero;
+                // オブジェクトが未登録
+                if (!implicateObjects.Contains(collision.gameObject))
+                {
+                    Enemy enem = collision.gameObject.GetComponent<Enemy>();
+                    // ステートの取得が成功
+                    if (enem.Machine.StateObject.GetComponent<EnemyC_Caught>())
                     {
-                        enem.UnSubscribeAll();
+                        // 捕捉状態のステートを取得
+                        EnemyC_Caught caughtState = enem.Machine.StateObject.GetComponent<EnemyC_Caught>();
+                        caughtState.Caught = true;
+
+                        // バルブを落とさない状態にする
+                        enem.IsDropValves = false;
+
+                        // 取得したステートのIDを元に遷移
+                        enem.Machine.TransitionTo(caughtState.StateID);
+
+                        // コライダーの非アクティブ化
+                        enem.EnemyCollider.enabled = false;
+                        if (enem.EnemyAgent != null)
+                            enem.EnemyAgent.enabled = false;
+
+                        // 衝突オブジェクトリストに追加
+                        implicateObjects.Add(collision.gameObject);
+
+                        // 衝突時のベクトルの差分を求める
+                        Vector3 sub = collision.transform.position - enemyC.transform.position;
+
+                        // 差分を辞書に登録
+                        positions.Add(collision.gameObject, sub);
+
+                        // 衝突時の回転角度を保存しておく
+                        angles.Add(collision.gameObject, angle);
+                        if (enem.GetComponent<EnemyC>() == null)
+                        {
+                            enem.UnSubscribeAll();
+                        }
                     }
+
+                    isEnemyHitStop = true;
+                    hitStopCnt = 0.0f;
                 }
             }
         }
-        else if (collision.transform.tag == "GoldValve")
+        
+        if (collision.transform.tag == "GoldValve")
         {
             // 取得状態に変更
             collision.transform.GetComponent<GoldValveController>().GetGoldValve();
@@ -210,41 +256,48 @@ public class EnemyC_Rolling : EnemyState_C
 
     public override void TriggerEnterSelf(Collider other)
     {
-        if (other.transform.tag == "Enemy")
+        if(!isEnemyHitStop && !isWallHitStop)
         {
-            Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
-            enemy.EnemyRigidbody.velocity = Vector3.zero;
-            // オブジェクトが未登録
-            if (!implicateObjects.Contains(other.gameObject))
+            if (other.transform.tag == "Enemy")
             {
-                Enemy enem = other.gameObject.GetComponent<Enemy>();
-                // ステートの取得が成功
-                if (enem.Machine.StateObject.GetComponent<EnemyC_Caught>())
+                Enemy_Manager.instance.CreateSparkleEffect(enemy.transform.position, Quaternion.identity);
+                enemy.EnemyRigidbody.velocity = Vector3.zero;
+                // オブジェクトが未登録
+                if (!implicateObjects.Contains(other.gameObject))
                 {
-                    EnemyC_Caught caughtState = enem.Machine.StateObject.GetComponent<EnemyC_Caught>();
-                    caughtState.Caught = true;
-
-                    // バルブ非ドロップ状態
-                    enem.IsDropValves = false;
-
-                    enem.Machine.TransitionTo(caughtState.StateID);
-                    enem.EnemyCollider.enabled = false;
-                    // 衝突オブジェクトリストに追加
-                    implicateObjects.Add(other.gameObject);
-                    // 衝突時のベクトルの差分を求める
-                    Vector3 sub = other.transform.position - enemyC.transform.position;
-                    // 差分を辞書に登録
-                    positions.Add(other.gameObject, sub);
-                    // 衝突時の回転角度を保存しておく
-                    angles.Add(other.gameObject, angle);
-                    if (enem.GetComponent<EnemyC>() == null)
+                    Enemy enem = other.gameObject.GetComponent<Enemy>();
+                    // ステートの取得が成功
+                    if (enem.Machine.StateObject.GetComponent<EnemyC_Caught>())
                     {
-                        enem.UnSubscribeAll();
+                        EnemyC_Caught caughtState = enem.Machine.StateObject.GetComponent<EnemyC_Caught>();
+                        caughtState.Caught = true;
+
+                        // バルブ非ドロップ状態
+                        enem.IsDropValves = false;
+
+                        enem.Machine.TransitionTo(caughtState.StateID);
+                        enem.EnemyCollider.enabled = false;
+                        // 衝突オブジェクトリストに追加
+                        implicateObjects.Add(other.gameObject);
+                        // 衝突時のベクトルの差分を求める
+                        Vector3 sub = other.transform.position - enemyC.transform.position;
+                        // 差分を辞書に登録
+                        positions.Add(other.gameObject, sub);
+                        // 衝突時の回転角度を保存しておく
+                        angles.Add(other.gameObject, angle);
+                        if (enem.GetComponent<EnemyC>() == null)
+                        {
+                            enem.UnSubscribeAll();
+                        }
                     }
                 }
+
+                isEnemyHitStop = true;
+                hitStopCnt = 0.0f;
             }
         }
-        else if (other.transform.tag == "GoldValve")
+        
+        if (other.transform.tag == "GoldValve")
         {
             other.transform.GetComponent<GoldValveController>().GetGoldValve();
         }
