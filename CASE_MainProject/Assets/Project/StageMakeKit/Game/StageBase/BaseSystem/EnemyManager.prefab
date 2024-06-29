@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 420348001836708066}
-  - component: {fileID: 1196451870504958166}
+  - component: {fileID: 7589359356604142447}
   - component: {fileID: 3617855326432886852}
   m_Layer: 0
   m_Name: EnemyManager
@@ -33,7 +33,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1196451870504958166
+--- !u!114 &7589359356604142447
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,7 +42,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4152134558632629808}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbd860cbd00fa114ba77fa00802e6cdd, type: 3}
+  m_Script: {fileID: 11500000, guid: 287c303d723196947aabf2b29bfb4416, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   collisionEffect: {fileID: 2662798393433424169, guid: b2b82e37aaa1a854b859b5f7c87be529,
@@ -53,6 +53,9 @@ MonoBehaviour:
     type: 3}
   explisionSE: {fileID: -3904813653726153462, guid: 30edabee38f67d4408c749fc318b285a,
     type: 3}
+  steamEffect: {fileID: 6722472057741226865, guid: f66ca0af307b1d9418f8608c6fe36dc6,
+    type: 3}
+  steamSE: {fileID: 1250557319850627143, guid: f66ca0af307b1d9418f8608c6fe36dc6, type: 3}
   reflectMaterial0: {fileID: 2100000, guid: 016f16cdac21e5142b042e7fa033bc15, type: 2}
   reflectMaterial1: {fileID: 2100000, guid: 5c0c518570e5ad443b51f5c52d51ef94, type: 2}
   reflectMaterial2: {fileID: 2100000, guid: c9d16e5da7b83474397211221cbd9de0, type: 2}

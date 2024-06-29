@@ -37,9 +37,9 @@ public class EnemyC : Enemy
         base.Start();
         switch (pressureState)
         {
-            case PressureState.Low: applyMesh.material =  EnemyC_Manager.instance.Material2; break;
-            case PressureState.Med: applyMesh.material = EnemyC_Manager.instance.Material1; break;
-            case PressureState.High: applyMesh.material = EnemyC_Manager.instance.Material0; break;
+            case PressureState.Low: applyMesh.material =  Enemy_Manager.instance.Material2; break;
+            case PressureState.Med: applyMesh.material = Enemy_Manager.instance.Material1; break;
+            case PressureState.High: applyMesh.material = Enemy_Manager.instance.Material0; break;
         }
     }
 

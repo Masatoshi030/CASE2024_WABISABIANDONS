@@ -9,12 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 309482183625341619}
-  - component: {fileID: 7700622169328119335}
   - component: {fileID: 6979560752887727692}
   - component: {fileID: 2178910180352193397}
   - component: {fileID: 4795324841128855410}
   - component: {fileID: 4325419782409839310}
   - component: {fileID: 2559619339537856303}
+  - component: {fileID: 320069124664297467}
   m_Layer: 0
   m_Name: EnemyAObject_Ver3
   m_TagString: Enemy
@@ -39,27 +39,6 @@ Transform:
   - {fileID: 3421808858362000886}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &7700622169328119335
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2425498809074616516}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.4, y: 1.5, z: 3.57}
-  m_Center: {x: 0, y: 0.775, z: 0}
 --- !u!54 &6979560752887727692
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -135,9 +114,10 @@ MonoBehaviour:
   dropValveNum: 24
   isAutoGet: 1
   isFindPlayer: 0
+  isAttackNow: 0
   rb: {fileID: 6979560752887727692}
   animator: {fileID: 6090529932498047653}
-  enemyCollider: {fileID: 7700622169328119335}
+  enemyCollider: {fileID: 0}
   enemyAgent: {fileID: 2178910180352193397}
   allowObject: {fileID: 0}
 --- !u!114 &4325419782409839310
@@ -176,6 +156,29 @@ MonoBehaviour:
     state: {fileID: 0}
   cnt: 0
   isUpdate: 1
+--- !u!136 &320069124664297467
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2425498809074616516}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.2
+  m_Height: 4
+  m_Direction: 2
+  m_Center: {x: 0, y: 1.18, z: 0}
 --- !u!1 &3695939722104157867
 GameObject:
   m_ObjectHideFlags: 0

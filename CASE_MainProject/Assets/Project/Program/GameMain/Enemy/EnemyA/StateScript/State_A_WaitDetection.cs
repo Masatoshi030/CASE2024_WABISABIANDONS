@@ -63,6 +63,7 @@ public class State_A_WaitDetection : EnemyState
         {
             if (collision.transform.tag == "Ground")
             {
+                Enemy_Manager.instance.CreateSteamEffect(enemy.transform.position, Quaternion.identity);
                 machine.TransitionTo(detectedKey);
             }
         }
