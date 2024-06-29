@@ -2528,7 +2528,7 @@ MonoBehaviour:
   naturalAddPressure: 3
   au_Steam: {fileID: 4174861317411024326}
   bSteamScaleEnable: 0
-  steamMaxAlertSpeed: 8
+  steamMaxAlertSpeed: 2
   steamMaxScale: {x: 1.5, y: 1.5, z: 1.5}
   steamMaxAlertMaterial: {fileID: 2100000, guid: 993f6af033579974abe652262384885f,
     type: 2}
@@ -2958,7 +2958,7 @@ PrefabInstance:
     - target: {fileID: 2921500011784151524, guid: 2d53852ecea23094ebc5814ccc50a77f,
         type: 3}
       propertyPath: InitialModule.startLifetime.scalar
-      value: 5
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 2921500011784151524, guid: 2d53852ecea23094ebc5814ccc50a77f,
         type: 3}
@@ -4400,6 +4400,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -4272583844770678126, guid: b3bbec6351a36bd4a9bffd8f6895faab,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -4156270234269376659, guid: b3bbec6351a36bd4a9bffd8f6895faab,
         type: 3}
