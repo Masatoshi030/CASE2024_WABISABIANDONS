@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyC_Manager : MonoBehaviour
+public class Enemy_Manager : MonoBehaviour
 {
-    public static EnemyC_Manager instance;
+    public static Enemy_Manager instance;
     [SerializeField, Header("衝突エフェクト")]
     GameObject collisionEffect;
     [SerializeField, Header("衝突SE")]
@@ -14,6 +14,11 @@ public class EnemyC_Manager : MonoBehaviour
     GameObject explosionEffect;
     [SerializeField, Header("爆発SE")]
     AudioSource explisionSE;
+
+    [SerializeField, Header("蒸気エフェクト")]
+    GameObject steamEffect;
+    [SerializeField, Header("蒸気SE")]
+    AudioSource steamSE;
 
     [SerializeField, Header("反射マテリアル0")]
     Material reflectMaterial0;
@@ -50,6 +55,13 @@ public class EnemyC_Manager : MonoBehaviour
     {
         GameObject obj = Instantiate(explosionEffect, position, quaternion);
         obj.GetComponent<AudioSource>().PlayOneShot(explisionSE.clip);
+        return obj;
+    }
+
+    public GameObject CreateSteamEffect(Vector3 position, Quaternion quaternion)
+    {
+        GameObject obj = Instantiate(steamEffect, position, quaternion);
+        obj.GetComponent<AudioSource>().PlayOneShot(steamSE.clip);
         return obj;
     }
 }

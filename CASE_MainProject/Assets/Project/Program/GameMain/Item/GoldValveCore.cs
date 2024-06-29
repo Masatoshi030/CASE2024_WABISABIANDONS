@@ -9,6 +9,9 @@ public class GoldValveCore : MonoBehaviour
 
     public bool useHitStop = false;
 
+    [SerializeField, Header("SE‚Ì—LŒø")]
+    bool useSE = true;
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.transform.tag == "Player")
@@ -22,8 +25,14 @@ public class GoldValveCore : MonoBehaviour
         float time = 0.1f;
         if(useHitStop)
         {
-            HitStopManager.instance.HitStopEffect(0.05f, 0.5f);
+            HitStopManager.instance.HitStopEffect(0.05f, 0.3f);
         }
+        if(useSE)
+        {
+            AudioSource source = GetComponent<AudioSource>();
+            source.PlayOneShot(source.clip);
+        }
+        
 
         foreach (AutoValveGet valve in valves)
         {

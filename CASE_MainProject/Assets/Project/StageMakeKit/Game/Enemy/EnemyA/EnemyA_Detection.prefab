@@ -53,6 +53,7 @@ GameObject:
   - component: {fileID: 1632465501212528345}
   - component: {fileID: 345236057722754486}
   - component: {fileID: 2576393711153581641}
+  - component: {fileID: 7150543241578528989}
   m_Layer: 0
   m_Name: Setting
   m_TagString: Untagged
@@ -133,8 +134,8 @@ MonoBehaviour:
     stateID: 3
     transitionEnable: 1
   elapsedKey:
-    stateName: wait
-    stateID: 5
+    stateName: idle
+    stateID: 7
     transitionEnable: 1
   damagedKey:
     stateName: damage
@@ -311,6 +312,36 @@ MonoBehaviour:
   enterAnimation: 
   animSpeed: 1
   waitInterval: 2
+--- !u!114 &7150543241578528989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 839576789485603466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c877e5380a5262743839153e1cd6d03b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stateName: idle
+  stateID: 7
+  isAnimation: 1
+  enterAnimation: Idle
+  animSpeed: 1.5
+  waitTime: 3
+  elapsedKey:
+    stateName: Idle
+    stateID: 7
+    transitionEnable: 1
+  findingKey:
+    stateName: tracking
+    stateID: 2
+    transitionEnable: 1
+  damagedKey:
+    stateName: damage
+    stateID: 6
+    transitionEnable: 1
 --- !u!1 &3520232644120387157
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,6 +508,11 @@ PrefabInstance:
       propertyPath: allowObject
       value: 
       objectReference: {fileID: 8486529047168249527}
+    - target: {fileID: 4310193474462269379, guid: fc0838425e4bb5740b0f448d6cdb486b,
+        type: 3}
+      propertyPath: enemyCollider
+      value: 
+      objectReference: {fileID: 2370566118114521011}
     - target: {fileID: 5612712691990160432, guid: fc0838425e4bb5740b0f448d6cdb486b,
         type: 3}
       propertyPath: m_Name
@@ -490,6 +526,12 @@ PrefabInstance:
 --- !u!4 &250954458137642912 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3780796482423910246, guid: fc0838425e4bb5740b0f448d6cdb486b,
+    type: 3}
+  m_PrefabInstance: {fileID: 3964161211887790278}
+  m_PrefabAsset: {fileID: 0}
+--- !u!136 &2370566118114521011 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 1722194532910417781, guid: fc0838425e4bb5740b0f448d6cdb486b,
     type: 3}
   m_PrefabInstance: {fileID: 3964161211887790278}
   m_PrefabAsset: {fileID: 0}

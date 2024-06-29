@@ -97,13 +97,13 @@ public class EnemyC_Rolling : EnemyState_C
                     {
                         case EnemyC.PressureState.Low:
                             enemyC.CState = EnemyC.PressureState.Med;
-                            enemyC.applyMesh.material = EnemyC_Manager.instance.Material1;
-                            EnemyC_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
+                            enemyC.applyMesh.material = Enemy_Manager.instance.Material1;
+                            Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
                             break;
                         case EnemyC.PressureState.Med:
                             enemyC.CState = EnemyC.PressureState.High;
-                            enemyC.applyMesh.material = EnemyC_Manager.instance.Material0;
-                            EnemyC_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
+                            enemyC.applyMesh.material = Enemy_Manager.instance.Material0;
+                            Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
                             break;
                         case EnemyC.PressureState.High:
                             // 最大の場合
@@ -131,13 +131,13 @@ public class EnemyC_Rolling : EnemyState_C
             {
                 case EnemyC.PressureState.Low:
                     enemyC.CState = EnemyC.PressureState.Med;
-                    enemyC.applyMesh.material = EnemyC_Manager.instance.Material1;
-                    EnemyC_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
+                    enemyC.applyMesh.material = Enemy_Manager.instance.Material1;
+                    Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
                     break;
                 case EnemyC.PressureState.Med:
                     enemyC.CState = EnemyC.PressureState.High;
-                    enemyC.applyMesh.material = EnemyC_Manager.instance.Material0;
-                    EnemyC_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
+                    enemyC.applyMesh.material = Enemy_Manager.instance.Material0;
+                    Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
                     break;
                 case EnemyC.PressureState.High:
                     // 最大の場合
@@ -148,7 +148,7 @@ public class EnemyC_Rolling : EnemyState_C
         // 敵にぶつかった場合巻き込む
         else if (collision.transform.tag == "Enemy")
         {
-            EnemyC_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
+            Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
             enemy.EnemyRigidbody.velocity = Vector3.zero;
             // オブジェクトが未登録
             if (!implicateObjects.Contains(collision.gameObject))
@@ -212,7 +212,7 @@ public class EnemyC_Rolling : EnemyState_C
     {
         if (other.transform.tag == "Enemy")
         {
-            EnemyC_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
+            Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
             enemy.EnemyRigidbody.velocity = Vector3.zero;
             // オブジェクトが未登録
             if (!implicateObjects.Contains(other.gameObject))
@@ -321,7 +321,7 @@ public class EnemyC_Rolling : EnemyState_C
         positions.Clear();
         angles.Clear();
         implicateObjects.Clear();
-        EnemyC_Manager.instance.CreateExplosionEffect(enemy.transform.position, Quaternion.identity);
+        Enemy_Manager.instance.CreateExplosionEffect(enemy.transform.position, Quaternion.identity);
         machine.TransitionTo(collisionID);
     }
 
