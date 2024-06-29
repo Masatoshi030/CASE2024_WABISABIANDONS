@@ -46,8 +46,10 @@ public class AttackGaugeController : MonoBehaviour
 
     }
 
-    public void AddValue(float _value)
+    public bool AddValue(float _value)
     {
+        bool bStepChange = false;
+
         //Œø‰Ê‰¹
         if(gageValue == 0.0f)
         {
@@ -59,21 +61,32 @@ public class AttackGaugeController : MonoBehaviour
         }
 
         //‰ÁŽZ
-        gageValue += _value / ((int)attackGageStep);
+        gageValue += _value / (((int)attackGageStep + 1) * 0.75f);
 
         //Å‘å’l“ª‘Å‚¿
         if (gageValue > gaugeMaxValue)
         {
             if(attackGageStep < ATTACK_GAGE_STEP.MaxStep)
             {
+
+                if(attackGageStep == ATTACK_GAGE_STEP.Step3) 
+                {
+                    //‘ã“ü
+                    gageValue = gaugeMaxValue;
+                }
+                else
+                {
+                    //‘ã“ü
+                    gageValue = 0;
+                }
+
                 //’iŠK‚ðˆê‚Â‘‚â‚·
                 attackGageStep++;
 
-                //‘ã“ü
-                gageValue = 0;
-
                 //ƒQ[ƒW‚ÌF‚ð•ÏX
                 gageImage.material = gageStepMaterialList[((int)attackGageStep)];
+
+                bStepChange = true;
             }
             else
             {
@@ -83,6 +96,8 @@ public class AttackGaugeController : MonoBehaviour
 
         //‰æ‘œ‚Ì’·‚³‚É‰e‹¿‚³‚¹‚é
         gageImage.fillAmount = gageValue / gaugeMaxValue;
+
+        return bStepChange;
     }
 
     public void SetValue(float _value)
@@ -118,8 +133,13 @@ public class AttackGaugeController : MonoBehaviour
         return gageValue / gaugeMaxValue;
     }
 
-    public float GetGageStepValue()
+    public float GetGageStepFloatValue()
     {
-        return ((int)attackGageStep) + 1;
+        return ((int)attackGageStep);
+    }
+
+    public int GetGageStep()
+    {
+        return ((int)attackGageStep);
     }
 }

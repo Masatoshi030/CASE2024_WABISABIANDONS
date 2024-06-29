@@ -118,7 +118,7 @@ public class HeadCollision_Manager : MonoBehaviour
                             Instantiate(hibana_ParticleEffect, transform.position, Quaternion.identity);
 
                             //­‚µˆø‚¢‚½ƒJƒƒ‰‚É‚·‚é
-                            CinemachineCameraSetting.instance.SetlittlePulledCamera(1.0f);
+                            //CinemachineCameraSetting.instance.SetlittlePulledCamera(1.0f);
 
                             return;
                         }

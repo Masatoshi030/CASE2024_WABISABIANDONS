@@ -100,11 +100,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("蒸気量で大きさを変える機能を有効")]
     bool bSteamScaleEnable = true;
 
-    [SerializeField, Header("蒸気のパンパン度合いで大きさが変わる軸")]
-    GameObject steamScaleShaft;
+    [SerializeField, Header("蒸気限界警告速度")]
+    float steamMaxAlertSpeed = 2.0f;
 
     [SerializeField, Header("パンパンの時の最大スケール")]
     Vector3 steamMaxScale = new Vector3(1, 1, 1);
+
+    public Material steamMaxAlertMaterial;
 
 
 
@@ -164,6 +166,35 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, Header("突撃ゲージ溜め中の減圧量")]
     float gageChargeDecompression = 0.025f;
+
+    [SerializeField, Header("突撃専用噴出蒸気")]
+    ParticleSystem attack_SteamEffect;
+
+    [SerializeField, Header("突撃専用噴出蒸気の生成個数")]
+    float attack_SteamEffect_RateOverTime = 50.0f;
+
+    [SerializeField, Header("突撃専用スチーム音　AudioSource")]
+    AudioSource au_AttackSteam;
+
+    //突撃専用スチーム音のスタート音量
+    float au_AttackSteam_StartVolume = 0.0f;
+
+    //突撃専用スチーム音のスタートピッチ
+    float au_AttackSteam_StartPitch = 0.0f;
+
+    [SerializeField, Header("突撃の発射音　リソース")]
+    AudioSource attackStartSource;
+
+    float attackStartSource_StartVolume;
+
+    [SerializeField, Header("突撃の発射音")]
+    AudioClip attackStartSound;
+
+    [SerializeField, Header("突撃の軌跡を描くTrailRenderer")]
+    TrailRenderer[] attackTrailRenderer;
+
+    [SerializeField, Header("溜め状態によって変わる色のリスト")]
+    Material[] attackStepMaterials;
 
 
 
@@ -236,6 +267,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         if (instance == null)
         {
             // 自身をインスタンスとする
@@ -265,16 +297,53 @@ public class PlayerController : MonoBehaviour
 
         //mainBGMManagerを取得
         mainBGMManager = GameObject.Find("mainBGMManager").GetComponent<BGMManager>();
+
+        //突撃専用蒸気エフェクトを停止
+        attack_SteamEffect.Stop();
+
+        //突撃専用蒸気音の音量を取得
+        au_AttackSteam_StartVolume = au_AttackSteam.volume;
+        au_AttackSteam_StartPitch = au_AttackSteam.pitch;
+        au_AttackSteam.volume = 0.0f;
+
+        //突撃発射音　初期ボリュームを取得
+        attackStartSource_StartVolume = attackStartSource.volume;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //=== 蒸気管理 ===//
+        if (heldSteam < 0.0f)
+        {
+            heldSteam = 0.0f;
+
+            //蒸気エフェクト
+            var emission = compressor_SteamEffect.emission;
+            emission.rateOverTime = 0.0f;
+        }
+        else
+        {
+            //蒸気エフェクト
+            var emission = compressor_SteamEffect.emission;
+            emission.rateOverTime = 50.0f * outSteamValue;
+        }
+
+
+        //ロックしても止まらない処理
+        //==================================================//
+        //                                            操作ロックの早期リターン
+
         //ロックがかかったら早期リターン
         if (bLock)
         {
             return;
         }
+
+        //==================================================//
+        //ロックしたら止まる処理
+
+
 
         //=== 重力 ===//
 
@@ -344,19 +413,9 @@ public class PlayerController : MonoBehaviour
             //蒸気の状態でポストエフェクトをブレンド
             volumeAnimation.SetFloat("fPressure", heldSteam / maxHeldSteam);
 
-            if (heldSteam < 0.0f)
+            if(heldSteam / maxHeldSteam > 0.7f)
             {
-                heldSteam = 0.0f;
-
-                //蒸気エフェクト
-                var emission = compressor_SteamEffect.emission;
-                emission.rateOverTime = 0.0f;
-            }
-            else
-            {
-                //蒸気エフェクト
-                var emission = compressor_SteamEffect.emission;
-                emission.rateOverTime = 50.0f * outSteamValue;
+                SteamMaxEffect();
             }
         }
         else
@@ -502,17 +561,31 @@ public class PlayerController : MonoBehaviour
                     moveVelocity.x,
                     moveVelocity.y + jumpContinuationPower * (jumpMaxTime - jumpTime / jumpMaxTime) * Time.deltaTime,
                     moveVelocity.z);
+
+                //軌跡のTrailRendererを有効
+                for (int i = 0; i < attackTrailRenderer.Length - 1; i++)
+                {
+                    attackTrailRenderer[i].emitting = true;
+                    attackTrailRenderer[i].material = attackStepMaterials[0];
+                }
             }
 
             //ジャンプ最大時間を過ぎるか×ボタンを押すのをやめたら降下に移行
             if (jumpTime > jumpMaxTime || DualSense_Manager.instance.GetInputState().LeftTrigger.TriggerValue == 0.0f)
             {
                 jumpState = JUMP_STATE.Descending;
+
+                //軌跡のTrailRendererを無効
+                for (int i = 0; i < attackTrailRenderer.Length - 1; i++)
+                {
+                    attackTrailRenderer[i].emitting = false;
+                }
             }
         }
         //降下中
         else if (jumpState == JUMP_STATE.Descending)
         {
+
             //接地判定が有効になったらジャンプ終了
             if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.On)
             {
@@ -615,6 +688,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void SteamMaxEffect()
+    {
+        float steamMaxAlertValue = Mathf.Lerp(2.0f, steamMaxAlertSpeed, (heldSteam / maxHeldSteam / 3.0f) * 0.7f);
+
+        steamMaxAlertValue = Mathf.Sin(Time.time * steamMaxAlertValue) * 0.25f + 0.25f;
+
+        Color colorBuf = steamMaxAlertMaterial.color;
+        colorBuf.a = steamMaxAlertValue;
+
+        steamMaxAlertMaterial.color = colorBuf;
+    }
+
     public void Damage(float _damage)
     {
         characterAnimation.SetTrigger("tDamage");
@@ -656,7 +741,32 @@ public class PlayerController : MonoBehaviour
         if (attackState == ATTACK_STATE.Aim)
         {
             //ゲージを溜める
-            attackGauge.AddValue(Time.deltaTime * attackGauge_AddSpeed);
+            if (attackGauge.AddValue(Time.deltaTime * attackGauge_AddSpeed))
+            {
+                //突撃ゲージから溜めた結果を取得
+                gaugeAttackValue = (attackGauge.GetGageStepFloatValue() + 0.1f) / ((int)AttackGaugeController.ATTACK_GAGE_STEP.MaxStep);
+
+                //突撃ゲージの溜めで回る速さを変える
+                characterAnimation.SetInteger("attackStep", attackGauge.GetGageStep());
+
+                //突撃専用蒸気の生成個数を増やす
+                var emission = attack_SteamEffect.emission;
+                emission.rateOverTime = Mathf.Lerp(0.0f, attack_SteamEffect_RateOverTime, gaugeAttackValue);
+
+                //突撃専用蒸気音の音量とピッチを大きくする
+                au_AttackSteam.volume = Mathf.Lerp(0.0f, au_AttackSteam_StartVolume, gaugeAttackValue);
+                au_AttackSteam_StartPitch = Mathf.Lerp(1.0f, au_AttackSteam_StartPitch, gaugeAttackValue);
+
+                //コントローラーに振動を与える
+                DualSense_Manager.instance.SetLeftRumble(0.7f * gaugeAttackValue, 0.25f * gaugeAttackValue);
+            }
+
+            //最大ステップまで溜まると振動をする
+            if(attackGauge.GetGageStep() == ((int)AttackGaugeController.ATTACK_GAGE_STEP.MaxStep))
+            {
+                //コントローラーに振動を与える
+                DualSense_Manager.instance.SetRightRumble(1.0f, 0.1f);
+            }
 
             //突撃ゲージを溜めている間減圧
             heldSteam -= Time.deltaTime * attackGauge_AddSpeed * gageChargeDecompression;
@@ -692,12 +802,19 @@ public class PlayerController : MonoBehaviour
                     //感度をリセット
                     PlayerVirtualCameraController.instance.OnAim(100, 100);
 
+                    gaugeAttackValue = 0.2f;
+
                     //移動ロック
                     bMoveLock = true;
 
+                    //突撃ゲージの溜めの回転速度段階をリセットする
+                    characterAnimation.SetInteger("attackStep", 0);
 
-                    //スロー
-                    //Time.timeScale = 0.1f;
+                    //突撃専用蒸気エフェクトを再生
+                    attack_SteamEffect.Play();
+
+                    //突撃ゲージを戻す
+                    attackGauge.SetValue(0.0f);
                 }
 
                 //右トリガーを離す
@@ -708,15 +825,22 @@ public class PlayerController : MonoBehaviour
                         //攻撃状態へ移行
                         attackState = ATTACK_STATE.Attack;
 
-                        //突撃ゲージから溜めた結果を取得
-                        gaugeAttackValue = attackGauge.GetGageStepValue() / ((int)AttackGaugeController.ATTACK_GAGE_STEP.MaxStep);
+                        //突撃発射音を鳴らす
+                        attackStartSource.volume = Mathf.Lerp(0.1f, attackStartSource_StartVolume, gaugeAttackValue);
+                        attackStartSource.PlayOneShot(attackStartSound);
 
-                        //突撃ゲージを溜めた分減圧する
-                        //heldSteam -= attackGauge.GetGageStepValue() * 10.0f;
+                        //軌跡のTrailRendererを有効
+                        for (int i = 0; i < attackTrailRenderer.Length; i++)
+                        {
+                            attackTrailRenderer[i].emitting = true;
+                            attackTrailRenderer[i].material = attackStepMaterials[attackGauge.GetGageStep()];
+                        }
 
-                        //突撃ゲージを隠す
-                        attackGauge.SetValue(0.0f);
+                        //ゲージを隠す
                         attackGauge.gameObject.SetActive(false);
+
+                        //コントローラーに振動を与える
+                        DualSense_Manager.instance.SetLeftRumble(0.7f, 0.3f);
 
                         //感度をリセット
                         PlayerVirtualCameraController.instance.OnAimReset();
@@ -739,9 +863,6 @@ public class PlayerController : MonoBehaviour
                         {
                             AttackTargetPosition = hit.point;
                         }
-
-                        //スロー終了
-                        //Time.timeScale = 1.0f;
                     }
                 }
             }
@@ -751,12 +872,32 @@ public class PlayerController : MonoBehaviour
     public void StopAttack()
     {
         attackState = ATTACK_STATE.Idle;
+
         //突撃アニメーション終了
         characterAnimation.SetBool("bAttack", false);
+
         //姿勢を戻す
         attackShaft.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
+
         //突撃ポストエフェクト無効
         volumeAnimation.SetBool("bAttack", false);
+
+        //突撃専用蒸気エフェクトの生成個数を戻す
+        var emission = attack_SteamEffect.emission;
+        emission.rateOverTime = 0.0f;
+
+        //突撃専用蒸気音の音量とピッチを0にする
+        au_AttackSteam.volume = 0.0f;
+        au_AttackSteam_StartPitch = 0.0f;
+
+        //突撃専用蒸気エフェクトを停止
+        attack_SteamEffect.Stop();
+
+        //軌跡のTrailRendererを無効
+        for (int i = 0; i < attackTrailRenderer.Length; i++)
+        {
+            attackTrailRenderer[i].emitting = false;
+        }
 
         //重力を無効にする
         myRigidbody.useGravity = true;
@@ -777,6 +918,9 @@ public class PlayerController : MonoBehaviour
 
         //ノックバック状態にする
         attackState = ATTACK_STATE.KnockBack;
+
+        //突撃強制終了
+        StopAttack();
     }
 
     public void KnockBack(float power,  Vector3 direction)
@@ -791,6 +935,9 @@ public class PlayerController : MonoBehaviour
 
         //ノックバック状態にする
         attackState = ATTACK_STATE.KnockBack;
+
+        //突撃強制終了
+        StopAttack();
     }
 
     void OnFixedInterval()
@@ -798,25 +945,16 @@ public class PlayerController : MonoBehaviour
         //カウント
         fixedIntervalTimer += Time.deltaTime;
         //一定時間が経つと
-        if(fixedIntervalTimer > fixedIntervalTime)
+        if (fixedIntervalTimer > fixedIntervalTime)
         {
             //=== 処理 ===//
 
-            //if (heldSteam > 0.0f)
-            //{
-            //    //トリガー抵抗力
-            //    DualSense_Manager.instance.SetLeftTriggerContinuousResistanceEffect(0.0f, heldSteam / maxHeldSteam);
-            //}
-            //else
-            //{
-            //    //トリガー抵抗を無効にする
-            //    DualSense_Manager.instance.SetLeftTriggerNoEffect();
-            //}
-
-            if (bSteamScaleEnable)
+            //蒸気警告を止める
+            if (heldSteam / maxHeldSteam < 0.7f)
             {
-                //蒸気のパンパン度合いでプレイヤーのスケールを変える
-                steamScaleShaft.transform.localScale = Vector3.Lerp(new Vector3(1.0f, 1.0f, 1.0f), steamMaxScale, heldSteam / maxHeldSteam);
+                Color colorBuf = steamMaxAlertMaterial.color;
+                colorBuf.a = 0.0f;
+                steamMaxAlertMaterial.color = colorBuf;
             }
 
             //左トリガーの抵抗設定

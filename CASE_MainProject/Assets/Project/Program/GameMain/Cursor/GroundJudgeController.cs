@@ -22,7 +22,8 @@ public class GroundJudgeController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Ground")
+        if (other.tag == "Ground" ||
+            (other.tag == "BrokenWall" && PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack))
         {
             onGroundState = ON_GROUND_STATE.On;
 
@@ -33,7 +34,8 @@ public class GroundJudgeController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Ground")
+        if (other.tag == "Ground" || 
+            (other.tag == "BrokenWall" && PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack))
         {
             onGroundState = ON_GROUND_STATE.On;
 
@@ -44,7 +46,8 @@ public class GroundJudgeController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Ground")
+        if (other.tag == "Ground" ||
+            (other.tag == "BrokenWall" && PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack))
         {
             onGroundState = ON_GROUND_STATE.Off;
             //カーソルを非接地判定
