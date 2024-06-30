@@ -25,7 +25,7 @@ public class GoldValveCore : MonoBehaviour
         float time = 0.1f;
         if(useHitStop)
         {
-            HitStopManager.instance.HitStopEffect(0.05f, 0.3f);
+            PlayerController.instance.OnHitStop(0.5f, 0.1f);
         }
         if(useSE)
         {
