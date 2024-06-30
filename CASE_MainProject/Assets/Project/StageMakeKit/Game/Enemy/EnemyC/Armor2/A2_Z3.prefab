@@ -57,8 +57,6 @@ MonoBehaviour:
   isAnimation: 0
   enterAnimation: 
   animSpeed: 1
-  pressureAmount: 0
-  pressureZeroID: 1
 --- !u!114 &4201976330421610140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76,8 +74,6 @@ MonoBehaviour:
   isAnimation: 0
   enterAnimation: 
   animSpeed: 1
-  pressureAmount: 0
-  pressureZeroID: 1
   healAmount: 5
   transitionAmount: 75
   baseID: 2
@@ -99,8 +95,6 @@ MonoBehaviour:
   isAnimation: 1
   enterAnimation: Idle
   animSpeed: 0.5
-  pressureAmount: 0
-  pressureZeroID: 1
   waitInterval: 10
   elapsedID: 3
   damagedID: 4
@@ -121,8 +115,6 @@ MonoBehaviour:
   isAnimation: 1
   enterAnimation: Walk
   animSpeed: 0.25
-  pressureAmount: 0.1
-  pressureZeroID: 1
   moveSpeed: 0.25
   acceleration: 0.25
   angularSpeed: 180
@@ -148,13 +140,14 @@ MonoBehaviour:
   isAnimation: 0
   enterAnimation: 
   animSpeed: 1
-  pressureAmount: 0
-  pressureZeroID: 1
   rollSpeed: 0
   direction: {x: 0, y: 0, z: 0}
   rollingBody: {fileID: 0}
+  trailObject: {fileID: 7066264831278164027}
   rollAxis: {x: 1, y: 0, z: 0}
   valveBonus: 5
+  wallHitStopTime: 0.2
+  enemyHitStopTime: 0.1
   implicateObjects: []
   collisionID: 0
 --- !u!114 &28667631184135382
@@ -174,8 +167,6 @@ MonoBehaviour:
   isAnimation: 0
   enterAnimation: 
   animSpeed: 1
-  pressureAmount: 0
-  pressureZeroID: 1
   bCaught: 0
   elapesedID: 6
   damagedID: 6
@@ -196,8 +187,6 @@ MonoBehaviour:
   isAnimation: 0
   enterAnimation: 
   animSpeed: 1
-  pressureAmount: 0
-  pressureZeroID: 1
   waitInterval: 2
 --- !u!1 &1194518975831361631
 GameObject:
@@ -377,6 +366,11 @@ PrefabInstance:
       propertyPath: stateObject
       value: 
       objectReference: {fileID: 452376587426198988}
+    - target: {fileID: 7651592471832677075, guid: e1692f143236d274d95f42ea8a1949dd,
+        type: 3}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 8040213490182358239, guid: e1692f143236d274d95f42ea8a1949dd,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -396,6 +390,12 @@ MeshRenderer:
 --- !u!54 &2134574764818065177 stripped
 Rigidbody:
   m_CorrespondingSourceObject: {fileID: 7984075590730241438, guid: e1692f143236d274d95f42ea8a1949dd,
+    type: 3}
+  m_PrefabInstance: {fileID: 8309891190940611207}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7066264831278164027 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1243768027045042876, guid: e1692f143236d274d95f42ea8a1949dd,
     type: 3}
   m_PrefabInstance: {fileID: 8309891190940611207}
   m_PrefabAsset: {fileID: 0}

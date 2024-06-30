@@ -13,6 +13,8 @@ public class EnemyC_Rolling : EnemyState_C
     Vector3 direction;
     [SerializeField, Header("回転するボディ")]
     GameObject rollingBody;
+    [SerializeField, Header("トレイルオブジェクト")]
+    GameObject trailObject;
     [SerializeField, Header("回転軸"), ReadOnly, VectorRange(-1.0f, 1.0f)]
     Vector3 rollAxis;
     float angle;
@@ -44,6 +46,10 @@ public class EnemyC_Rolling : EnemyState_C
 
         rb = enemy.transform.GetComponent<Rigidbody>();
         rollingBody = enemy.transform.Find("Body").gameObject;
+        if (trailObject != null)
+        {
+            trailObject.SetActive(false);
+        }
     }
 
     public override void Enter()
@@ -56,6 +62,10 @@ public class EnemyC_Rolling : EnemyState_C
         direction.y = 0.0f;
         direction.Normalize();
         enemy.transform.LookAt(enemy.transform.position + direction * 20.0f);
+        if(trailObject != null)
+        {
+            trailObject.SetActive(true);
+        }
     }
 
     public override void MainFunc()
