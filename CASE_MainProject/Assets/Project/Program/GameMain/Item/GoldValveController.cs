@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class GoldValveController : MonoBehaviour
 {
-
+   
     [SerializeField, Header("プレイヤーに向かうスピード")]
     float speed = 2.0f;
 
@@ -41,7 +42,8 @@ public class GoldValveController : MonoBehaviour
             //もしプレイヤーに到着したら削除
             if(lerpValue > 1.0f)
             {
-                Destroy(this.gameObject);
+                GoldValve_Count.instance.AddValveCount();
+                Destroy(this.gameObject);   
             }
         }
     }
