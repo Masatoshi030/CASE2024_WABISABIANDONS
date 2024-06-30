@@ -181,14 +181,14 @@ public class EnemyC_Rolling : EnemyState_C
                         hitStopCnt = 0.0f;
                         enemyC.CState = EnemyC.PressureState.Med;
                         enemyC.applyMesh.material = Enemy_Manager.instance.Material1;
-                        Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
+                        Enemy_Manager.instance.CreateSparkleEffect(enemy.transform.position, Quaternion.identity);
                         break;
                     case EnemyC.PressureState.Med:
                         isWallHitStop = true;
                         hitStopCnt = 0.0f;
                         enemyC.CState = EnemyC.PressureState.High;
                         enemyC.applyMesh.material = Enemy_Manager.instance.Material0;
-                        Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
+                        Enemy_Manager.instance.CreateSparkleEffect(enemy.transform.position, Quaternion.identity);
                         break;
                     case EnemyC.PressureState.High:
                         // ç≈ëÂÇÃèÍçá
@@ -385,6 +385,7 @@ public class EnemyC_Rolling : EnemyState_C
         angles.Clear();
         implicateObjects.Clear();
         Enemy_Manager.instance.CreateExplosionEffect(enemy.transform.position, Quaternion.identity);
+        Enemy_Manager.instance.CreateCollisionEffect(enemy.transform.position, Quaternion.identity);
         machine.TransitionTo(collisionID);
     }
 
