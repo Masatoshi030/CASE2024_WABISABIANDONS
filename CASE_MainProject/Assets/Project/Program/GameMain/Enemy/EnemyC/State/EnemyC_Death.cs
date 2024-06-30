@@ -7,7 +7,8 @@ public class EnemyC_Death : EnemyState_C
     public override void Enter()
     {
         enemy.SendMsg<int>(1, 0);
-        Enemy_Manager.instance.AddDefeatEnemy();
+        if(enemy.countEnable)
+            Enemy_Manager.instance.AddDefeatEnemy();
 
         Destroy(enemy.gameObject);
         Destroy(gameObject);

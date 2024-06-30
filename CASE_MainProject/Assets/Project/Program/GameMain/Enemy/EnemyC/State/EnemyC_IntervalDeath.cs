@@ -25,7 +25,8 @@ public class EnemyC_IntervalDeath : EnemyState
         {
             // Cの死亡メッセージを通知(スポナーにビリヤードのスポーン依頼)
             enemy.SendMsg<int>(1, 0);
-            Enemy_Manager.instance.AddDefeatEnemy();
+            if(enemy.countEnable)
+                Enemy_Manager.instance.AddDefeatEnemy();
 
             enemy.DestroyAllow();
             Destroy(enemy.gameObject);

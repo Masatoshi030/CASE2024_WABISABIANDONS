@@ -54,6 +54,7 @@ public class EnemySpawner : Subscriber
                 spawnEnemyComponent.EnemyRigidbody.isKinematic = true;
                 spawnEnemyComponent.EnemyRigidbody.useGravity = false;
                 spawnEnemyComponent.EnemyCollider.enabled = false;
+                spawnEnemyComponent.countEnable = false;
                 spawnCnt = 0.0f;
                 break;
         }
