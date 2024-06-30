@@ -833,6 +833,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3005772773376222073}
+  - {fileID: 7018722614611300915}
   m_Father: {fileID: 7007900555689148525}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1 &2521301955315317187
@@ -1198,10 +1199,12 @@ MonoBehaviour:
   dropValveNum: 0
   isAutoGet: 1
   isFindPlayer: 0
+  isAttackNow: 0
   rb: {fileID: 57008456864939677}
   animator: {fileID: 5087932266299742423}
   enemyCollider: {fileID: 334724434995812443}
   enemyAgent: {fileID: 0}
+  allowObject: {fileID: 0}
   pressureState: 0
   applyMesh: {fileID: 113497102698999772}
 --- !u!114 &972162745549746465
@@ -1222,7 +1225,6 @@ MonoBehaviour:
     id: 0
     name: 
     state: {fileID: 0}
-  stateDatas: []
   cnt: 0
   isUpdate: 1
 --- !u!114 &4708086278964067405
@@ -2134,6 +2136,151 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4866545236520497668
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7018722614611300915}
+  - component: {fileID: 1422395711628739210}
+  m_Layer: 0
+  m_Name: Trail
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7018722614611300915
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4866545236520497668}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0.0489, y: 0.0296, z: 0}
+  m_LocalScale: {x: 0.033333324, y: 0.033333335, z: 0.033333324}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6521365519420927240}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!96 &1422395711628739210
+TrailRenderer:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4866545236520497668}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: -876546973899608171, guid: 166cd7c65651cc3459b879558e20ff01, type: 3}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Time: 2
+  m_PreviewTimeScale: 1
+  m_Parameters:
+    serializedVersion: 3
+    widthMultiplier: 0.5
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.6
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 0.2
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 0.18669513, g: 1, b: 0.028301716, a: 1}
+      key1: {r: 1, g: 0.68025136, b: 0, a: 0.35686275}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_ColorSpace: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    numCornerVertices: 0
+    numCapVertices: 0
+    alignment: 0
+    textureMode: 0
+    textureScale: {x: 1, y: 1}
+    shadowBias: 0.5
+    generateLightingData: 0
+  m_MinVertexDistance: 0.05
+  m_MaskInteraction: 0
+  m_Autodestruct: 0
+  m_Emitting: 1
+  m_ApplyActiveColorSpace: 1
 --- !u!1 &5101824619658992935
 GameObject:
   m_ObjectHideFlags: 0
@@ -2632,8 +2779,6 @@ MonoBehaviour:
   isAnimation: 0
   enterAnimation: 
   animSpeed: 1
-  pressureAmount: 0
-  pressureZeroID: 1
 --- !u!114 &8219992156082385531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2651,8 +2796,6 @@ MonoBehaviour:
   isAnimation: 0
   enterAnimation: 
   animSpeed: 1
-  pressureAmount: 0
-  pressureZeroID: 1
   healAmount: 5
   transitionAmount: 75
   baseID: 2
@@ -2674,8 +2817,6 @@ MonoBehaviour:
   isAnimation: 1
   enterAnimation: Idle
   animSpeed: 0.5
-  pressureAmount: 0
-  pressureZeroID: 1
   waitInterval: 10
   elapsedID: 3
   damagedID: 4
@@ -2696,8 +2837,6 @@ MonoBehaviour:
   isAnimation: 1
   enterAnimation: Walk
   animSpeed: 0.25
-  pressureAmount: 0.1
-  pressureZeroID: 1
   moveSpeed: 0.25
   acceleration: 0.25
   angularSpeed: 180
@@ -2723,13 +2862,14 @@ MonoBehaviour:
   isAnimation: 0
   enterAnimation: 
   animSpeed: 1
-  pressureAmount: 0
-  pressureZeroID: 1
   rollSpeed: 0
   direction: {x: 0, y: 0, z: 0}
   rollingBody: {fileID: 0}
+  trailObject: {fileID: 4866545236520497668}
   rollAxis: {x: 1, y: 0, z: 0}
   valveBonus: 5
+  wallHitStopTime: 0.2
+  enemyHitStopTime: 0.1
   implicateObjects: []
   collisionID: 0
 --- !u!114 &3219205142164549089
@@ -2749,8 +2889,6 @@ MonoBehaviour:
   isAnimation: 0
   enterAnimation: 
   animSpeed: 1
-  pressureAmount: 0
-  pressureZeroID: 1
   bCaught: 0
   elapesedID: 6
   damagedID: 6
@@ -2771,8 +2909,6 @@ MonoBehaviour:
   isAnimation: 0
   enterAnimation: 
   animSpeed: 1
-  pressureAmount: 0
-  pressureZeroID: 1
   waitInterval: 2
 --- !u!1 &6851101942993505166
 GameObject:
