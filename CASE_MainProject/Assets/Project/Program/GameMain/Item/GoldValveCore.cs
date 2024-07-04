@@ -7,7 +7,13 @@ public class GoldValveCore : MonoBehaviour
     [SerializeField, Header("自動取得するバルブ")]
     AutoValveGet[] valves;
 
+    [SerializeField, Header("ヒットストップの有効")]
     public bool useHitStop = false;
+
+    [SerializeField, Header("ヒットストップの有効時間")]
+    float hitStopTime = 0.2f;
+    [SerializeField, Header("ヒットストップ時のタイムスケール")]
+    float hitStopTimeScale = 0.1f;
 
     [SerializeField, Header("SEの有効")]
     bool useSE = true;
@@ -25,7 +31,7 @@ public class GoldValveCore : MonoBehaviour
         float time = 0.1f;
         if(useHitStop)
         {
-            PlayerController.instance.OnHitStop(0.5f, 0.1f);
+            PlayerController.instance.OnHitStop(hitStopTime, hitStopTimeScale);
         }
         if(useSE)
         {
