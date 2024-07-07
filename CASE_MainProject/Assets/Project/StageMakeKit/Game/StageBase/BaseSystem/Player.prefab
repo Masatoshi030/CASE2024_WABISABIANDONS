@@ -2528,7 +2528,7 @@ MonoBehaviour:
   naturalAddPressure: 3
   au_Steam: {fileID: 4174861317411024326}
   bSteamScaleEnable: 0
-  steamMaxAlertSpeed: 2
+  steamMaxAlertSpeed: 15
   steamMaxScale: {x: 1.5, y: 1.5, z: 1.5}
   steamMaxAlertMaterial: {fileID: 2100000, guid: 993f6af033579974abe652262384885f,
     type: 2}
@@ -2567,6 +2567,8 @@ MonoBehaviour:
     type: 3}
   explosionEffect: {fileID: 2786308746509509768, guid: e773daa8ede5a6f49bb853020fb33ede,
     type: 3}
+  au_Damage: {fileID: 2820129448502716723}
+  damageSound: {fileID: 8300000, guid: 531ef2cf68f44654890728e9140efe99, type: 3}
   valveFlyTime: 1
   valveFlyTimer: 0
   valveFlyState: 0
@@ -2580,6 +2582,7 @@ MonoBehaviour:
   volumeAnimation: {fileID: 0}
   bLock: 0
   playerLayerMask: 6
+  selfHitStopTime: 0
 --- !u!114 &5249567584725752381
 MonoBehaviour:
   m_ObjectHideFlags: 0
