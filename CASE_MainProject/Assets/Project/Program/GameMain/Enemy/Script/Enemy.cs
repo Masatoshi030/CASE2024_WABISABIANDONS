@@ -112,6 +112,8 @@ public class Enemy : Subscriber
 
     public GameObject AllowObject { get => allowObject; }
 
+    public bool countEnable = true;
+
     public void SetAllowActive(bool active)
     {
         if(allowObject != null)

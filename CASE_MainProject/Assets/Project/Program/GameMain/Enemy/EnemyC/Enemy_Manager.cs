@@ -34,6 +34,7 @@ public class Enemy_Manager : MonoBehaviour
     Material reflectMaterial2;
     public Material Material2 { get => reflectMaterial2; }
 
+    [SerializeField, Header("“|‚µ‚½”")]
     uint DefeatEnemyNum = 0;
 
     private void Awake()

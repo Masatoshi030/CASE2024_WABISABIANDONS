@@ -264,6 +264,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("プレイヤーのレイヤーマスク")]
     int playerLayerMask = 6;
 
+    // セルフヒットストップ
+
+    [SerializeField, Header("セルフヒットストップタイム")]
+    float selfHitStopTime;
+    float selfHitStopCnt = 0.0f;
+    bool isSelfHitStop = false;
+
+    // velocityの保存
+    Vector3 saveVeclocity;
+    // animationspeedの保存
+    float saveAnimSpeed;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -313,6 +327,18 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(isSelfHitStop)
+        {
+            selfHitStopCnt += Time.deltaTime;
+            if(selfHitStopCnt >= selfHitStopTime)
+            {
+                isSelfHitStop = false;
+                myRigidbody.velocity = saveVeclocity;
+                characterAnimation.speed = saveAnimSpeed;
+            }
+            return;
+        }
+
         //=== 蒸気管理 ===//
         if (heldSteam < 0.0f)
         {
@@ -464,6 +490,10 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(isSelfHitStop)
+        {
+            return;
+        }
 
         //ロックがかかったら早期リターン
         if (bLock)
@@ -963,6 +993,17 @@ public class PlayerController : MonoBehaviour
             //タイマーをリセット
             fixedIntervalTimer = 0.0f;
         }
+    }
+
+    public void OnHitStop(float time, float timescale)
+    {
+        isSelfHitStop = true;
+        selfHitStopTime = time;
+        selfHitStopCnt = 0.0f;
+        saveVeclocity = myRigidbody.velocity;
+        saveAnimSpeed = characterAnimation.speed;
+        myRigidbody.velocity = myRigidbody.velocity * timescale;
+        characterAnimation.speed = timescale;
     }
 
     public void OnGoal()
