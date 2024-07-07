@@ -974,6 +974,6 @@ public class PlayerController : MonoBehaviour
         bLock = true;
 
         //チュートリアルのガイドを削除
-        GameObject.Find("TutorialCanvas").SetActive(false);
+        //GameObject.Find("TutorialCanvas").SetActive(false);
     }
 }

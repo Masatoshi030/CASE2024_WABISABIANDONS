@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -44,6 +45,8 @@ public class StageSelect : MonoBehaviour
     public GameObject[,] stageArray = new GameObject[4, 6];     //全ステージ数の配列
     public GameObject[,] checkArray = new GameObject[4, 6];     //ステージのクリア状況確認配列
 
+    bool[,] bClear = new bool[4, 6];
+
     // Start関数
     void Start()
     {
@@ -56,15 +59,50 @@ public class StageSelect : MonoBehaviour
                 stageArray[i, j] = papers[i].transform.GetChild(j).transform.GetChild(1).gameObject;
                 checkArray[i, j] = papers[i].transform.GetChild(j).transform.GetChild(0).gameObject;
                 checkArray[i, j].SetActive(true);
+
+                string stageWord = "";
+
+                //ワールド数
+                switch (i)
+                {
+                    case 0:
+                        stageWord = "A";
+                        break;
+                    case 1:
+                        stageWord = "B";
+                        break;
+                    case 2:
+                        stageWord = "C";
+                        break;
+                    case 3:
+                        stageWord = "D";
+                        break;
+                    default:
+                        stageWord = "A";
+                        break;
+                }
+
+                string stageDataName = "SELECT_CLEAR[" + stageWord + "_" + (j + 1).ToString() + "]";
+
+                bClear[i, j] = Convert.ToBoolean(PlayerPrefs.GetInt(stageDataName));
+
+                if (bClear[i, j] == true)
+                {
+                    checkArray[i, j].GetComponent<Animator>().SetBool("bCheck", true);
+                    checkArray[i, j].SetActive(true);
+                }
             }
         }
+
+        //選択していたステージ
+        nowSelect = PlayerPrefs.GetInt("SELECT[SelectStageCount]");
     }
 
     // Update関数
     void Update()
     {
         //ページセレクトスクリプトから今のページを持ってくる
-        nowPage = PageSelect.serectPage;
+        nowPage = PageSelect.selectPage;
 
         //触っていない時間格納
         noTouchTime += Time.deltaTime;
@@ -142,48 +180,17 @@ public class StageSelect : MonoBehaviour
                 {
                     stageArray[i, j].SetActive(false);
                 }
+
+                if (bClear[i, j] == true)
+                {
+                    checkArray[i, j].GetComponent<Animator>().SetBool("bCheck", true);
+                    checkArray[i, j].SetActive(true);
+                }
             }
         }
+
         //セレクトされているボタンをActiveにする処理
         SelectActive(nowPage, nowSelect);
-
-        //チェックを表示する
-        //チェックが全体のステージ数を越えていないか判定する処理
-        if (checkNum >= 0 && maxPage * maxSelectStage >= checkNum)
-        {
-            clearPage = checkNum / maxSelectStage;
-            clearSelectPage = checkNum % maxSelectStage;
-
-            //越えている場合(クリアステージが6以上)
-            if (clearPage > 0)
-            {
-                for (int i = 0; i < clearPage; i++)
-                {
-                    for (int j = 0; j < 6; j++)
-                    {
-                        checkArray[i, j].GetComponent<Animator>().SetBool("bCheck", true);
-                        checkArray[i, j].SetActive(true);
-                    }
-                    for (int j = 0; j < clearSelectPage; j++)
-                    {
-                        checkArray[clearPage, j].GetComponent<Animator>().SetBool("bCheck", true);
-                        checkArray[clearPage, j].SetActive(true);
-                    }
-                }
-            }
-            else  //越えていない場合(クリアステージが6以上)
-            {
-                for (int i = 0; i < clearSelectPage; i++)
-                {
-                    checkArray[clearPage, i].GetComponent<Animator>().SetBool("bCheck", true);
-                    checkArray[clearPage, i].SetActive(true);
-                }
-            }
-        }
-        else if (checkNum > 24)     //24ステージ以上を選択してしまった場合
-        {
-            checkNum = 24;
-        }
 
         //決定ボタン
         if (DualSense_Manager.instance.GetInputState().OptionsButton == DualSenseUnity.ButtonState.Down)
@@ -220,6 +227,10 @@ public class StageSelect : MonoBehaviour
 
             //決定オン再生
             myAudioSource.PlayOneShot(stageEnterSound);
+
+            //セレクトデータ保存
+            PlayerPrefs.SetInt("SELECT[SelectPageCount]", nowPage);
+            PlayerPrefs.SetInt("SELECT[SelectStageCount]", nowSelect);
         }
     }
 

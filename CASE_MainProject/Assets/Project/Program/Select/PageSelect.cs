@@ -20,14 +20,14 @@ public class PageSelect : MonoBehaviour
     [SerializeField, Header("ページめくり音")]
     AudioClip pageSwitchSound;
 
-    public static int serectPage;
+    public static int selectPage;
     private Animator anim;
 
     // Start関数
     void Start()
     {
 
-        serectPage = 0;
+        selectPage = 0;
         anim= gameObject.GetComponent<Animator>();
 
         //１ページ以外非表示
@@ -35,6 +35,12 @@ public class PageSelect : MonoBehaviour
         papers[1].SetActive(false);
         papers[2].SetActive(false);
         papers[3].SetActive(false);
+
+        //選択していたページ
+        selectPage = PlayerPrefs.GetInt("SELECT[SelectPageCount]");
+
+        //ページ切替処理
+        SelectPaperProcess();
     }
 
     
@@ -48,7 +54,7 @@ public class PageSelect : MonoBehaviour
         if (DualSense_Manager.instance.GetInputState().DPadRightButton == DualSenseUnity.ButtonState.Down)
         {
             //クールタイムが上がっていたらボタン入力処理
-            if (noTouchTime > buttonCoolTime && serectPage < 3)
+            if (noTouchTime > buttonCoolTime && selectPage < 3)
             {
                 //Bool型のパラメーターであるbPageMoveをTrueにする
                 anim.SetTrigger("tPageMove");
@@ -57,7 +63,7 @@ public class PageSelect : MonoBehaviour
                 myAudioSource.PlayOneShot(pageSwitchSound);
 
                 DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
-                serectPage++;
+                selectPage++;
             }
             //ボタンが触られたのでクールタイム初期化
             noTouchTime = 0.0f;
@@ -67,7 +73,7 @@ public class PageSelect : MonoBehaviour
         if (DualSense_Manager.instance.GetInputState().DPadLeftButton == DualSenseUnity.ButtonState.Down)
         {
             //クールタイムが上がっていたらボタン入力処理
-            if (noTouchTime > buttonCoolTime && serectPage > 0)
+            if (noTouchTime > buttonCoolTime && selectPage > 0)
             {
                 //Bool型のパラメーターであるbPageMoveをTrueにする
                 anim.SetTrigger("tPageMove");
@@ -76,39 +82,40 @@ public class PageSelect : MonoBehaviour
                 myAudioSource.PlayOneShot(pageSwitchSound);
 
                 DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
-                serectPage--;
+                selectPage--;
             }
             //ボタンが触られたのでクールタイム初期化
             noTouchTime = 0.0f;
         }
+
         //ページ切替処理
         SelectPaperProcess();
     }
 
     private void SelectPaperProcess()
     {
-        if (serectPage == 0)
+        if (selectPage == 0)
         {
             papers[0].SetActive(true);
             papers[1].SetActive(false);
             papers[2].SetActive(false);
             papers[3].SetActive(false);
         }
-        if (serectPage == 1)
+        if (selectPage == 1)
         {
             papers[0].SetActive(false);
             papers[1].SetActive(true);
             papers[2].SetActive(false);
             papers[3].SetActive(false);
         }
-        if (serectPage == 2)
+        if (selectPage == 2)
         {
             papers[0].SetActive(false);
             papers[1].SetActive(false);
             papers[2].SetActive(true);
             papers[3].SetActive(false);
         }
-        if (serectPage == 3)
+        if (selectPage == 3)
         {
             papers[0].SetActive(false);
             papers[1].SetActive(false);

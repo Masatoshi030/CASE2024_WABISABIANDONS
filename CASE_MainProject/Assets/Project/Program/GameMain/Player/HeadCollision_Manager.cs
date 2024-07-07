@@ -132,6 +132,9 @@ public class HeadCollision_Manager : MonoBehaviour
 
                     //プレイヤーのゴール処理
                     PlayerController.instance.OnGoal();
+
+                    //このシーンをクリアとしてセーブ
+                    DataManager.instance.SaveClearThisStage();
                 }
 
                 //着火判定生成
