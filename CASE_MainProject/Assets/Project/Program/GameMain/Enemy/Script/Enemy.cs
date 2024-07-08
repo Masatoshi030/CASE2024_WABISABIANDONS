@@ -17,14 +17,14 @@ public class Enemy : Subscriber
     public EnemyStateMachine Machine { get => enemyStateMachine; }
 
     [SerializeField, Header("最大HP")]
-    float maxHp;
+    protected float maxHp;
     [SerializeField, Header("HP"), ReadOnly]
-    float enemyHp;
+    protected float enemyHp;
     public float Hp { get => enemyHp; }
     [SerializeField, Header("最大圧力")]
-    float maxPressure;
+    protected float maxPressure;
     [SerializeField, Header("圧力"), ReadOnly]
-    float enemyPressure;
+    protected float enemyPressure;
     public float Pressre { get => enemyPressure; }
     [SerializeField, Header("視点")]
     protected Transform eyeTransform;
@@ -92,7 +92,7 @@ public class Enemy : Subscriber
 
 
     [SerializeField, Header("RigidBody")]
-    Rigidbody rb;
+    protected Rigidbody rb;
     public Rigidbody EnemyRigidbody { get => rb; }
 
     [SerializeField, Header("アニメーター")]

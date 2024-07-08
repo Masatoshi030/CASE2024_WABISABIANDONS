@@ -29,8 +29,8 @@ public class ShakeCurve : MonoBehaviour
         cnt += Time.deltaTime * timeRate;
         float shake = shakeCurve.Evaluate(cnt) * moveRate;
 
-        Vector3 newPosition = transform.position;
+        Vector3 newPosition = transform.localPosition;
         newPosition.y = Originheight + shake;
-        transform.position = newPosition;
+        transform.localPosition = newPosition;
     }
 }

@@ -163,12 +163,16 @@ public class StateMachine : MonoBehaviour
 
     public virtual void AddState(State state)
     {
-        StateData data = new StateData();
-        data.state = state;
-        data.id = state.StateID;
-        data.name = state.StateName;
-        data.state.Machine = this;
-        state.Initialize();
+        if(!stateDatas.ContainsKey(state.StateID))
+        {
+            StateData data = new StateData();
+            data.state = state;
+            data.id = state.StateID;
+            data.name = state.StateName;
+            data.state.Machine = this;
+            state.Initialize();
+            stateDatas.Add(data.id, data);
+        }
     }
 
     /*
@@ -245,5 +249,10 @@ public class StateMachine : MonoBehaviour
     public virtual void TriggerExitOpponent(Collider other)
     {
         if (currentState != null) currentState.state.TriggerExitOpponent(other);
+    }
+
+    public void ResetCount()
+    {
+        cnt = 0.0f;
     }
 }

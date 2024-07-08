@@ -35,7 +35,7 @@ public class HeadCollision_Manager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Wall" || other.tag == "Ground" || other.tag == "Enemy" || other.tag == "Dummy" || other.tag == "Valve" || other.tag == "Goal" || other.tag == "BrokenWall")
+        if (other.tag == "Wall" || other.tag == "Ground" || other.tag == "Enemy" || other.tag == "Dummy" || other.tag == "Valve" || other.tag == "Goal" || other.tag == "BrokenWall" || other.tag == "Boss")
         {
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
             {
@@ -138,6 +138,11 @@ public class HeadCollision_Manager : MonoBehaviour
                 if (other.tag == "Wall" || other.tag == "Ground")
                 {
                     Instantiate(explosionSwitchObject, transform.position, Quaternion.identity);
+                }
+
+                if(other.tag == "Boss")
+                {
+                    Boss.instance.Damage(20.0f, PlayerController.instance.transform.GetComponent<Rigidbody>().velocity);
                 }
 
                 //ìÀåÇèIóπ

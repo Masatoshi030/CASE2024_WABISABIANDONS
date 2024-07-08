@@ -33,7 +33,7 @@ public class Boss_Manager : MonoBehaviour
     void Update()
     {
         // 感情の計算
-        int total = 0;
+        float total = 0;
 
         for(int i = 0; i < (int)Emotion.Max; i++)
         {
@@ -43,7 +43,7 @@ public class Boss_Manager : MonoBehaviour
         // パーセンテージに変換(100%)
         for(int i = 0; i < (int)Emotion.Max; i++)
         {
-            fEmotionArray[i] = (emotionArray[i] / total) * 100.0f;
+            fEmotionArray[i] = ((float)emotionArray[i] / (float)total) * 100.0f;
         }
     }
 
@@ -52,6 +52,10 @@ public class Boss_Manager : MonoBehaviour
     {
         // 特定の感情の計算
         emotionArray[(int)emotion] += value;
+        if(emotionArray[(int)emotion] <= 0)
+        {
+            emotionArray[(int)emotion] = 0;
+        }
     }
 
     public float[] GetEmotions()
@@ -68,14 +72,17 @@ public class Boss_Manager : MonoBehaviour
         int r = Random.Range(0, 150);
         if(r <= rates[(int)Emotion.Calm])
         {
+            // 冷静
             emotion = Emotion.Calm;
         }
         else if(r <= rates[(int)Emotion.Calm] + rates[(int)Emotion.Anger])
         {
+            // 怒り
             emotion = Emotion.Anger;
         }
         else
         {
+            // 暴走
             emotion = Emotion.Lazy;
         }
 
@@ -84,6 +91,7 @@ public class Boss_Manager : MonoBehaviour
 
     public void SetEmotion(Emotion _emotion)
     {
+        // 外部から強制的に感情を設定
         emotion = _emotion;
     }
 }
