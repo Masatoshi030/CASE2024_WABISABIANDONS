@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Threading.Tasks;
 
 public class GameUIManager : MonoBehaviour
@@ -13,6 +14,14 @@ public class GameUIManager : MonoBehaviour
 
     [SerializeField, Header("パネルフェードアニメーション")]
     Animator panelFadeAnimator;
+
+    [SerializeField, Header("ScreenSmokePanel")]
+    Image screenSmokePanel;
+
+    [SerializeField, Header("画面スモークが消えるまでの時間")]
+    float screenSmokeThinTime = 3.0f;
+
+    float screenSmokeThinTimer = 0.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +44,26 @@ public class GameUIManager : MonoBehaviour
         if(DualSense_Manager.instance.GetInputState().OptionsButton == DualSenseUnity.ButtonState.NewDown)
         {
             SetPause(!pauseObj.activeSelf);
+        }
+
+        //画面スモークエフェクトの自然消滅
+        if(screenSmokeThinTimer > 0.0f)
+        {
+            //タイマー計測
+            screenSmokeThinTimer -= Time.deltaTime;
+
+            //０に矯正
+            if(screenSmokeThinTimer <= 0.0f)
+            {
+                screenSmokeThinTimer = 0.0f;
+            }
+
+            //線形補間でα値を計算
+            Color colorbuf = screenSmokePanel.color;
+
+            colorbuf.a = Mathf.Lerp(0.0f, 1.0f, screenSmokeThinTimer / screenSmokeThinTime);
+
+            screenSmokePanel.color = colorbuf;
         }
     }
 
@@ -71,5 +100,11 @@ public class GameUIManager : MonoBehaviour
 
         //シーンリロード
         this.GetComponent<SceneChanger>().Reload();
+    }
+
+    public void SetScreenSmoke()
+    {
+        //タイマーを最大時間にリセット
+        screenSmokeThinTimer = screenSmokeThinTime;
     }
 }
