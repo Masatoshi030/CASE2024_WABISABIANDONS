@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 
@@ -9,6 +10,10 @@ public class PageSelect : MonoBehaviour
     //定義領域＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
     [SerializeField, Header("ページ設定")]
     GameObject[] papers;
+    [SerializeField, Header("クールタイム時間保存")]
+    float timeElapsed;
+    [SerializeField, Header("LEFT,RIGHTボタン長押しセレクトクールタイム")]
+    float timeOut;
     [SerializeField, Header("横十字キー触っていない時間")]
     float noTouchTime;
     [SerializeField, Header("横十字キーのクールタイム")]
@@ -19,6 +24,9 @@ public class PageSelect : MonoBehaviour
 
     [SerializeField, Header("ページめくり音")]
     AudioClip pageSwitchSound;
+
+    static int maxPage = 4;    //ページの最大
+    static int minPage = 0;     //ページの最小
 
     public static int selectPage;
     private Animator anim;
@@ -88,6 +96,83 @@ public class PageSelect : MonoBehaviour
             noTouchTime = 0.0f;
         }
 
+        //右スティック
+        if (DualSense_Manager.instance.GetLeftStick().x > 0.5f &&
+            1.0f <= DualSense_Manager.instance.GetLeftStick().x)
+        {
+            //クールタイムが上がっていたらボタン入力処理
+            if (noTouchTime > buttonCoolTime)
+            {
+                //Bool型のパラメーターであるbPageMoveをTrueにする
+                anim.SetTrigger("tPageMove");
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
+                //ページ切り替え音再生
+                myAudioSource.PlayOneShot(pageSwitchSound);
+                selectPage++;
+                timeElapsed = 0.0f;
+            }
+
+            timeElapsed += Time.unscaledDeltaTime;
+
+            //一定時間押していると実行される処理
+            if (timeElapsed > timeOut)
+            {
+                //Bool型のパラメーターであるbPageMoveをTrueにする
+                anim.SetTrigger("tPageMove");
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
+                //ページ切り替え音再生
+                myAudioSource.PlayOneShot(pageSwitchSound);
+                selectPage++;
+                timeElapsed = 0.0f;
+            }
+
+            if (selectPage > maxPage - 1)
+            {
+                selectPage = minPage;
+            }
+
+            //ボタンが触られたのでクールタイム初期化
+            noTouchTime = 0.0f;
+        }
+
+        //左スティック
+        if (-0.5f > DualSense_Manager.instance.GetLeftStick().x &&
+              DualSense_Manager.instance.GetLeftStick().x <= -1.0f)
+        {
+            //クールタイムが上がっていたらボタン入力処理
+            if (noTouchTime > buttonCoolTime)
+            {
+                //Bool型のパラメーターであるbPageMoveをTrueにする
+                anim.SetTrigger("tPageMove");
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
+                //ページ切り替え音再生
+                myAudioSource.PlayOneShot(pageSwitchSound);
+                selectPage--;
+                timeElapsed = 0.0f;
+            }
+
+            timeElapsed += Time.unscaledDeltaTime;
+
+            //一定時間押していると実行される処理
+            if (timeElapsed > timeOut)
+            {
+                //Bool型のパラメーターであるbPageMoveをTrueにする
+                anim.SetTrigger("tPageMove");
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
+                //ページ切り替え音再生
+                myAudioSource.PlayOneShot(pageSwitchSound);
+                selectPage--;
+                timeElapsed = 0.0f;
+            }
+
+            if (selectPage > minPage)
+            {
+                selectPage = maxPage - 1;
+            }
+
+            //ボタンが触られたのでクールタイム初期化
+            noTouchTime = 0.0f;
+        }
         //ページ切替処理
         SelectPaperProcess();
     }
