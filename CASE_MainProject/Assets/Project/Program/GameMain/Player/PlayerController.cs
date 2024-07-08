@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public class PlayerController : MonoBehaviour
 {
@@ -205,6 +206,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("爆発エフェクト")]
     GameObject explosionEffect;
 
+    [SerializeField, Header("ダメージサウンドソース")]
+    AudioSource au_Damage;
+
+    [SerializeField, Header("ダメージ効果音")]
+    AudioClip damageSound;
+
+    bool bNotDamage = false;
 
 
     //=== バルブ蒸気ぶっ飛び ===//
@@ -652,10 +660,7 @@ public class PlayerController : MonoBehaviour
         if(other.tag == "DamageSteam")
         {
             //ダメージ
-            heldSteam += 10.0f;
-
-            //ノックバック
-            KnockBack();
+            Damage(10.0f);
         }
     }
 
@@ -730,14 +735,35 @@ public class PlayerController : MonoBehaviour
         steamMaxAlertMaterial.color = colorBuf;
     }
 
+    async void ControllLock_Time(float _stopTimer)
+    {
+        bNotDamage = true;
+
+        // 指定時間待機
+        await Task.Delay((int)(_stopTimer * 1000));
+
+        bNotDamage = false;
+    }
+
     public void Damage(float _damage)
     {
-        characterAnimation.SetTrigger("tDamage");
+        if (bNotDamage == false)
+        {
+            characterAnimation.SetTrigger("tDamage");
 
-        //突撃方向の反対ベクトルの斜め上にノックバックする
-        myRigidbody.velocity = (Vector3.up - moveRotationShaft.transform.forward) * knockBackPower;
+            //ダメージ音再生
+            au_Damage.PlayOneShot(damageSound);
 
-        heldSteam += _damage;
+            //突撃方向の反対ベクトルの斜め上にノックバックする
+            myRigidbody.velocity = (Vector3.up - moveRotationShaft.transform.forward) * knockBackPower;
+
+            //重ためのヒットストップ
+            HitStopManager.instance.HitStopEffect(0.1f, 0.3f);
+
+            ControllLock_Time(3.0f);
+
+            heldSteam += _damage;
+        }
     }
 
     void OnAttack()
@@ -1015,6 +1041,6 @@ public class PlayerController : MonoBehaviour
         bLock = true;
 
         //チュートリアルのガイドを削除
-        GameObject.Find("TutorialCanvas").SetActive(false);
+        //GameObject.Find("TutorialCanvas").SetActive(false);
     }
 }

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class GoldValveController : MonoBehaviour
 {
@@ -42,7 +41,7 @@ public class GoldValveController : MonoBehaviour
             //‚à‚µƒvƒŒƒCƒ„[‚É“ž’…‚µ‚½‚çíœ
             if(lerpValue > 1.0f)
             {
-                GoldValve_Count.instance.AddValveCount();
+                //GoldValve_Count.instance.AddValveCount();
                 Destroy(this.gameObject);   
             }
         }
