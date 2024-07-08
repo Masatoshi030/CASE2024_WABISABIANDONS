@@ -151,7 +151,7 @@ public class PlayerController : MonoBehaviour
     float attackUpCorrectionPower = 1.0f;
 
     [SerializeField, Header("突撃ゲージ")]
-    AttackGaugeController attackGauge;
+    public AttackGaugeController attackGauge;
 
     [SerializeField, Header("突撃ゲージが溜まる速度")]
     float attackGauge_AddSpeed = 2.0f;
