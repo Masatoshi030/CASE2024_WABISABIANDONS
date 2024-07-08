@@ -41,6 +41,9 @@ public class GoldValveController : MonoBehaviour
             //もしプレイヤーに到着したら削除
             if(lerpValue > 1.0f)
             {
+                //リザルト用のカウント
+                GoldValve_Count.instance.AddValveCount();
+
                 //GoldValve_Count.instance.AddValveCount();
                 Destroy(this.gameObject);   
             }

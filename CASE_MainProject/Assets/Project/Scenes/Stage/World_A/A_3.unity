@@ -1006,7 +1006,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8879622227388247387, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1083367697}
   m_SourcePrefab: {fileID: 100100000, guid: 924e2e14df82fd74388c58f934b12972, type: 3}
 --- !u!4 &271560035 stripped
 Transform:
@@ -1723,6 +1727,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7eb1501e05f69004b8b76661936fd341, type: 3}
+--- !u!1 &447840265 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8879622227388247387, guid: 924e2e14df82fd74388c58f934b12972,
+    type: 3}
+  m_PrefabInstance: {fileID: 236935951}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &456094887 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4882355965543457789, guid: eaf3bcea73f9ca143a378c0e268a4ae0,
@@ -3964,6 +3974,23 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 236935951}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1083367697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447840265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4a5156fbedb4624a8558c44b62bd876, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoldValve: GoldValve
+  Enemy: Enemy
+  Get_Count: 0
+  GoldValve_C: []
+  Enemy_C: []
 --- !u!1001 &1084748210
 PrefabInstance:
   m_ObjectHideFlags: 0
