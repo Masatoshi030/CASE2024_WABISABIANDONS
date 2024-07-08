@@ -171,6 +171,70 @@ public class StageSelect : MonoBehaviour
             noTouchTime = 0.0f;
         }
 
+        //上スティック入力
+        if (DualSense_Manager.instance.GetLeftStick().y > 0.5f &&
+           1.0f <= DualSense_Manager.instance.GetLeftStick().y)
+        {
+            //クールタイムが上がっていたらボタン入力処理
+            if (noTouchTime > buttonCoolTime)
+            {
+                DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
+                myAudioSource.PlayOneShot(cursorMoveSound);
+                nowSelect--;
+                timeElapsed = 0.0f;
+            }
+
+            timeElapsed += Time.unscaledDeltaTime;
+
+            //一定時間押していると実行される処理
+            if (timeElapsed > timeOut)
+            {
+                DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
+                nowSelect--;
+                timeElapsed = 0.0f;
+            }
+
+            if (nowSelect < minSelectStage)
+            {
+                nowSelect = maxSelectStage - 1;
+            }
+
+            //ボタンが触られたのでクールタイム初期化
+            noTouchTime = 0.0f;
+        }
+
+        //下スティック入力
+        if (-0.5f > DualSense_Manager.instance.GetLeftStick().y &&
+              DualSense_Manager.instance.GetLeftStick().y <= -1.0f)
+        {
+            //クールタイムが上がっていたらボタン入力処理
+            if (noTouchTime > buttonCoolTime)
+            {
+                DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
+                myAudioSource.PlayOneShot(cursorMoveSound);
+                nowSelect++;
+                timeElapsed = 0.0f;
+            }
+
+            timeElapsed += Time.unscaledDeltaTime;
+
+            //一定時間押していると実行される処理
+            if (timeElapsed > timeOut)
+            {
+                DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
+                nowSelect++;
+                timeElapsed = 0.0f;
+            }
+
+            if (nowSelect > maxSelectStage - 1)
+            {
+                nowSelect = minSelectStage;
+            }
+
+            //ボタンが触られたのでクールタイム初期化
+            noTouchTime = 0.0f;
+        }
+
         //セレクトされていない状態にする処理
         for (int i = minPage; i < maxPage; i++)
         {
