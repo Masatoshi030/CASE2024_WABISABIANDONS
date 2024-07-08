@@ -159,6 +159,9 @@ public class PlayerController : MonoBehaviour
     //突撃ターゲット座標
     Vector3 AttackTargetPosition;
 
+    //突撃方向
+    Vector3 attackTargetAngleVector_normalize;
+
     //突撃ゲージの溜めた値　段階数値
     public float gaugeAttackValue = 0.0f;
 
@@ -806,11 +809,7 @@ public class PlayerController : MonoBehaviour
         {
 
             //突撃速度　計算したターゲットへのベクトルを正規化し、速度を乗算する
-            transform.position += (AttackTargetPosition - transform.position).normalized * (attackSpeed * gaugeAttackValue) * Time.deltaTime;
-
-            //頭を飛んでいくほうに向ける
-            attackShaft.transform.LookAt(AttackTargetPosition);      //前方ベクトルを向ける
-            attackShaft.transform.Rotate(90.0f, 0.0f, 0.0f);
+            transform.position += attackTargetAngleVector_normalize * (attackSpeed * gaugeAttackValue) * Time.deltaTime;
         }
 
         //地面に着地すると終了
@@ -950,6 +949,13 @@ public class PlayerController : MonoBehaviour
                         if (Physics.Raycast(ray, out hit, 1000.0f, LayerMask))
                         {
                             AttackTargetPosition = hit.point;
+
+                            //頭を飛んでいくほうに向ける
+                            attackShaft.transform.LookAt(AttackTargetPosition);      //前方ベクトルを向ける
+                            attackShaft.transform.Rotate(90.0f, 0.0f, 0.0f);
+
+                            //飛んでいく方向を計算
+                            attackTargetAngleVector_normalize = (AttackTargetPosition - transform.position).normalized;
                         }
                     }
                 }

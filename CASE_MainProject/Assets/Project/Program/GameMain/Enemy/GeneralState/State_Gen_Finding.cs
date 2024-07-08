@@ -16,6 +16,9 @@ public class State_Gen_Finding : EnemyState
     [SerializeField, Header("矢印に適用するマテリアル")]
     Material allowMaterial;
 
+    [SerializeField, Header("発見時エフェクト")]
+    GameObject foundEffect;
+
     [Space(pad), Header("--遷移先リスト--")]
     [SerializeField, Header("経過時の遷移")]
     StateKey elapsedKey;
@@ -34,6 +37,10 @@ public class State_Gen_Finding : EnemyState
         enemy.IsVelocityZero = true;
         // 他からの通知をさえぎるため攻撃中にする
         enemy.IsAttackNow = true;
+
+        //検知時の発見エフェクト生成
+        GameObject foundEffectObjectBuf = Instantiate(foundEffect, enemy.EyeTransform.position, Quaternion.LookRotation(-enemy.EyeTransform.forward));
+        foundEffectObjectBuf.transform.parent = enemy.EyeTransform;
     }
 
     public override void MainFunc()
