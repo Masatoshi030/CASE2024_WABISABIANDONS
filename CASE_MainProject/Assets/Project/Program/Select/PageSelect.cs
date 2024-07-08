@@ -62,16 +62,32 @@ public class PageSelect : MonoBehaviour
         if (DualSense_Manager.instance.GetInputState().DPadRightButton == DualSenseUnity.ButtonState.Down)
         {
             //クールタイムが上がっていたらボタン入力処理
-            if (noTouchTime > buttonCoolTime && selectPage < 3)
+            if (noTouchTime > buttonCoolTime)
             {
                 //Bool型のパラメーターであるbPageMoveをTrueにする
                 anim.SetTrigger("tPageMove");
-
-                //ページ切り替え音再生
                 myAudioSource.PlayOneShot(pageSwitchSound);
-
                 DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
                 selectPage++;
+                timeElapsed = 0.0f;
+            }
+
+            timeElapsed += Time.unscaledDeltaTime;
+
+            //一定時間押していると実行される処理
+            if (timeElapsed > timeOut)
+            {
+                //Bool型のパラメーターであるbPageMoveをTrueにする
+                anim.SetTrigger("tPageMove");
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
+                myAudioSource.PlayOneShot(pageSwitchSound);
+                selectPage++;
+                timeElapsed = 0.0f;
+            }
+
+            if (selectPage > maxPage - 1)
+            {
+                selectPage = minPage;
             }
             //ボタンが触られたのでクールタイム初期化
             noTouchTime = 0.0f;
@@ -81,17 +97,34 @@ public class PageSelect : MonoBehaviour
         if (DualSense_Manager.instance.GetInputState().DPadLeftButton == DualSenseUnity.ButtonState.Down)
         {
             //クールタイムが上がっていたらボタン入力処理
-            if (noTouchTime > buttonCoolTime && selectPage > 0)
+            if (noTouchTime > buttonCoolTime)
             {
                 //Bool型のパラメーターであるbPageMoveをTrueにする
                 anim.SetTrigger("tPageMove");
-
-                //ページ切り替え音再生
                 myAudioSource.PlayOneShot(pageSwitchSound);
-
                 DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
                 selectPage--;
+                timeElapsed = 0.0f;
             }
+
+            timeElapsed += Time.unscaledDeltaTime;
+
+            //一定時間押していると実行される処理
+            if (timeElapsed > timeOut)
+            {
+                //Bool型のパラメーターであるbPageMoveをTrueにする
+                anim.SetTrigger("tPageMove");
+                DualSense_Manager.instance.SetLeftRumble(0.1f, 0.1f);
+                myAudioSource.PlayOneShot(pageSwitchSound);
+                selectPage--;
+                timeElapsed = 0.0f;
+            }
+
+            if (selectPage < minPage)
+            {
+                selectPage = maxPage - 1;
+            }
+
             //ボタンが触られたのでクールタイム初期化
             noTouchTime = 0.0f;
         }
@@ -165,7 +198,7 @@ public class PageSelect : MonoBehaviour
                 timeElapsed = 0.0f;
             }
 
-            if (selectPage > minPage)
+            if (selectPage < minPage)
             {
                 selectPage = maxPage - 1;
             }
