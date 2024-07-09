@@ -158,7 +158,7 @@ public class GetImagesInCanvas : MonoBehaviour
             noTouchTime = 0.0f;
         }
 
-        if(DualSense_Manager.instance.GetInputState().CircleButton== DualSenseUnity.ButtonState.NewDown)
+        if(DualSense_Manager.instance.GetInputState().CrossButton== DualSenseUnity.ButtonState.NewDown)
         {
 
             //ŽžŠÔ‚ð–ß‚·

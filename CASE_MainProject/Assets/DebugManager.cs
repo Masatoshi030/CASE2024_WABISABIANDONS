@@ -5,8 +5,14 @@ using TMPro;
 
 public class DebugManager : MonoBehaviour
 {
+	[SerializeField, Header("デバッグモード")]
+	bool bDebugEnable = true;
+
+	[SerializeField, Header("デバッグモニター")]
+	GameObject debugMonitor;
+
 	[SerializeField, Header("▼TextMeshProコンポーネント")]
-	TextMeshProUGUI text;
+	TextMeshProUGUI debugText_FPS;
 
 	[SerializeField, Header("▼何秒ごとにテキスト更新するか：負荷軽減用"), Range(0, 5)]
 	int second = 1;
@@ -14,11 +20,22 @@ public class DebugManager : MonoBehaviour
 	int frameCount = 0;//Updateが呼ばれた回数カウント用
 	float oldTime = 0.0f;//前回フレームレートを表示してからの経過時間計算用
 
-	/*------------------------------------------------------------
-	1フレームに1回呼び出される、GameObjectとコンポーネントが有効な時に実行される
-	------------------------------------------------------------*/
-	void Update()
+	void Awake()
 	{
+		if (!bDebugEnable)
+		{
+			debugMonitor.SetActive(false);
+		}
+	}
+
+    void Update()
+	{
+		//=== デバッグモードが無効だったら早期リターン ===//
+		if (!bDebugEnable)
+		{
+			return;
+		}
+
 		//Updateが呼ばれた回数を加算
 		frameCount++;
 
@@ -32,7 +49,7 @@ public class DebugManager : MonoBehaviour
 			float fps = frameCount / time;
 
 			//計算したフレームレートを小数点2桁まで丸めてテキスト表示：SetText()を使用してエディタ以外ではGCを発生させない
-			text.SetText("{0:2} FPS", fps);
+			debugText_FPS.SetText("FPS: {0:2}", fps);
 
 			//カウントと経過時間をリセット
 			frameCount = 0;

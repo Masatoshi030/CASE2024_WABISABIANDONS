@@ -11,6 +11,9 @@ public class SinVibration : MonoBehaviour
     [SerializeField, Header("振動の速さ"), Range(0.0f, 100.0f)]
     public float Speed = 1.0f;
 
+    [SerializeField, Header("X軸方向")]
+    bool bHorizontal = false;
+
     [SerializeField, Header("スケールモード有効")]
     bool bScale = false;
 
@@ -35,7 +38,14 @@ public class SinVibration : MonoBehaviour
         }
         else
         {
-            transform.localPosition = StartPosition + transform.up * Mathf.Sin(Time.time * Speed) * Intensity;
+            if (bHorizontal)
+            {
+                transform.localPosition = StartPosition + transform.right * Mathf.Sin(Time.time * Speed) * Intensity;
+            }
+            else
+            {
+                transform.localPosition = StartPosition + transform.up * Mathf.Sin(Time.time * Speed) * Intensity;
+            }
         }
     }
 }
