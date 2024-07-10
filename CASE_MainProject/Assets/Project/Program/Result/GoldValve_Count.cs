@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GoldValve_Count : MonoBehaviour
 {
-    static public GoldValve_Count instance;
+    static public GoldValve_Count instance;//一つのシーンに一つだけ存在するもの
 
     [SerializeField, Header("ゴールドバルブタグ名")]
     string GoldValve="GoldValve";
@@ -17,6 +17,7 @@ public class GoldValve_Count : MonoBehaviour
     public GameObject[] GoldValve_C;
     public GameObject[] Enemy_C;
 
+    //Startの前に処理をする
     private void Awake()
     {
         if(instance == null)
