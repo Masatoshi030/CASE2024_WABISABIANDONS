@@ -8,11 +8,15 @@ public class CinemachineCameraSetting : MonoBehaviour
 
     public static CinemachineCameraSetting instance;
 
-    [SerializeField, Header("少し引いたカメラ")]
-    CinemachineVirtualCamera littlePulledCamera;
+    CinemachineVirtualCamera mainVirtualCamera;
+
+    float mainCameraFieldOfView = 60.0f;
+
+    [SerializeField, Header("少し引いたカメラ視野角")]
+    float pullCameraFieldOfView = 90.0f;
 
     [SerializeField, Header("引いたカメラを有効にしている時間")]
-    float littlePulledCameraTimer = 0.0f;
+    float pulledCameraTimer = 0.0f;
 
     private void Awake()
     {
@@ -27,6 +31,12 @@ public class CinemachineCameraSetting : MonoBehaviour
             Destroy(gameObject);
         }
 
+        //メインバーチャルカメラを取得
+        mainVirtualCamera = this.transform.GetChild(1).GetComponent<CinemachineVirtualCamera>();
+
+        //メインバーチャルカメラの視野角を取得
+        mainCameraFieldOfView = mainVirtualCamera.m_Lens.FieldOfView;
+
         //バーチャルカメラ全てにプレイヤーのインスタンスを強制設定
         for (int i = 1; i < transform.childCount; i++)
         {
@@ -36,21 +46,20 @@ public class CinemachineCameraSetting : MonoBehaviour
 
     private void Update()
     {
-        if(littlePulledCameraTimer > 0.0f)
+        if(pulledCameraTimer > 0.0f)
         {
-            littlePulledCameraTimer -= Time.deltaTime;
+            pulledCameraTimer -= Time.deltaTime;
 
-            if(littlePulledCameraTimer < 0.0f)
+            if(pulledCameraTimer < 0.0f)
             {
-                littlePulledCameraTimer = 0.0f;
-                littlePulledCamera.Priority = -1;
+                mainVirtualCamera.m_Lens.FieldOfView = mainCameraFieldOfView;
             }
         }
     }
 
-    public void SetlittlePulledCamera(float _time)
+    public void SetPulledCamera(float _time)
     {
-        littlePulledCameraTimer = _time;
-        littlePulledCamera.Priority = 10;
+        pulledCameraTimer = _time;
+        mainVirtualCamera.m_Lens.FieldOfView = pullCameraFieldOfView;
     }
 }

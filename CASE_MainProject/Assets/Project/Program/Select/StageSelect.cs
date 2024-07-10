@@ -26,6 +26,9 @@ public class StageSelect : MonoBehaviour
     [SerializeField, Header("効果音再生ソース")]
     AudioSource myAudioSource;
 
+    [SerializeField, Header("カーソル効果音マネージャー")]
+    SoundEffectManager cursorMoveSoundManager;
+
     [SerializeField, Header("カーソル移動効果音")]
     AudioClip cursorMoveSound;
 
@@ -114,7 +117,8 @@ public class StageSelect : MonoBehaviour
             if (noTouchTime > buttonCoolTime)
             {
                 DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
-                myAudioSource.PlayOneShot(cursorMoveSound);
+                //取得音再生
+                cursorMoveSoundManager.PlaySoundEffect(cursorMoveSound);
                 nowSelect++;
                 timeElapsed = 0.0f;
             }
@@ -124,7 +128,8 @@ public class StageSelect : MonoBehaviour
             if (timeElapsed > timeOut)
             {
                 DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
-                myAudioSource.PlayOneShot(cursorMoveSound);
+                //取得音再生
+                cursorMoveSoundManager.PlaySoundEffect(cursorMoveSound);
                 nowSelect++;
                 timeElapsed = 0.0f;
             }
@@ -146,7 +151,8 @@ public class StageSelect : MonoBehaviour
             if (noTouchTime > buttonCoolTime)
             {
                 DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
-                myAudioSource.PlayOneShot(cursorMoveSound);
+                //取得音再生
+                cursorMoveSoundManager.PlaySoundEffect(cursorMoveSound);
                 nowSelect--;
                 timeElapsed = 0.0f;
             }
@@ -157,7 +163,8 @@ public class StageSelect : MonoBehaviour
             if (timeElapsed > timeOut)
             {
                 DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
-                myAudioSource.PlayOneShot(cursorMoveSound);
+                //取得音再生
+                cursorMoveSoundManager.PlaySoundEffect(cursorMoveSound);
                 nowSelect--;
                 timeElapsed = 0.0f;
             }
@@ -165,6 +172,76 @@ public class StageSelect : MonoBehaviour
             if (nowSelect < minSelectStage)
             {
                 nowSelect = maxSelectStage - 1;
+            }
+
+            //ボタンが触られたのでクールタイム初期化
+            noTouchTime = 0.0f;
+        }
+
+        //上スティック入力
+        if (DualSense_Manager.instance.GetLeftStick().y > 0.5f &&
+           1.0f <= DualSense_Manager.instance.GetLeftStick().y)
+        {
+            //クールタイムが上がっていたらボタン入力処理
+            if (noTouchTime > buttonCoolTime)
+            {
+                DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
+                //取得音再生
+                cursorMoveSoundManager.PlaySoundEffect(cursorMoveSound);
+                nowSelect--;
+                timeElapsed = 0.0f;
+            }
+
+            timeElapsed += Time.unscaledDeltaTime;
+
+            //一定時間押していると実行される処理
+            if (timeElapsed > timeOut)
+            {
+                DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
+                //取得音再生
+                cursorMoveSoundManager.PlaySoundEffect(cursorMoveSound);
+                nowSelect--;
+                timeElapsed = 0.0f;
+            }
+
+            if (nowSelect < minSelectStage)
+            {
+                nowSelect = maxSelectStage - 1;
+            }
+
+            //ボタンが触られたのでクールタイム初期化
+            noTouchTime = 0.0f;
+        }
+
+        //下スティック入力
+        if (-0.5f > DualSense_Manager.instance.GetLeftStick().y &&
+              DualSense_Manager.instance.GetLeftStick().y <= -1.0f)
+        {
+            //クールタイムが上がっていたらボタン入力処理
+            if (noTouchTime > buttonCoolTime)
+            {
+                DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
+                //取得音再生
+                cursorMoveSoundManager.PlaySoundEffect(cursorMoveSound);
+                nowSelect++;
+                timeElapsed = 0.0f;
+            }
+
+            timeElapsed += Time.unscaledDeltaTime;
+
+            //一定時間押していると実行される処理
+            if (timeElapsed > timeOut)
+            {
+                DualSense_Manager.instance.SetRightRumble(0.1f, 0.05f);
+                //取得音再生
+                cursorMoveSoundManager.PlaySoundEffect(cursorMoveSound);
+                nowSelect++;
+                timeElapsed = 0.0f;
+            }
+
+            if (nowSelect > maxSelectStage - 1)
+            {
+                nowSelect = minSelectStage;
             }
 
             //ボタンが触られたのでクールタイム初期化
@@ -192,8 +269,16 @@ public class StageSelect : MonoBehaviour
         //セレクトされているボタンをActiveにする処理
         SelectActive(nowPage, nowSelect);
 
-        //決定ボタン
-        if (DualSense_Manager.instance.GetInputState().OptionsButton == DualSenseUnity.ButtonState.Down)
+        //タイトルにもどる
+        if (DualSense_Manager.instance.GetInputState().CircleButton == DualSenseUnity.ButtonState.Down)
+        {
+            //決定オン再生
+            myAudioSource.PlayOneShot(stageEnterSound);
+            this.GetComponent<SceneChanger>().SceneChange("Title");
+        }
+ 
+        //ステージ決定
+        if (DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.Down)
         {
 
             string stageName = "";

@@ -151,13 +151,16 @@ public class PlayerController : MonoBehaviour
     float attackUpCorrectionPower = 1.0f;
 
     [SerializeField, Header("突撃ゲージ")]
-    AttackGaugeController attackGauge;
+    public AttackGaugeController attackGauge;
 
     [SerializeField, Header("突撃ゲージが溜まる速度")]
     float attackGauge_AddSpeed = 2.0f;
 
     //突撃ターゲット座標
     Vector3 AttackTargetPosition;
+
+    //突撃方向
+    Vector3 attackTargetAngleVector_normalize;
 
     //突撃ゲージの溜めた値　段階数値
     public float gaugeAttackValue = 0.0f;
@@ -212,7 +215,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("ダメージ効果音")]
     AudioClip damageSound;
 
-    bool bNotDamage = false;
+    bool bGetDamage = false;
 
 
     //=== バルブ蒸気ぶっ飛び ===//
@@ -459,7 +462,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //プレイヤーに力を加える
-        if (bMoveLock == false)
+        if (bMoveLock == false && bGetDamage == false)
         {
             myRigidbody.velocity = moveVelocity;
         }
@@ -632,17 +635,42 @@ public class PlayerController : MonoBehaviour
                 jumpTime = 0.0f;
             }
         }
+    }
 
-        //接地する
-        if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.Off)
-        {
-            characterAnimation.SetBool("bOnGround", false);
-        }
-        else
-        {
-            //ジャンプアニメーション終了
-            characterAnimation.SetBool("bOnGround", true);
-        }
+    //着地した瞬間に呼ばれる処理
+    public void NewOnGround()
+    {
+        //=== ジャンプ関連 ===//
+        //ジャンプアニメーション終了
+        characterAnimation.SetBool("bOnGround", true);
+
+        //=== ダメージ終了 ===//
+        characterAnimation.SetBool("bDamage", false);
+        bGetDamage = false;
+    }
+
+    //着地している時に呼ばれる処理
+    public void StayOnGround()
+    {
+        //=== ジャンプ関連 ===//
+        //ジャンプアニメーション終了
+        characterAnimation.SetBool("bOnGround", true);
+    }
+
+    //離地した瞬間に呼ばれる処理
+    public void NewExitGround()
+    {
+        //=== ジャンプ関連 ===//
+        //空中モーションに切り替え
+        characterAnimation.SetBool("bOnGround", false);
+    }
+
+    //離地している時に呼ばれる処理
+    public void StayExitGround()
+    {
+        //=== ジャンプ関連 ===//
+        //空中モーションに切り替え
+        characterAnimation.SetBool("bOnGround", false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -737,30 +765,37 @@ public class PlayerController : MonoBehaviour
 
     async void ControllLock_Time(float _stopTimer)
     {
-        bNotDamage = true;
+        bGetDamage = true;
 
         // 指定時間待機
         await Task.Delay((int)(_stopTimer * 1000));
 
-        bNotDamage = false;
+        bGetDamage = false;
+        characterAnimation.SetBool("bDamage", false);
     }
 
     public void Damage(float _damage)
     {
-        if (bNotDamage == false)
+        if (bGetDamage == false)
         {
-            characterAnimation.SetTrigger("tDamage");
+            characterAnimation.SetBool("bDamage", true);
+
+            //突撃をキャンセル
+            StopAttack();
+
+            //画面スモーク
+            GameUIManager.instance.SetScreenSmoke();
 
             //ダメージ音再生
             au_Damage.PlayOneShot(damageSound);
 
             //突撃方向の反対ベクトルの斜め上にノックバックする
-            myRigidbody.velocity = (Vector3.up - moveRotationShaft.transform.forward) * knockBackPower;
+            myRigidbody.velocity = (Vector3.up - moveRotationShaft.forward) * knockBackPower;
 
             //重ためのヒットストップ
             HitStopManager.instance.HitStopEffect(0.1f, 0.3f);
 
-            ControllLock_Time(3.0f);
+            ControllLock_Time(2.0f);
 
             heldSteam += _damage;
         }
@@ -774,11 +809,7 @@ public class PlayerController : MonoBehaviour
         {
 
             //突撃速度　計算したターゲットへのベクトルを正規化し、速度を乗算する
-            transform.position += (AttackTargetPosition - transform.position).normalized * (attackSpeed * gaugeAttackValue) * Time.deltaTime;
-
-            //頭を飛んでいくほうに向ける
-            attackShaft.transform.LookAt(AttackTargetPosition);      //前方ベクトルを向ける
-            attackShaft.transform.Rotate(90.0f, 0.0f, 0.0f);
+            transform.position += attackTargetAngleVector_normalize * (attackSpeed * gaugeAttackValue) * Time.deltaTime;
         }
 
         //地面に着地すると終了
@@ -918,6 +949,13 @@ public class PlayerController : MonoBehaviour
                         if (Physics.Raycast(ray, out hit, 1000.0f, LayerMask))
                         {
                             AttackTargetPosition = hit.point;
+
+                            //頭を飛んでいくほうに向ける
+                            attackShaft.transform.LookAt(AttackTargetPosition);      //前方ベクトルを向ける
+                            attackShaft.transform.Rotate(90.0f, 0.0f, 0.0f);
+
+                            //飛んでいく方向を計算
+                            attackTargetAngleVector_normalize = (AttackTargetPosition - transform.position).normalized;
                         }
                     }
                 }
@@ -971,23 +1009,6 @@ public class PlayerController : MonoBehaviour
 
         //突撃方向の反対ベクトルの斜め上にノックバックする
         myRigidbody.velocity = Vector3.up * knockBackPower;
-
-        //ノックバック状態にする
-        attackState = ATTACK_STATE.KnockBack;
-
-        //突撃強制終了
-        StopAttack();
-    }
-
-    public void KnockBack(float power,  Vector3 direction)
-    {
-        //ノックバックアニメーション終了
-        characterAnimation.SetTrigger("tHit");
-
-        Debug.Log("Knock");
-
-        //突撃方向の反対ベクトルの斜め上にノックバックする
-        myRigidbody.velocity = direction * power;
 
         //ノックバック状態にする
         attackState = ATTACK_STATE.KnockBack;

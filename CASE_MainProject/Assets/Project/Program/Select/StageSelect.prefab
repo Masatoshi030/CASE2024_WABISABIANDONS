@@ -567,6 +567,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Intensity: 3
   Speed: 2
+  bScale: 0
 --- !u!114 &3044681086185189456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -743,8 +744,12 @@ MonoBehaviour:
   - {fileID: 8250151561165942766}
   - {fileID: 4246144969348528283}
   - {fileID: 52521237507381373}
+  timeElapsed: 0
+  timeOut: 0
   noTouchTime: 0
   buttonCoolTime: 0.1
+  myAudioSource: {fileID: 0}
+  pageSwitchSound: {fileID: 0}
 --- !u!114 &290750954373384203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -767,6 +772,9 @@ MonoBehaviour:
   - {fileID: 8250151561165942766}
   - {fileID: 4246144969348528283}
   - {fileID: 52521237507381373}
+  myAudioSource: {fileID: 0}
+  cursorMoveSound: {fileID: 0}
+  stageEnterSound: {fileID: 0}
 --- !u!1 &7993708915935669508
 GameObject:
   m_ObjectHideFlags: 0

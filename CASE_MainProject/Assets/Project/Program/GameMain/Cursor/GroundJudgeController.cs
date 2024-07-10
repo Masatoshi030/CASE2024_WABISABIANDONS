@@ -7,7 +7,9 @@ public class GroundJudgeController : MonoBehaviour
 
     public enum ON_GROUND_STATE
     {
+        NewOn,
         On,
+        NewOff,
         Off
     }
 
@@ -25,7 +27,10 @@ public class GroundJudgeController : MonoBehaviour
         if (other.tag == "Ground" ||
             (other.tag == "BrokenWall" && PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack))
         {
-            onGroundState = ON_GROUND_STATE.On;
+            onGroundState = ON_GROUND_STATE.NewOn;
+
+            //プレイヤーの着地したときの処理を呼ぶ
+            PlayerController.instance.NewOnGround();
 
             //カーソルを接地判定
             CursorController.instance.ChangeCursorState(CursorController.ON_CURSOR_STATE.Idle);
@@ -39,6 +44,9 @@ public class GroundJudgeController : MonoBehaviour
         {
             onGroundState = ON_GROUND_STATE.On;
 
+            //プレイヤーの着地しているときの処理を呼ぶ
+            PlayerController.instance.StayOnGround();
+
             //カーソルを接地判定
             CursorController.instance.ChangeCursorState(CursorController.ON_CURSOR_STATE.Idle);
         }
@@ -49,9 +57,27 @@ public class GroundJudgeController : MonoBehaviour
         if (other.tag == "Ground" ||
             (other.tag == "BrokenWall" && PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack))
         {
-            onGroundState = ON_GROUND_STATE.Off;
+            onGroundState = ON_GROUND_STATE.NewOff;
+
+            //プレイヤーの離地したときの処理を呼ぶ
+            PlayerController.instance.NewExitGround();
+
             //カーソルを非接地判定
             CursorController.instance.ChangeCursorState(CursorController.ON_CURSOR_STATE.OffGround);
+        }
+    }
+
+    private void Update()
+    {
+        //StayExit
+        if (onGroundState == ON_GROUND_STATE.NewOff)
+        {
+            onGroundState = ON_GROUND_STATE.Off;
+        }
+        else if (onGroundState == ON_GROUND_STATE.NewOff)
+        {
+            //プレイヤーの離地している間の処理を呼ぶ
+            PlayerController.instance.StayExitGround();
         }
     }
 }

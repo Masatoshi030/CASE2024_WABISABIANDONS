@@ -20,6 +20,9 @@ public class HeadCollision_Manager : MonoBehaviour
     [SerializeField, Header("可燃ガス着火判定")]
     GameObject explosionSwitchObject;
 
+    [SerializeField, Header("木材散開エフェクト")]
+    GameObject woodSplit_ParticleEffect;
+
 
     // Start is called before the first frame update
     void Start()
@@ -117,8 +120,11 @@ public class HeadCollision_Manager : MonoBehaviour
                             //火花を生成する
                             Instantiate(hibana_ParticleEffect, transform.position, Quaternion.identity);
 
-                            //少し引いたカメラにする
-                            //CinemachineCameraSetting.instance.SetlittlePulledCamera(1.0f);
+                            //火花を生成する
+                            Instantiate(woodSplit_ParticleEffect, transform.position, Quaternion.identity);
+
+                            //衝突音
+                            audioSource.PlayOneShot(soundClips[2]);
 
                             return;
                         }
