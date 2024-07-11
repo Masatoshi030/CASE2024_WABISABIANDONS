@@ -1,13 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Text_randomroulette : MonoBehaviour
 {
+    [SerializeField, Header("リザルトで使用してるAnimator")]
     public Animator result_Anim;
 
+    [SerializeField, Header("ゴールドバルブ取得の数を示すテキスト")]
     public TextMeshProUGUI textMeshPro_Valve;
+
+    [SerializeField, Header("倒した敵の数を示すテキスト")]
     public TextMeshProUGUI textMeshPro_Enemy;
 
     [SerializeField, Header("Animationを流す時間")]
@@ -16,11 +22,19 @@ public class Text_randomroulette : MonoBehaviour
     [SerializeField, Header("数字の更新時間")]
     public float update_nunber=0.01f;
 
-    //最後に表示する数字
-    public int finalNumber_Valve = 0;
-    public int finalNumber_Enemy = 0;
+    [SerializeField, Header("遷移するSecen")]
+    string stageName;
 
-    private bool finish_Rondom=true;
+    [SerializeField, Header("×ボタンのクールタイム")]
+    float buttonCoolTime=0.25f;
+    [SerializeField, Header("×ボタンを触っていない時間"),ReadOnly]
+    float noTouchTime;
+
+    //最後に表示する数字
+    private int finalNumber_Valve = 0;
+    private int finalNumber_Enemy = 0;
+
+    private bool finish_Rondom=true;  //ランダムが終わったか
    
     // Start is called before the first frame update
     void Start()
@@ -35,10 +49,21 @@ public class Text_randomroulette : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        noTouchTime += Time.deltaTime;
+
         // ランダムな数字を表示する関数
         StartCoroutine(DisplayRandomNumbers());
+
+        //ステージ遷移
+        if(noTouchTime> buttonCoolTime) 
+        {
+            Next_Stage();
+        }
+       
+
     }
 
+    //ランダムの数字を出す
     IEnumerator DisplayRandomNumbers()
     {
         if(finish_Rondom)
@@ -58,6 +83,14 @@ public class Text_randomroulette : MonoBehaviour
 
                 elapsedTime += 1.0f;
 
+                if (DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.NewDown)
+                {
+                    noTouchTime = 0.0f;
+                    finish_Rondom = false;
+                    result_Anim.SetTrigger("Stamp_finish");
+                }
+
+
             }
 
             finish_Rondom = false;
@@ -68,6 +101,15 @@ public class Text_randomroulette : MonoBehaviour
             result_Anim.SetBool("Start_Anim", true);
         }
     }
-       
+
+    void Next_Stage()
+    {
+        if (DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.NewDown)
+        { 
+            this.GetComponent<SceneChanger>().SceneChange(stageName);
+        }
+    }
+
 }
 
+    

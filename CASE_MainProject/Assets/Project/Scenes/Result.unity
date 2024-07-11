@@ -709,6 +709,7 @@ GameObject:
   - component: {fileID: 773347576}
   - component: {fileID: 773347577}
   - component: {fileID: 773347578}
+  - component: {fileID: 773347579}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -855,10 +856,23 @@ MonoBehaviour:
   result_Anim: {fileID: 773347577}
   textMeshPro_Valve: {fileID: 1676338602}
   textMeshPro_Enemy: {fileID: 1946313755}
-  randomTimer: 30
+  randomTimer: 20
   update_nunber: 0.01
-  finalNumber_Valve: 0
-  finalNumber_Enemy: 0
+  stageName: Select
+  buttonCoolTime: 0.25
+  noTouchTime: 0
+--- !u!114 &773347579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773347571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afb8d0f35344e1f48af81cb4064d89b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1113178357
 GameObject:
   m_ObjectHideFlags: 0
@@ -1487,6 +1501,7 @@ GameObject:
   - component: {fileID: 1820868983}
   - component: {fileID: 1820868982}
   - component: {fileID: 1820868985}
+  - component: {fileID: 1820868986}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1612,6 +1627,27 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &1820868986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820868981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 720b0a8de1eb58745b0bd8d5ba5bdd1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controllerCount: 1
+  dead_LeftStick: 0.05
+  dead_RightStick: 0.05
+  rumble_Type1:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1907329352
 GameObject:
   m_ObjectHideFlags: 0
