@@ -20,7 +20,7 @@ public class Text_randomroulette : MonoBehaviour
     public int finalNumber_Valve = 0;
     public int finalNumber_Enemy = 0;
 
-    private bool finish_Rondom=false;
+    private bool finish_Rondom=true;
    
     // Start is called before the first frame update
     void Start()
@@ -29,38 +29,45 @@ public class Text_randomroulette : MonoBehaviour
         finalNumber_Valve = GoldValve_Count.instance.SetValveCount();
         finalNumber_Enemy = (int)Enemy_Manager.instance.GetDefeatEnemyNum();
 
-        // ランダムな数字を表示する関数
-        StartCoroutine(DisplayRandomNumbers());
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        // ランダムな数字を表示する関数
+        StartCoroutine(DisplayRandomNumbers());
     }
 
     IEnumerator DisplayRandomNumbers()
     {
-        float elapsedTime = 0f;
-
-        while (elapsedTime < randomTimer)
+        if(finish_Rondom)
         {
-            // ランダムな数字を生成して表示
-            int randomNumber = Random.Range(0, 1000); // 0から99のランダムな数字
-            textMeshPro_Valve.text = randomNumber.ToString();
-            randomNumber = Random.Range(0, 1000); // 0から99のランダムな数字
-            textMeshPro_Enemy.text = randomNumber.ToString();
+            float elapsedTime = 0f;
 
-            // フレームを待機
-            yield return new WaitForSeconds(update_nunber); // 更新
+            while (elapsedTime < randomTimer&&finish_Rondom)
+            {
+                // ランダムな数字を生成して表示
+                int randomNumber = Random.Range(0, 1000); // 0から99のランダムな数字
+                textMeshPro_Valve.text = randomNumber.ToString();
+                randomNumber = Random.Range(0, 1000); // 0から99のランダムな数字
+                textMeshPro_Enemy.text = randomNumber.ToString();
 
-            elapsedTime += 1.0f;
+                // フレームを待機
+                yield return new WaitForSeconds(update_nunber); // 更新
+
+                elapsedTime += 1.0f;
+
+            }
+
+            finish_Rondom = false;
+
+            textMeshPro_Valve.text = finalNumber_Valve.ToString();
+            textMeshPro_Enemy.text = finalNumber_Enemy.ToString();
+
+            result_Anim.SetBool("Start_Anim", true);
         }
-
-        textMeshPro_Valve.text=finalNumber_Valve.ToString();
-        textMeshPro_Enemy.text=finalNumber_Enemy.ToString();
-
-        result_Anim.SetBool("Start_Anim", true) ;
     }
+       
 }
 
