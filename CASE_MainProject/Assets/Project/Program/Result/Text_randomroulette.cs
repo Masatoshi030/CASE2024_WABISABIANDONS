@@ -5,39 +5,31 @@ using UnityEngine;
 
 public class Text_randomroulette : MonoBehaviour
 {
-    public enum Text_choice
-    {
-        Valve,
-        Enemy,
-    }
+    public Animator result_Anim;
 
-    public TextMeshProUGUI textMeshPro;
+    public TextMeshProUGUI textMeshPro_Valve;
+    public TextMeshProUGUI textMeshPro_Enemy;
 
-    [SerializeField, Header("動かす数字"), Toolbar(typeof(Text_choice))]
-    public Text_choice text_Move = Text_choice.Valve;
+    [SerializeField, Header("Animationを流す時間")]
+    public float randomTimer = 20;
 
-    [SerializeField,Header("Animationを流す時間")]
-    public float randomTimer=20;
+    [SerializeField, Header("数字の更新時間")]
+    public float update_nunber=0.01f;
 
-   public int finalNumber= 12;
+    //最後に表示する数字
+    public int finalNumber_Valve = 0;
+    public int finalNumber_Enemy = 0;
 
-    private bool isDisplayingRandomNumbers = true;
-
+    private bool finish_Rondom=false;
+   
     // Start is called before the first frame update
     void Start()
     {
-        //switch(text_Move)
-        //{
-        //    case Text_choice.Valve:
-        //        finalNumber = GoldValve_Count.instance.SetValveCount();
-        //        break;
+        //倒した敵と獲得したバルブの数を取得していく
+        finalNumber_Valve = GoldValve_Count.instance.SetValveCount();
+        finalNumber_Enemy = (int)Enemy_Manager.instance.GetDefeatEnemyNum();
 
-        //        case Text_choice.Enemy:
-        //        finalNumber =(int)Enemy_Manager.instance.GetDefeatEnemyNum();
-        //        break;
-        //}
-
-        // ランダムな数字を表示するコルーチンを開始
+        // ランダムな数字を表示する関数
         StartCoroutine(DisplayRandomNumbers());
     }
 
@@ -55,15 +47,20 @@ public class Text_randomroulette : MonoBehaviour
         {
             // ランダムな数字を生成して表示
             int randomNumber = Random.Range(0, 1000); // 0から99のランダムな数字
-            textMeshPro.text = randomNumber.ToString();
+            textMeshPro_Valve.text = randomNumber.ToString();
+            randomNumber = Random.Range(0, 1000); // 0から99のランダムな数字
+            textMeshPro_Enemy.text = randomNumber.ToString();
 
             // フレームを待機
-            yield return new WaitForSeconds(0.001f); // 0.1秒ごとに更新
+            yield return new WaitForSeconds(update_nunber); // 更新
 
-            elapsedTime += 0.1f;
+            elapsedTime += 1.0f;
         }
 
-        textMeshPro.text=finalNumber.ToString();
+        textMeshPro_Valve.text=finalNumber_Valve.ToString();
+        textMeshPro_Enemy.text=finalNumber_Enemy.ToString();
+
+        result_Anim.SetBool("Start_Anim", true) ;
     }
 }
 
