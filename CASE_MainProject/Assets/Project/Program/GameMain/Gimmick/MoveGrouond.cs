@@ -17,7 +17,7 @@ public class MoveGrouond : MonoBehaviour
     float stopTime = 0.0f;
 
     [SerializeField, Header("作動するまでの時間")]
-    float delayTime = 3.0f;
+    float delayTime = 2.0f;
 
     [SerializeField, Header("作動するまでのタイマー")]
     float delayTimer = 0.0f;
@@ -41,6 +41,8 @@ public class MoveGrouond : MonoBehaviour
     [SerializeField, Header("移動音オブジェクト")]
     GameObject moveSoundObject;
 
+    AudioSource au_moveSound;
+
     [SerializeField, Header("停止音オブジェクト")]
     AudioSource au_StopSound;
 
@@ -48,6 +50,8 @@ public class MoveGrouond : MonoBehaviour
     {
         //デバッグ用終着地点を非表示に
         endPoint.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
+
+        au_moveSound = moveSoundObject.GetComponent<AudioSource>();
     }
 
     // Start is called before the first frame update
@@ -67,13 +71,17 @@ public class MoveGrouond : MonoBehaviour
             if (delayTimer > 0.0f)
             {
                 delayTimer -= Time.deltaTime;
+
+                au_moveSound.volume = 0.5f;
+                moveSoundObject.SetActive(true);
             }
             else
             {
                 moveTimer += Time.deltaTime;
-            }
 
-            moveSoundObject.SetActive(true);
+                au_moveSound.volume = 1.0f;
+                moveSoundObject.SetActive(true);
+            }
 
             if (moveTimer > moveTime)
             {
@@ -81,21 +89,15 @@ public class MoveGrouond : MonoBehaviour
 
                 delayTimer = delayTime;
 
-                moveSoundObject.SetActive(false);
+                au_StopSound.PlayOneShot(au_StopSound.clip);
             }
         }
 
         if (mySteam_Scale.state == Steam_Scale.State.WaitStart)
         {
-            if (delayTimer > 0.0f)
-            {
-                delayTimer -= Time.deltaTime;
-            }
-            else
-            {
-                moveTimer -= Time.deltaTime;
-            }
+            moveTimer -= Time.deltaTime;
 
+            au_moveSound.volume = 1.0f;
             moveSoundObject.SetActive(true);
 
             if (moveTimer < 0.0f)

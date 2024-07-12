@@ -20,8 +20,11 @@ public class HeadCollision_Manager : MonoBehaviour
     [SerializeField, Header("可燃ガス着火判定")]
     GameObject explosionSwitchObject;
 
-    [SerializeField, Header("木材散開エフェクト")]
-    GameObject woodSplit_ParticleEffect;
+    [SerializeField, Header("木材散開エフェクト 壊れる壁用")]
+    GameObject woodSplit_BrokenWall_ParticleEffect;
+
+    [SerializeField, Header("木材散開エフェクト 木箱や樽用")]
+    GameObject woodSplit_BoxBarrel_ParticleEffect;
 
 
     // Start is called before the first frame update
@@ -38,7 +41,7 @@ public class HeadCollision_Manager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Wall" || other.tag == "Ground" || other.tag == "Enemy" || other.tag == "Dummy" || other.tag == "Valve" || other.tag == "Goal" || other.tag == "BrokenWall")
+        if (other.tag == "Wall" || other.tag == "Ground" || other.tag == "Enemy" || other.tag == "Dummy" || other.tag == "Valve" || other.tag == "Goal" || other.tag == "BrokenWall" || other.tag == "BreakBox")
         {
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
             {
@@ -100,34 +103,41 @@ public class HeadCollision_Manager : MonoBehaviour
                     other.GetComponent<Valve_Base>().SetCommand();
                 }
 
-                if (other.tag == "BrokenWall")
+                if (other.tag == "BrokenWall" || other.tag == "BreakBox")
                 {
-                    if (other.transform.parent.GetComponent<BrokenWallController>().bBroken == false)
+                    if (PlayerController.instance.gaugeAttackValue > 0.5f)
                     {
-                        if (PlayerController.instance.gaugeAttackValue > 0.5f)
+                        //対象物を削除
+                        Destroy(other.gameObject);
+
+                        //ヒットストップ
+                        HitStopManager.instance.HitStopEffect(0.05f, 0.5f);
+
+                        //小振動
+                        DualSense_Manager.instance.SetLeftRumble(1.0f, 0.1f);
+
+                        //衝突音
+                        audioSource.PlayOneShot(soundClips[1]);
+
+                        //火花を生成する
+                        Instantiate(hibana_ParticleEffect, transform.position, Quaternion.identity);
+
+                        if(other.tag == "BreakBox")
                         {
-                            other.transform.parent.GetComponent<BrokenWallController>().SetBreak();
-
-                            //ヒットストップ
-                            HitStopManager.instance.HitStopEffect(0.05f, 0.5f);
-
-                            //小振動
-                            DualSense_Manager.instance.SetLeftRumble(1.0f, 0.1f);
-
-                            //衝突音
-                            audioSource.PlayOneShot(soundClips[1]);
-
-                            //火花を生成する
-                            Instantiate(hibana_ParticleEffect, transform.position, Quaternion.identity);
-
-                            //火花を生成する
-                            Instantiate(woodSplit_ParticleEffect, transform.position, Quaternion.identity);
-
-                            //衝突音
-                            audioSource.PlayOneShot(soundClips[2]);
-
-                            return;
+                            //木材の散開を生成する
+                            Instantiate(woodSplit_BoxBarrel_ParticleEffect, transform.position, Quaternion.identity);
                         }
+
+                        if (other.tag == "BrokenWall")
+                        {
+                            //木材の散開を生成する
+                            Instantiate(woodSplit_BrokenWall_ParticleEffect, transform.position, Quaternion.identity);
+                        }
+
+                        //衝突音
+                        audioSource.PlayOneShot(soundClips[2]);
+
+                        return;
                     }
                 }
 
