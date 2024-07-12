@@ -12,7 +12,7 @@ using UnityEngine;
  * Drumming            : x = 1, y = 1
  */
 
-public class State_Boss_Fase1 : State_Boss
+public class State_Boss_Phase1 : State_Boss
 {
     public enum SubState
     {
@@ -58,9 +58,16 @@ public class State_Boss_Fase1 : State_Boss
     const float land_waitInterval = 3.0f;
 
     // ˆÚ“®‰ñ“]
+    float land_TransCnt = 0.0f;
+    float spendTime = 0.0f;
     float land_moveSpeed = 5.0f;
     const float land_rotateSpeed = 360.0f;
 
+    [Space(pad), Header("--’@‚«‚Â‚¯--")]
+    [SerializeField, Header("’@‚«‚Â‚¯Žž‚ÌyÀ•WƒJ[ƒu"), AnimCurve]
+    AnimationCurve land_slammingCurve;
+    float land_slammingCnt = 0.0f;
+    bool isSlamming = false;
 
 
     public override void Enter()
@@ -70,8 +77,6 @@ public class State_Boss_Fase1 : State_Boss
         // ’…’nó‘Ô‚©‚çƒXƒ^[ƒg
         subState = SubState.Landing;
         motionState = MotionState.Judge;
-
-        SetAnimation(new Vector2(0.0f, 0.0f));
         //ChangeSubState();
     }
 
@@ -103,7 +108,10 @@ public class State_Boss_Fase1 : State_Boss
                 Func_LandingTrans();
                 break;
             case MotionState.ArmSlash:
-
+                Func_LandingArmSlash();
+                break;
+            case MotionState.ArmSlamming:
+                Func_LandArmSlamming();
                 break;
             case MotionState.Hatch:
 
@@ -191,8 +199,11 @@ public class State_Boss_Fase1 : State_Boss
                 // ŽŸ‚Ìƒ‚[ƒVƒ‡ƒ“‚ð“ã‚¬•¥‚¢‚ÉÝ’è
                 nextMotionState = MotionState.ArmSlash;
                 motionState = MotionState.Trans;
+                // —âÃ‚É‚Â‚«ŽžŠÔ‚ð‚©‚¯‚Ä‘_‚¤
+                spendTime = 0.75f;
                 // ‰ñ“]‚Ì‚Ý—LŒø‰»
                 isRotate = true;
+                isTranslate = false;
                 machine.ResetCount();
                 boss.IsFinishAnimation = false;
             }
@@ -200,7 +211,7 @@ public class State_Boss_Fase1 : State_Boss
             {
                 // ŽŸ‚Ìƒ‚[ƒVƒ‡ƒ“‚ð’@‚«‚Â‚¯‚ÉÝ’è
                 nextMotionState = MotionState.ArmSlamming;
-                SetAnimation(new Vector2(-1.0f, 0.0f), 0.5f);
+                motionState = MotionState.Trans;
                 // ˆÚ“®‚Æ‰ñ“]‚Ì—LŒø‰»
                 isTranslate = true;
                 isRotate = true;
@@ -232,93 +243,143 @@ public class State_Boss_Fase1 : State_Boss
     {
         switch (nextMotionState)
         {
-            case MotionState.ArmSlamming:
-                if(machine.Cnt >= 2.0f)
+            case MotionState.Empty:
                 {
-                    boss.EnemyAnimator.speed = 0.0f;
-                }
-                if (boss.ToPlayerAngle < 10.0f && boss.ToPlayerDistace < land_JudgeCloseMaxDistance)
-                {
-                    boss.EnemyAnimator.speed = 1.0f;
-                    motionState = nextMotionState;
-                    nextMotionState = MotionState.Empty;
-                }
-                else
-                {
-                    if (isRotate)
+                    land_TransCnt += Time.deltaTime * (1.0f / spendTime);
+                    land_TransCnt = land_TransCnt >= 1.0f ? 1.0f : land_TransCnt;
+                    // YŽ²ˆÈŠO‚ð0‚É–ß‚·
+                    Quaternion quat = boss.transform.rotation;
+                    quat.x = 0.0f;
+                    quat.z = 0.0f;
+                    Vector3 newPosition = boss.transform.position;
+                    newPosition.y = landingHeight;
+                    // ‰ñ“]‚ÌC³
+                    boss.transform.rotation = Quaternion.Lerp(boss.transform.rotation, quat, land_TransCnt);
+                    // ˆÊ’u‚¸‚ê‚ÌC³
+                    boss.transform.position = Vector3.Lerp(boss.transform.position, newPosition, land_TransCnt);
+
+                    if(machine.Cnt >= spendTime)
                     {
-                        Quaternion quat = boss.transform.rotation;
-                        quat *= Quaternion.Euler(0.0f, land_rotateSpeed * Time.deltaTime, 0.0f);
-                        boss.transform.rotation = Quaternion.Lerp(boss.transform.rotation, quat, Time.deltaTime);
+                        boss.transform.rotation = quat;
+                        motionState = MotionState.Judge;
+                        land_TransCnt = 0.0f;
                     }
-                    if (isTranslate)
+                }
+                break;
+
+
+            case MotionState.ArmSlamming:
+                {
+                    if (machine.Cnt >= 2.0f)
                     {
-                        Vector3 direction = (Enemy.Target.transform.position - boss.transform.position).normalized;
-                        float distance = Vector3.Distance(Enemy.Target.transform.position, boss.transform.position);
-                        if (distance >= land_JudgeCloseMaxDistance)
+                        boss.EnemyAnimator.speed = 0.0f;
+                    }
+                    if (boss.ToPlayerAngle < 10.0f && boss.ToPlayerDistace < land_JudgeCloseMaxDistance)
+                    {
+                        boss.EnemyAnimator.speed = 1.0f;
+                        motionState = nextMotionState;
+                        nextMotionState = MotionState.Empty;
+                    }
+                    else
+                    {
+                        if (isRotate)
                         {
-                            boss.transform.Translate(direction * land_moveSpeed * Time.deltaTime);
+                            Quaternion quat = boss.transform.rotation;
+                            quat *= Quaternion.Euler(0.0f, land_rotateSpeed * Time.deltaTime, 0.0f);
+                            boss.transform.rotation = Quaternion.Lerp(boss.transform.rotation, quat, Time.deltaTime);
+                        }
+                        if (isTranslate)
+                        {
+                            Vector3 direction = (Enemy.Target.transform.position - boss.transform.position).normalized;
+                            direction.y = 0.0f;
+                            float distance = Vector3.Distance(Enemy.Target.transform.position, boss.transform.position);
+                            if (distance >= land_JudgeCloseMaxDistance)
+                            {
+                                boss.transform.Translate(direction * land_moveSpeed * Time.deltaTime);
+                            }
                         }
                     }
                 }
                 break;
 
             case MotionState.ArmSlash:
-                // 1.5•b‚©‚¯‚ÄŒü‚«‚ð®‚¦‚é
-                if (machine.Cnt >= 1.5f)
                 {
-                    SetAnimation(new Vector2(1.0f, 0.0f), 0.25f);
-                    motionState = nextMotionState;
-                    nextMotionState = MotionState.Empty;
-                    machine.ResetCount();
-                }
-                else
-                {
-                    if (isRotate)
+                    if (machine.Cnt >= spendTime)
                     {
-                        Vector3 Direction = Enemy.Target.transform.position - boss.transform.position;
-                        Direction.Normalize();
-                        Transform trans = boss.transform;
-                        trans.LookAt(Enemy.Target.transform.position);
-                        trans.rotation = new Quaternion(-trans.rotation.x, -trans.rotation.y, -trans.rotation.z, trans.rotation.w);
-                        boss.transform.localRotation = Quaternion.Lerp(boss.transform.localRotation, trans.rotation, Time.deltaTime);
+                        boss.IsFinishAnimation = false;
+                        SetAnimation("bSweep", true);
+                        SetAnimationSpeed(1.75f);
+                        motionState = nextMotionState;
+                        nextMotionState = MotionState.Empty;
+                        machine.ResetCount();
+                    }
+                    else
+                    {
+                        if (isRotate)
+                        {
+                            Vector3 Direction = Enemy.Target.transform.position - boss.EyeTransform.position;
+                            Direction.Normalize();
+                            Quaternion quat = boss.transform.rotation;
+                            quat = Quaternion.LookRotation(Direction);
+                            boss.transform.rotation = Quaternion.Lerp(boss.transform.rotation, quat, Time.deltaTime);
+                        }
+                        if(isTranslate)
+                        {
+                            Vector3 direction = (Enemy.Target.transform.position - boss.transform.position).normalized;
+                            direction.y = 0.0f;
+                            float distance = Vector3.Distance(Enemy.Target.transform.position, boss.transform.position);
+                            if (distance >= land_JudgeCloseMaxDistance)
+                            {
+                                boss.transform.Translate(direction * land_moveSpeed * Time.deltaTime);
+                            }
+                        }
                     }
                 }
                 break;
         }
     }
 
-    void Func_ArmSlash()
+    void Func_LandingArmSlash()
     {
         if(boss.IsFinishAnimation)
         {
-            boss.IsFinishAnimation = false;
-            motionState = MotionState.Judge;
+            motionState = MotionState.Trans;
+            nextMotionState = MotionState.Empty;
+            spendTime = 2.5f;
+            SetAnimationSpeed(1.0f);
+            machine.ResetCount();
         }
+    }
+
+    void Func_LandArmSlamming()
+    {
+        land_slammingCnt += Time.deltaTime;
+        float slammingPosition = land_slammingCurve.Evaluate(land_slammingCnt);
+        slammingPosition += landingHeight;
+        Vector3 pos = boss.transform.position;
+        pos.y = slammingPosition;
+        boss.transform.position = pos;
+
+        if(land_slammingCnt >= 1.5f && !isSlamming)
+        {
+            isSlamming = true;
+            SetAnimation("bSlamming", true);
+        }
+
+        if(boss.IsFinishAnimation)
+        {
+            motionState = MotionState.Trans;
+            nextMotionState = MotionState.Empty;
+            boss.IsFinishAnimation = false;
+            land_slammingCnt = 0.0f;
+        }
+        
     }
 
 
     void Func_FloatingJudge()
     {
-        if (boss.ToPlayerDistace < land_JudgeCloseMaxDistance && boss.ToPlayerDistace >= land_JudgeCloseMinDistance)
-        {
-            Boss_Manager.Emotion emotion = boss.Manager.CalcEmotion();
-            if (emotion == Boss_Manager.Emotion.Calm)
-            {
-                // “ã‚¬•¥‚¢
-                SetAnimation(new Vector2(1.0f, 0.0f), 0.25f);
-                machine.ResetCount();
-            }
-            else if (emotion == Boss_Manager.Emotion.Anger)
-            {
-                SetAnimation(new Vector2(-1.0f, 0.0f), 0.25f);
-                machine.ResetCount();
-            }
-        }
-        else if (boss.ToPlayerDistace < land_JudgeRangeDistance && boss.ToPlayerDistace >= land_JudgeCloseMaxDistance)
-        {
-
-        }
+        
     }
 
     void Func_FloatingIdle()

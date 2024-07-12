@@ -6,6 +6,13 @@ using System.IO;
 
 public class Boss : Enemy
 {
+    public struct AnimationMsg
+    {
+        public string booleanName;
+        public bool booleanValue;
+    }
+
+
     public static Boss instance;
 
     [SerializeField, Header("スタン時の非アクティブオブジェクト")]
@@ -57,7 +64,7 @@ public class Boss : Enemy
         // 距離と角度を保存しておく
         (isFindPlayer, toPlayerDistance, toPlayerAngle) = FindPlayerAtFOV();
         toPlayerDistance = Mathf.Sqrt(toPlayerDistance);
-        Debug.Log(toPlayerDistance);
+        //Debug.Log(toPlayerDistance);
 
         if(bossStateMachine.IsUpdate)
         {
@@ -70,6 +77,12 @@ public class Boss : Enemy
         if(msgType == 0)
         {
             isFinishAnimation = true;
+        }
+        else if(msgType == 1)
+        {
+            isFinishAnimation = true;
+            AnimationMsg message = GetValue<T, AnimationMsg>(msg);
+            animator.SetBool(message.booleanName, message.booleanValue);
         }
     }
 

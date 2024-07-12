@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class AnimationObserver : Publisher
 {
-    public void EndAnimation(int msgType)
+    public void EndAnimation(string name)
     {
-        SendMsg<int>(msgType, 0);
+        Boss.AnimationMsg msg;
+        msg.booleanValue = false;
+        msg.booleanName = name;
+        SendMsg(1, msg);
     }
 }
