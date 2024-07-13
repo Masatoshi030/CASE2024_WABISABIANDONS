@@ -16,6 +16,12 @@ public class MoveGrouond : MonoBehaviour
    [SerializeField, Header("到着後の停止時間　※到着後何秒後に戻り始めるか")]
     float stopTime = 0.0f;
 
+    [SerializeField, Header("作動するまでの時間")]
+    float delayTime = 2.0f;
+
+    [SerializeField, Header("作動するまでのタイマー")]
+    float delayTimer = 0.0f;
+
     [SerializeField, Header("自分のSteamScale")]
     Steam_Scale mySteam_Scale;
 
@@ -31,10 +37,21 @@ public class MoveGrouond : MonoBehaviour
     [SerializeField, Header("回転線形補間有効")]
     bool bRotationLerp = false;
 
+
+    [SerializeField, Header("移動音オブジェクト")]
+    GameObject moveSoundObject;
+
+    AudioSource au_moveSound;
+
+    [SerializeField, Header("停止音オブジェクト")]
+    AudioSource au_StopSound;
+
     private void Awake()
     {
         //デバッグ用終着地点を非表示に
         endPoint.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
+
+        au_moveSound = moveSoundObject.GetComponent<AudioSource>();
     }
 
     // Start is called before the first frame update
@@ -43,7 +60,7 @@ public class MoveGrouond : MonoBehaviour
         groundStartPosition = startPoint.transform.position;
         groundStartQuaternion = startPoint.transform.localRotation;
 
-        mySteam_Scale.steam_Limit = moveTime + stopTime;
+        mySteam_Scale.steam_Limit = moveTime + stopTime + delayTime + delayTime;
     }
 
     // Update is called once per frame
@@ -51,19 +68,45 @@ public class MoveGrouond : MonoBehaviour
     {
         if (mySteam_Scale.state == Steam_Scale.State.End)
         {
-            moveTimer += Time.deltaTime;
-            if(moveTimer > moveTime)
+            if (delayTimer > 0.0f)
+            {
+                delayTimer -= Time.deltaTime;
+
+                au_moveSound.volume = 0.5f;
+                moveSoundObject.SetActive(true);
+            }
+            else
+            {
+                moveTimer += Time.deltaTime;
+
+                au_moveSound.volume = 1.0f;
+                moveSoundObject.SetActive(true);
+            }
+
+            if (moveTimer > moveTime)
             {
                 moveTimer = moveTime;
+
+                delayTimer = delayTime;
+
+                au_StopSound.PlayOneShot(au_StopSound.clip);
             }
         }
 
         if (mySteam_Scale.state == Steam_Scale.State.WaitStart)
         {
             moveTimer -= Time.deltaTime;
+
+            au_moveSound.volume = 1.0f;
+            moveSoundObject.SetActive(true);
+
             if (moveTimer < 0.0f)
             {
                 moveTimer = 0.0f;
+
+                delayTimer = delayTime;
+
+                moveSoundObject.SetActive(false);
             }
         }
 

@@ -234,6 +234,7 @@ Transform:
   - {fileID: 257141508}
   - {fileID: 878359400}
   - {fileID: 311960487}
+  - {fileID: 350942467972621962}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &99054840
@@ -5690,6 +5691,28 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5249567584725752381, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: soundClips.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5249567584725752381, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: soundClips.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: cd5da99d1f729c14b9f9f9263b99cc94, type: 3}
+    - target: {fileID: 5249567584725752381, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: woodSplit_BoxBarrel_ParticleEffect
+      value: 
+      objectReference: {fileID: 1175895574899848804, guid: 3f2da933805e81741b899e003380bfb8,
+        type: 3}
+    - target: {fileID: 5249567584725752381, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: woodSplit_BrokenWall_ParticleEffect
+      value: 
+      objectReference: {fileID: 1175895574899848804, guid: 8420312bddd5c1a41b41578e3a887c02,
+        type: 3}
     - target: {fileID: 5356101857455146502, guid: 924e2e14df82fd74388c58f934b12972,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5749,6 +5772,11 @@ PrefabInstance:
         type: 3}
       propertyPath: maxHeldSteam
       value: 1000000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6380851179128401316, guid: 924e2e14df82fd74388c58f934b12972,
+        type: 3}
+      propertyPath: steamEmptyCoolDownDisableBorder
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8879622227388247387, guid: 924e2e14df82fd74388c58f934b12972,
         type: 3}
@@ -6035,7 +6063,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 62178717}
     m_Modifications:
     - target: {fileID: 492124153371360470, guid: ccbab5dc4d290dd4bacc5c138d45d5f6,
         type: 3}
@@ -6117,6 +6145,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ccbab5dc4d290dd4bacc5c138d45d5f6, type: 3}
+--- !u!4 &350942467972621962 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3991154429290528256, guid: ccbab5dc4d290dd4bacc5c138d45d5f6,
+    type: 3}
+  m_PrefabInstance: {fileID: 350942467972621961}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &543450653181918059
 Transform:
   m_ObjectHideFlags: 0
@@ -7095,7 +7129,6 @@ SceneRoots:
   - {fileID: 743251058}
   - {fileID: 8870245367201771224}
   - {fileID: 7688564637284352568}
-  - {fileID: 350942467972621961}
   - {fileID: 2038759401}
   - {fileID: 3286316275458539166}
   - {fileID: 1670214730}

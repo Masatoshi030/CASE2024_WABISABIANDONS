@@ -9,9 +9,10 @@ public class GoldValve_Count : MonoBehaviour
     [SerializeField, Header("ゴールドバルブタグ名")]
     string GoldValve="GoldValve";
 
-    [SerializeField, Header("ゴールドバルブタグ名")]
+    [SerializeField, Header("敵のタグ名")]
     string Enemy = "Enemy";
 
+    [SerializeField,Header("獲得したゴールドバルブの数"),ReadOnly]
     public int Get_Count;
 
     public GameObject[] GoldValve_C;

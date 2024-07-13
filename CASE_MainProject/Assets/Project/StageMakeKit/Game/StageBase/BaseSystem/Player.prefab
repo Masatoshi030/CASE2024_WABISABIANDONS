@@ -2521,7 +2521,7 @@ MonoBehaviour:
   myGroundJudgeController: {fileID: 4071649843644959769}
   au_Jump: {fileID: 3312005172706579909}
   jumpSound: {fileID: 8300000, guid: f0dff4d58008f5640bce11fb56cfbc38, type: 3}
-  heldSteam: 30
+  heldSteam: 20
   maxHeldSteam: 100
   outSteamValue: 0
   outMaxSteamValue: 0.1
@@ -2532,6 +2532,8 @@ MonoBehaviour:
   steamMaxScale: {x: 1.5, y: 1.5, z: 1.5}
   steamMaxAlertMaterial: {fileID: 2100000, guid: 993f6af033579974abe652262384885f,
     type: 2}
+  bSteamEmptyCoolDown: 0
+  steamEmptyCoolDownDisableBorder: 0.2
   bCombustibleGas: 0
   explosionPoint: {fileID: 8283244815977112913, guid: 5572cf0773ce8154e9dab224a76c9ecb,
     type: 3}
@@ -2599,13 +2601,16 @@ MonoBehaviour:
   soundClips:
   - {fileID: 8300000, guid: 250e86e4660929f409c1f30b17e22172, type: 3}
   - {fileID: 8300000, guid: afcc3f5cadc92ea40b8038d1fc1e1ed1, type: 3}
+  - {fileID: 8300000, guid: cd5da99d1f729c14b9f9f9263b99cc94, type: 3}
   hibana_ParticleEffect: {fileID: 2977903860043195035, guid: 23e09a88e9623034c944773e0b0aca3f,
     type: 3}
   partsSplit_ParticleEffect: {fileID: 2662798393433424169, guid: 67a75510c4adef44694d95c14e605700,
     type: 3}
   explosionSwitchObject: {fileID: 5353650854146111151, guid: 323715d57e70aad45a66b37eb276f1ee,
     type: 3}
-  woodSplit_ParticleEffect: {fileID: 1175895574899848804, guid: 8420312bddd5c1a41b41578e3a887c02,
+  woodSplit_BrokenWall_ParticleEffect: {fileID: 1175895574899848804, guid: 8420312bddd5c1a41b41578e3a887c02,
+    type: 3}
+  woodSplit_BoxBarrel_ParticleEffect: {fileID: 1175895574899848804, guid: 3f2da933805e81741b899e003380bfb8,
     type: 3}
 --- !u!1001 &824091648625795407
 PrefabInstance:

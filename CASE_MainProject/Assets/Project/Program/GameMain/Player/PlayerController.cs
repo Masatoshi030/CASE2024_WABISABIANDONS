@@ -109,6 +109,12 @@ public class PlayerController : MonoBehaviour
 
     public Material steamMaxAlertMaterial;
 
+    [SerializeField, Header("蒸気を使い切った時のフラグ"), ReadOnly]
+    bool bSteamEmptyCoolDown = false;
+
+    [SerializeField, Header("蒸気を使い切った時のクールダウン　復活割合")]
+    float steamEmptyCoolDownDisableBorder = 0.1f;
+
 
 
     //=== 可燃ガス ===//
@@ -338,6 +344,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //セルフヒットストップ
         if(isSelfHitStop)
         {
             selfHitStopCnt += Time.deltaTime;
@@ -358,6 +365,9 @@ public class PlayerController : MonoBehaviour
             //蒸気エフェクト
             var emission = compressor_SteamEffect.emission;
             emission.rateOverTime = 0.0f;
+
+            //空フラグをONにしてクールダウン開始
+            bSteamEmptyCoolDown = true;
         }
         else
         {
@@ -401,6 +411,15 @@ public class PlayerController : MonoBehaviour
         {
             //自然加圧
             heldSteam += naturalAddPressure * Time.deltaTime;
+
+            if(bSteamEmptyCoolDown == true)
+            {
+                //ボーダー以上に溜まっていたらクールダウン終了
+                if(heldSteam / maxHeldSteam > steamEmptyCoolDownDisableBorder)
+                {
+                    bSteamEmptyCoolDown = false;
+                }
+            }
         }
 
         //死亡処理
@@ -435,24 +454,27 @@ public class PlayerController : MonoBehaviour
         //蒸気出力
         if (heldSteam > 0.0f)
         {
-            //瞬間出力蒸気量
-            outSteamValue = (float)DualSense_Manager.instance.GetInputState().LeftTrigger.TriggerValue;
-
-            //噴出蒸気の振動
-            DualSense_Manager.instance.SetRightRumble(outSteamValue, 0.05f);
-
-            //貯蔵圧力から減らす
-            heldSteam -= outSteamValue * outMaxSteamValue;
-
-            //蒸気音量調節
-            au_Steam.volume = outSteamValue * 0.5f;
-
-            //蒸気の状態でポストエフェクトをブレンド
-            volumeAnimation.SetFloat("fPressure", heldSteam / maxHeldSteam);
-
-            if(heldSteam / maxHeldSteam > 0.7f)
+            if (bSteamEmptyCoolDown == false)
             {
-                SteamMaxEffect();
+                //瞬間出力蒸気量
+                outSteamValue = (float)DualSense_Manager.instance.GetInputState().LeftTrigger.TriggerValue;
+
+                //噴出蒸気の振動
+                DualSense_Manager.instance.SetRightRumble(outSteamValue, 0.05f);
+
+                //貯蔵圧力から減らす
+                heldSteam -= outSteamValue * outMaxSteamValue;
+
+                //蒸気音量調節
+                au_Steam.volume = outSteamValue * 0.5f;
+
+                //蒸気の状態でポストエフェクトをブレンド
+                volumeAnimation.SetFloat("fPressure", heldSteam / maxHeldSteam);
+
+                if (heldSteam / maxHeldSteam > 0.7f)
+                {
+                    SteamMaxEffect();
+                }
             }
         }
         else
@@ -581,12 +603,23 @@ public class PlayerController : MonoBehaviour
                 //初速をつける
                 moveVelocity = new Vector3(moveVelocity.x, jumpPower, moveVelocity.z);
 
-                //蒸気エフェクト
-                Instantiate(jump_SteamEffect, transform.position, Quaternion.identity);
-
                 //ジャンプ音再生
                 au_Jump.pitch = 1.0f + Random.Range(-0.25f, 2.0f);
                 au_Jump.PlayOneShot(jumpSound);
+
+                //蒸気があるときのみ
+                if (bSteamEmptyCoolDown == false)
+                {
+                    //蒸気エフェクト
+                    Instantiate(jump_SteamEffect, transform.position, Quaternion.identity);
+
+                    //軌跡のTrailRendererを有効
+                    for (int i = 0; i < attackTrailRenderer.Length - 1; i++)
+                    {
+                        attackTrailRenderer[i].emitting = true;
+                        attackTrailRenderer[i].material = attackStepMaterials[0];
+                    }
+                }
             }
         }
         //上昇中
@@ -595,19 +628,16 @@ public class PlayerController : MonoBehaviour
             //上昇中に×ボタンを押していたら
             if (DualSense_Manager.instance.GetInputState().LeftTrigger.TriggerValue > 0.0f)
             {
-                jumpTime += Time.deltaTime;
-
-                //追加速度をつける
-                moveVelocity = new Vector3(
-                    moveVelocity.x,
-                    moveVelocity.y + jumpContinuationPower * (jumpMaxTime - jumpTime / jumpMaxTime) * Time.deltaTime,
-                    moveVelocity.z);
-
-                //軌跡のTrailRendererを有効
-                for (int i = 0; i < attackTrailRenderer.Length - 1; i++)
+                //蒸気がなければ上昇しない
+                if (bSteamEmptyCoolDown == false)
                 {
-                    attackTrailRenderer[i].emitting = true;
-                    attackTrailRenderer[i].material = attackStepMaterials[0];
+                    jumpTime += Time.deltaTime;
+
+                    //追加速度をつける
+                    moveVelocity = new Vector3(
+                        moveVelocity.x,
+                        moveVelocity.y + jumpContinuationPower * (jumpMaxTime - jumpTime / jumpMaxTime) * Time.deltaTime,
+                        moveVelocity.z);
                 }
             }
 
