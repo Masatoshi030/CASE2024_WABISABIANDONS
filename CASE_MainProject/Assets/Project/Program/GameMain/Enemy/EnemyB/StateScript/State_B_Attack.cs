@@ -36,7 +36,7 @@ public class State_B_Attack : EnemyState
         GameObject attackObj = Instantiate(attackObject, enemy.transform.position, Quaternion.identity);
         attackObj.transform.forward = enemy.EyeTransform.forward;
         attackObj.transform.LookAt(PlayerController.instance.transform.position);
-
+        attackObj.GetComponent<DrillComponent>().AttackPower = attackPower;
         // è„â∫ÇÃVelocityÇæÇØçáÇÌÇπÇÈ
         Vector3 direction = (Enemy.Target.transform.position - attackObj.transform.position).normalized;
         direction *= attackSpeed;
