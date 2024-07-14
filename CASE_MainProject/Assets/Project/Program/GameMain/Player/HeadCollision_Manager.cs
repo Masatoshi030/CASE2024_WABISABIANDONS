@@ -26,6 +26,9 @@ public class HeadCollision_Manager : MonoBehaviour
     [SerializeField, Header("木材散開エフェクト 木箱や樽用")]
     GameObject woodSplit_BoxBarrel_ParticleEffect;
 
+    //重複防止　前回衝突したオブジェクト
+    string lastCollisionEnterObjectName = "";
+
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +44,18 @@ public class HeadCollision_Manager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+
+        //同じオブジェクトに複数回衝突した場合は
+        if(other.gameObject.name == lastCollisionEnterObjectName)
+        {
+            return;
+        }
+        else
+        {
+            //衝突したオブジェクト名を記録
+            lastCollisionEnterObjectName = other.gameObject.name;
+        }
+
         if (other.tag == "Wall" || other.tag == "Ground" || other.tag == "Enemy" || other.tag == "Dummy" || other.tag == "Valve" || other.tag == "Goal" || other.tag == "BrokenWall" || other.tag == "BreakBox")
         {
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
@@ -133,6 +148,8 @@ public class HeadCollision_Manager : MonoBehaviour
                             //木材の散開を生成する
                             Instantiate(woodSplit_BrokenWall_ParticleEffect, transform.position, Quaternion.identity);
                         }
+
+                        Debug.Log("破壊したよおおお" + other.gameObject.name);
 
                         //衝突音
                         audioSource.PlayOneShot(soundClips[2]);

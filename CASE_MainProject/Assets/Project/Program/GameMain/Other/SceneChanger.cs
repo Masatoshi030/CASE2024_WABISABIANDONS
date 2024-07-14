@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class SceneChanger : MonoBehaviour
 {
+
+    public string changeSceneName = "Title";
+
     public void SceneChange(string SceneName)
     {
         SceneManager.LoadScene(SceneName);
@@ -13,5 +16,10 @@ public class SceneChanger : MonoBehaviour
     public void Reload()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void SceneChange_ConfiguredScene()
+    {
+        SceneManager.LoadScene(changeSceneName);
     }
 }

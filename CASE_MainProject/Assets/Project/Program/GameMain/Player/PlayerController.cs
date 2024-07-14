@@ -705,10 +705,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Enemy")
-        {
-            Debug.Log("player");
-        }
         if(other.tag == "GoldValve")
         {
             //Žæ“¾ƒtƒ‰ƒO

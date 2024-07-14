@@ -35,6 +35,9 @@ public class PageSelect : MonoBehaviour
     void Start()
     {
 
+        //ŽžŠÔ‚ð–ß‚·
+        Time.timeScale = 1.0f;
+
         selectPage = 0;
         anim= gameObject.GetComponent<Animator>();
 

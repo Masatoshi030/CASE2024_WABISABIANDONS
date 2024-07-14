@@ -34,7 +34,7 @@ public class AttackGaugeController : MonoBehaviour
     float au_Gage_startPitch;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         au_Gage = this.GetComponent<AudioSource>();
         au_Gage_startPitch = au_Gage.pitch;
