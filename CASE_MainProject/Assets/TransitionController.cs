@@ -13,6 +13,9 @@ public class TransitionController : MonoBehaviour
 
     FadeOutEventFuction eventFunction;
 
+    [ReadOnly]
+    public bool bTransitioning = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -55,6 +58,7 @@ public class TransitionController : MonoBehaviour
     public void SetFadeOut()
     {
         transitionAnimator.SetTrigger("Enable");
+        bTransitioning = true;
     }
 
     //関数ポインターを設定
@@ -64,8 +68,13 @@ public class TransitionController : MonoBehaviour
     }
 
     //アニメーターに呼ばれるイベント関数
-    public void TransitionEventFunction()
+    public void FadeOutTransitionEventFunction()
     {
         eventFunction();
+    }
+
+    public void FadeInTransitionEventFunction()
+    {
+        bTransitioning = false;
     }
 }

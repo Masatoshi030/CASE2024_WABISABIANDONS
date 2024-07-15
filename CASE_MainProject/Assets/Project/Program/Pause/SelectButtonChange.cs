@@ -171,7 +171,9 @@ public class GetImagesInCanvas : MonoBehaviour
 
                 case 1:
 
-                    this.GetComponent<SceneChanger>().Reload();
+                    TransitionController.instance.SetFadeOutEventFuction(this.GetComponent<SceneChanger>().Reload);
+
+                    TransitionController.instance.SetFadeOut();
 
                     break;
 

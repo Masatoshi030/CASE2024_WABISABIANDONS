@@ -2,15 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SceneChanger : MonoBehaviour
 {
 
     public string changeSceneName = "Title";
 
-    public void SceneChange(string SceneName)
+    public GameObject loadingUI;
+
+    private void Start()
     {
-        SceneManager.LoadScene(SceneName);
+        loadingUI.gameObject.SetActive(false);
+    }
+
+    public void SceneChange(string sceneName)
+    {
+        StartCoroutine(SceneChange_Async(sceneName));
+    }
+
+    IEnumerator SceneChange_Async(string sceneName)
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+
+        loadingUI.gameObject.SetActive(true);
+
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        loadingUI.gameObject.SetActive(false);
     }
 
     public void Reload()
@@ -20,6 +42,6 @@ public class SceneChanger : MonoBehaviour
 
     public void SceneChange_ConfiguredScene()
     {
-        SceneManager.LoadScene(changeSceneName);
+        SceneChange(changeSceneName);
     }
 }

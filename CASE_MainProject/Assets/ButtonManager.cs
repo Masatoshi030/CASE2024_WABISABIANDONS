@@ -38,14 +38,15 @@ public class ButtonManager : MonoBehaviour
         }
 
         //選択中のボタン
-        buttons[selectButtonCount].transform.localScale = activeButtonScale;
+        buttons[selectButtonCount].transform.localScale = new Vector3(activeButtonScale.x, activeButtonScale.y, 1.0f);
         buttons[selectButtonCount].transform.GetChild(1).gameObject.SetActive(true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (DualSense_Manager.instance.GetInputState().LeftStick.YAxis > 0.8f)
+        if (DualSense_Manager.instance.GetInputState().LeftStick.YAxis > 0.8f ||
+            DualSense_Manager.instance.GetInputState().DPadUpButton == ButtonState.NewDown)
         {
             if (continuousCoolDownTimer <= 0.0f)
             {
@@ -57,12 +58,13 @@ public class ButtonManager : MonoBehaviour
                 ChangeButton(-1);
             }
 
-            if(continuousCoolDownTimer > 0.0f)
+            if (continuousCoolDownTimer > 0.0f)
             {
                 continuousCoolDownTimer -= Time.deltaTime;
             }
         }
-        else if (DualSense_Manager.instance.GetInputState().LeftStick.YAxis < -0.8f)
+        else if (DualSense_Manager.instance.GetInputState().LeftStick.YAxis < -0.8f ||
+                    DualSense_Manager.instance.GetInputState().DPadDownButton == ButtonState.NewDown)
         {
             if (continuousCoolDownTimer <= 0.0f)
             {
@@ -91,7 +93,9 @@ public class ButtonManager : MonoBehaviour
             {
                 //ステージセレクト
                 case 0:
-                    this.GetComponent<SceneChanger>().SceneChange("Select");
+                    TransitionController.instance.SetEventFunction_SceneChangeSetName("Select");
+                    TransitionController.instance.SetFadeOut();
+
                     break;
 
                 case 1:
@@ -188,11 +192,11 @@ public class ButtonManager : MonoBehaviour
         }
 
         //前回選択していたボタン
-        buttons[lastSelectButtonCount].transform.localScale = new Vector2(1.0f, 1.0f);
+        buttons[lastSelectButtonCount].transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         buttons[lastSelectButtonCount].transform.GetChild(1).gameObject.SetActive(false);
 
         //選択中のボタン
-        buttons[selectButtonCount].transform.localScale = activeButtonScale;
+        buttons[selectButtonCount].transform.localScale = new Vector3(activeButtonScale.x, activeButtonScale.y, 1.0f);
         buttons[selectButtonCount].transform.GetChild(1).gameObject.SetActive(true);
     }
 }
