@@ -118,7 +118,7 @@ public class HeadCollision_Manager : MonoBehaviour
                     other.GetComponent<Valve_Base>().SetCommand();
                 }
 
-                if (other.tag == "BrokenWall" || other.tag == "BreakBox")
+                if (other.tag == "BrokenWall")
                 {
                     if (PlayerController.instance.gaugeAttackValue > 0.5f)
                     {
@@ -137,26 +137,41 @@ public class HeadCollision_Manager : MonoBehaviour
                         //‰Î‰Ô‚ğ¶¬‚·‚é
                         Instantiate(hibana_ParticleEffect, transform.position, Quaternion.identity);
 
-                        if(other.tag == "BreakBox")
-                        {
-                            //–ØŞ‚ÌUŠJ‚ğ¶¬‚·‚é
-                            Instantiate(woodSplit_BoxBarrel_ParticleEffect, transform.position, Quaternion.identity);
-                        }
-
-                        if (other.tag == "BrokenWall")
-                        {
-                            //–ØŞ‚ÌUŠJ‚ğ¶¬‚·‚é
-                            Instantiate(woodSplit_BrokenWall_ParticleEffect, transform.position, Quaternion.identity);
-                        }
-
-                        Debug.Log("”j‰ó‚µ‚½‚æ‚¨‚¨‚¨" + other.gameObject.name);
-
                         //Õ“Ë‰¹
                         audioSource.PlayOneShot(soundClips[2]);
+
+                        //–ØŞ‚ÌUŠJ‚ğ¶¬‚·‚é
+                        Instantiate(woodSplit_BrokenWall_ParticleEffect, transform.position, Quaternion.identity);
 
                         return;
                     }
                 }
+
+
+                if (other.tag == "BreakBox")
+                {
+                    //‘ÎÛ•¨‚ğíœ
+                    Destroy(other.gameObject);
+
+                    //ƒqƒbƒgƒXƒgƒbƒv
+                    HitStopManager.instance.HitStopEffect(0.05f, 0.25f);
+
+                    //¬U“®
+                    DualSense_Manager.instance.SetLeftRumble(1.0f, 0.1f);
+
+                    //Õ“Ë‰¹
+                    audioSource.PlayOneShot(soundClips[1]);
+
+                    //‰Î‰Ô‚ğ¶¬‚·‚é
+                    Instantiate(hibana_ParticleEffect, transform.position, Quaternion.identity);
+
+                    //Õ“Ë‰¹
+                    audioSource.PlayOneShot(soundClips[2]);
+
+                    //–ØŞ‚ÌUŠJ‚ğ¶¬‚·‚é
+                    Instantiate(woodSplit_BoxBarrel_ParticleEffect, transform.position, Quaternion.identity);
+                }
+
 
                 if (other.tag == "Goal")
                 {
