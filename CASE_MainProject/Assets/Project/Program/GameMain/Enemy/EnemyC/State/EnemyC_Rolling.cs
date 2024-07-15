@@ -20,7 +20,7 @@ public class EnemyC_Rolling : EnemyState_C
     float angle;
 
     [SerializeField, Header("バルブボーナス(value * 巻き込み数)")]
-    uint valveBonus = 5;
+    int valveBonus = 5;
 
     [SerializeField, Header("セルフヒットストップ(壁)")]
     float wallHitStopTime = 0.2f;
@@ -335,8 +335,8 @@ public class EnemyC_Rolling : EnemyState_C
     void ExplosionMyBody()
     {
         // バルブのスポーン数
-        uint spawnNum = 0;
-        uint Count = 0;
+        int spawnNum = 0;
+        int Count = 0;
 
         foreach (GameObject obj in implicateObjects)
         {

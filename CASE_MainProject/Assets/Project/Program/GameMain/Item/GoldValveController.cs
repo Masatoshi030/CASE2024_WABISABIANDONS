@@ -42,9 +42,8 @@ public class GoldValveController : MonoBehaviour
             if(lerpValue > 1.0f)
             {
                 //リザルト用のカウント
-                //GoldValve_Count.instance.AddValveCount();
+                GoldValve_Count.instance.AddValveCount();
 
-                //GoldValve_Count.instance.AddValveCount();
                 Destroy(this.gameObject);   
             }
         }

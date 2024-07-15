@@ -18,7 +18,7 @@ public class Result : MonoBehaviour
     void Start()
     {
         //他のスクリプトから値を取得してくる
-        result_Valve = GoldValve_Count.instance.SetValveCount();
+        result_Valve = GoldValve_Count.instance.GetValveCount();
         result_Enemy = Enemy_Manager.instance.GetDefeatEnemyNum();
 
         valve_Score.text = result_Valve.ToString();

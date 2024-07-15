@@ -24,7 +24,7 @@ public class DropValveManager : MonoBehaviour
         }
     }
 
-    public void CreateValves(uint spawnNum, Vector3 spawnPosition, bool isAuto)
+    public void CreateValves(int spawnNum, Vector3 spawnPosition, bool isAuto)
     {
         GameObject obj = Instantiate(valveEmitter, spawnPosition, Quaternion.identity);
         obj.transform.SetParent(transform);
