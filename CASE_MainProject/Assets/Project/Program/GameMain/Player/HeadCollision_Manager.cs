@@ -5,28 +5,28 @@ using UnityEngine;
 
 public class HeadCollision_Manager : MonoBehaviour
 {
-    [SerializeField, Header("ƒI[ƒfƒBƒIƒ\[ƒXQÆæ")]
+    [SerializeField, Header("ã‚ªãƒ¼ãƒ‡ã‚£ã‚ªã‚½ãƒ¼ã‚¹å‚ç…§å…ˆ")]
     AudioSource audioSource;
 
-    [SerializeField, Header("‰¹ºƒNƒŠƒbƒvƒŠƒXƒg")]
+    [SerializeField, Header("éŸ³å£°ã‚¯ãƒªãƒƒãƒ—ãƒªã‚¹ãƒˆ")]
     AudioClip[] soundClips;
 
-    [SerializeField, Header("‰Î‰ÔƒGƒtƒFƒNƒg")]
+    [SerializeField, Header("ç«èŠ±ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ")]
     GameObject hibana_ParticleEffect;
 
-    [SerializeField, Header("ƒp[ƒcUŠJƒGƒtƒFƒNƒg")]
+    [SerializeField, Header("ãƒ‘ãƒ¼ãƒ„æ•£é–‹ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ")]
     GameObject partsSplit_ParticleEffect;
 
-    [SerializeField, Header("‰Â”RƒKƒX’…‰Î”»’è")]
+    [SerializeField, Header("å¯ç‡ƒã‚¬ã‚¹ç€ç«åˆ¤å®š")]
     GameObject explosionSwitchObject;
 
-    [SerializeField, Header("–ØŞUŠJƒGƒtƒFƒNƒg ‰ó‚ê‚é•Ç—p")]
+    [SerializeField, Header("æœ¨ææ•£é–‹ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ å£Šã‚Œã‚‹å£ç”¨")]
     GameObject woodSplit_BrokenWall_ParticleEffect;
 
-    [SerializeField, Header("–ØŞUŠJƒGƒtƒFƒNƒg –Ø” ‚â’M—p")]
+    [SerializeField, Header("æœ¨ææ•£é–‹ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ æœ¨ç®±ã‚„æ¨½ç”¨")]
     GameObject woodSplit_BoxBarrel_ParticleEffect;
 
-    //d•¡–h~@‘O‰ñÕ“Ë‚µ‚½ƒIƒuƒWƒFƒNƒg
+    //é‡è¤‡é˜²æ­¢ã€€å‰å›è¡çªã—ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
     string lastCollisionEnterObjectName = "";
 
 
@@ -45,14 +45,14 @@ public class HeadCollision_Manager : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
 
-        //“¯‚¶ƒIƒuƒWƒFƒNƒg‚É•¡”‰ñÕ“Ë‚µ‚½ê‡‚Í
+        //åŒã˜ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«è¤‡æ•°å›è¡çªã—ãŸå ´åˆã¯
         if(other.gameObject.name == lastCollisionEnterObjectName)
         {
             return;
         }
         else
         {
-            //Õ“Ë‚µ‚½ƒIƒuƒWƒFƒNƒg–¼‚ğ‹L˜^
+            //è¡çªã—ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåã‚’è¨˜éŒ²
             lastCollisionEnterObjectName = other.gameObject.name;
         }
 
@@ -60,59 +60,59 @@ public class HeadCollision_Manager : MonoBehaviour
         {
             if (PlayerController.instance.attackState == PlayerController.ATTACK_STATE.Attack)
             {
-                //“G‚É“ËŒ‚‚µ‚½‚Ìˆ—
+                //æ•µã«çªæ’ƒã—ãŸæ™‚ã®å‡¦ç†
                 if (other.tag == "Enemy")
                 {
                     Debug.Log("head");
                     Enemy enemy = other.GetComponent<Enemy>();
 
-                    // €–Sƒtƒ‰ƒO‚Ì”»’è
+                    // æ­»äº¡ãƒ•ãƒ©ã‚°ã®åˆ¤å®š
                     bool isDeath = enemy.Damage(20.0f, transform.up);
 
-                    // ƒGƒlƒ~[‚ÌƒgƒŠƒK[‚ğŒÄ‚Ño‚µ
+                    // ã‚¨ãƒãƒŸãƒ¼ã®ãƒˆãƒªã‚¬ãƒ¼ã‚’å‘¼ã³å‡ºã—
                     enemy.Machine.TriggerEnterOpponent(other);
 
-                    //Õ“Ë‹à‘®‰¹
+                    //è¡çªé‡‘å±éŸ³
                     audioSource.PlayOneShot(soundClips[0]);
 
-                    //ƒmƒbƒNƒoƒbƒN
+                    //ãƒãƒƒã‚¯ãƒãƒƒã‚¯
                     PlayerController.instance.KnockBack();
 
-                    //ƒp[ƒcUŠJƒGƒtƒFƒNƒg‚ğ¶¬‚·‚é
+                    //ãƒ‘ãƒ¼ãƒ„æ•£é–‹ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã™ã‚‹
                     Instantiate(partsSplit_ParticleEffect, transform.position, Quaternion.identity);
 
-                    //ƒqƒbƒgƒXƒgƒbƒv
+                    //ãƒ’ãƒƒãƒˆã‚¹ãƒˆãƒƒãƒ—
                     HitStopManager.instance.HitStopEffect(0.5f, 0.25f);
 
-                    //¬U“®
+                    //å°æŒ¯å‹•
                     DualSense_Manager.instance.SetRumble_Type1();
 
-                    //“ËŒ‚‰Â”\ƒtƒ‰ƒO‚ğ—LŒø‚É‚·‚é
+                    //çªæ’ƒå¯èƒ½ãƒ•ãƒ©ã‚°ã‚’æœ‰åŠ¹ã«ã™ã‚‹
                     PlayerController.instance.bAttackPossible = true;
 
-                    //“|‚µ‚½‚ç
+                    //å€’ã—ãŸã‚‰
                     if (isDeath)
                     {
-                        //ƒp[ƒcUŠJƒGƒtƒFƒNƒg‚ğ¶¬‚·‚é
+                        //ãƒ‘ãƒ¼ãƒ„æ•£é–‹ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã™ã‚‹
                         Instantiate(partsSplit_ParticleEffect, transform.position, Quaternion.identity);
 
-                        //ƒqƒbƒgƒXƒgƒbƒv
+                        //ãƒ’ãƒƒãƒˆã‚¹ãƒˆãƒƒãƒ—
                         HitStopManager.instance.HitStopEffect(0.5f, 0.25f);
 
-                        //¬U“®
+                        //å°æŒ¯å‹•
                         DualSense_Manager.instance.SetRumble_Type1();
                     }
-                    //“|‚µ‚Ä‚È‚¢
+                    //å€’ã—ã¦ãªã„
                     else
                     {
-                        //ƒqƒbƒgƒXƒgƒbƒv
+                        //ãƒ’ãƒƒãƒˆã‚¹ãƒˆãƒƒãƒ—
                         HitStopManager.instance.HitStopEffect(0.2f, 0.25f);
 
-                        //¬U“®
+                        //å°æŒ¯å‹•
                         DualSense_Manager.instance.SetLeftRumble(0.75f, 0.1f);
                     }
                 }
-                // ƒMƒ~ƒbƒNÕ“Ë‚Ìˆ—
+                // ã‚®ãƒŸãƒƒã‚¯è¡çªæ™‚ã®å‡¦ç†
                 if (other.tag == "Valve")
                 {
                     other.GetComponent<Valve_Base>().SetCommand();
@@ -122,25 +122,25 @@ public class HeadCollision_Manager : MonoBehaviour
                 {
                     if (PlayerController.instance.gaugeAttackValue > 0.5f)
                     {
-                        //‘ÎÛ•¨‚ğíœ
+                        //å¯¾è±¡ç‰©ã‚’å‰Šé™¤
                         Destroy(other.gameObject);
 
-                        //ƒqƒbƒgƒXƒgƒbƒv
+                        //ãƒ’ãƒƒãƒˆã‚¹ãƒˆãƒƒãƒ—
                         HitStopManager.instance.HitStopEffect(0.05f, 0.5f);
 
-                        //¬U“®
+                        //å°æŒ¯å‹•
                         DualSense_Manager.instance.SetLeftRumble(1.0f, 0.1f);
 
-                        //Õ“Ë‰¹
+                        //è¡çªéŸ³
                         audioSource.PlayOneShot(soundClips[1]);
 
-                        //‰Î‰Ô‚ğ¶¬‚·‚é
+                        //ç«èŠ±ã‚’ç”Ÿæˆã™ã‚‹
                         Instantiate(hibana_ParticleEffect, transform.position, Quaternion.identity);
 
-                        //Õ“Ë‰¹
+                        //è¡çªéŸ³
                         audioSource.PlayOneShot(soundClips[2]);
 
-                        //–ØŞ‚ÌUŠJ‚ğ¶¬‚·‚é
+                        //æœ¨æã®æ•£é–‹ã‚’ç”Ÿæˆã™ã‚‹
                         Instantiate(woodSplit_BrokenWall_ParticleEffect, transform.position, Quaternion.identity);
 
                         return;
@@ -150,57 +150,57 @@ public class HeadCollision_Manager : MonoBehaviour
 
                 if (other.tag == "BreakBox")
                 {
-                    //‘ÎÛ•¨‚ğíœ
+                    //å¯¾è±¡ç‰©ã‚’å‰Šé™¤
                     Destroy(other.gameObject);
 
-                    //ƒqƒbƒgƒXƒgƒbƒv
+                    //ãƒ’ãƒƒãƒˆã‚¹ãƒˆãƒƒãƒ—
                     HitStopManager.instance.HitStopEffect(0.05f, 0.25f);
 
-                    //¬U“®
+                    //å°æŒ¯å‹•
                     DualSense_Manager.instance.SetLeftRumble(1.0f, 0.1f);
 
-                    //Õ“Ë‰¹
+                    //è¡çªéŸ³
                     audioSource.PlayOneShot(soundClips[1]);
 
-                    //‰Î‰Ô‚ğ¶¬‚·‚é
+                    //ç«èŠ±ã‚’ç”Ÿæˆã™ã‚‹
                     Instantiate(hibana_ParticleEffect, transform.position, Quaternion.identity);
 
-                    //Õ“Ë‰¹
+                    //è¡çªéŸ³
                     audioSource.PlayOneShot(soundClips[2]);
 
-                    //–ØŞ‚ÌUŠJ‚ğ¶¬‚·‚é
+                    //æœ¨æã®æ•£é–‹ã‚’ç”Ÿæˆã™ã‚‹
                     Instantiate(woodSplit_BoxBarrel_ParticleEffect, transform.position, Quaternion.identity);
                 }
 
 
                 if (other.tag == "Goal")
                 {
-                    //ƒS[ƒ‹‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğˆÚs
+                    //ã‚´ãƒ¼ãƒ«ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ç§»è¡Œ
                     other.GetComponent<Animator>().SetBool("bGoal", true);
 
-                    //ƒvƒŒƒCƒ„[‚ÌƒS[ƒ‹ˆ—
+                    //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚´ãƒ¼ãƒ«å‡¦ç†
                     PlayerController.instance.OnGoal();
 
-                    //‚±‚ÌƒV[ƒ“‚ğƒNƒŠƒA‚Æ‚µ‚ÄƒZ[ƒu
+                    //ã“ã®ã‚·ãƒ¼ãƒ³ã‚’ã‚¯ãƒªã‚¢ã¨ã—ã¦ã‚»ãƒ¼ãƒ–
                     DataManager.instance.SaveClearThisStage();
                 }
 
-                //’…‰Î”»’è¶¬
+                //ç€ç«åˆ¤å®šç”Ÿæˆ
                 if (other.tag == "Wall" || other.tag == "Ground")
                 {
                     Instantiate(explosionSwitchObject, transform.position, Quaternion.identity);
                 }
 
-                //“ËŒ‚I—¹
+                //çªæ’ƒçµ‚äº†
                 PlayerController.instance.StopAttack();
 
-                //Õ“Ë‰¹
+                //è¡çªéŸ³
                 audioSource.PlayOneShot(soundClips[1]);
 
-                //‰Î‰Ô‚ğ¶¬‚·‚é
+                //ç«èŠ±ã‚’ç”Ÿæˆã™ã‚‹
                 Instantiate(hibana_ParticleEffect, transform.position, Quaternion.identity);
 
-                //¬U“®
+                //å°æŒ¯å‹•
                 DualSense_Manager.instance.SetLeftRumble(0.25f, 0.1f);
             }
         }

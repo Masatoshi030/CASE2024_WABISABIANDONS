@@ -23,7 +23,7 @@ public class GoldValveController : MonoBehaviour
     public void GetGoldValve()
     {
         PlayerController.instance.GetGoldValve();
-
+        startPosition = transform.position;
         bGetFlag = true;
     }
 
