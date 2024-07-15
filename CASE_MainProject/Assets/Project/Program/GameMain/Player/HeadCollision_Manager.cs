@@ -170,6 +170,9 @@ public class HeadCollision_Manager : MonoBehaviour
 
                     //木材の散開を生成する
                     Instantiate(woodSplit_BoxBarrel_ParticleEffect, transform.position, Quaternion.identity);
+
+                    other.GetComponent<GoldValveDropper>().DropValve();
+                    return;
                 }
 
 
