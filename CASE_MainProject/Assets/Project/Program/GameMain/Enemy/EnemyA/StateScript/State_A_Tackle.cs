@@ -17,12 +17,21 @@ public class State_A_Tackle : EnemyState
     [SerializeField, Header("タックル中か"), ReadOnly]
     bool bTackle = false;
     float subCnt = 0.0f;
+    [SerializeField, Header("タックル時エフェクト")]
+    GameObject tackleEffect;
 
     [Space(pad), Header("--遷移先リスト--")]
     [SerializeField, Header("衝突時の遷移")]
     StateKey tackledKey;
     [SerializeField, Header("ダメージ時の遷移")]
     StateKey damagedKey;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        tackleEffect = enemy.transform.Find("VFX_SpiderAttack").gameObject;
+        tackleEffect.SetActive(false);
+    }
 
     public override void Enter()
     {
@@ -53,6 +62,7 @@ public class State_A_Tackle : EnemyState
         enemy.EnemyCollider.isTrigger = true;
 
         enemy.IsAttackNow = true;
+        tackleEffect.SetActive(true);
 
         bTackle = true;
         subCnt = 0.0f;
@@ -93,6 +103,7 @@ public class State_A_Tackle : EnemyState
     public override void Exit()
     {
         base.Exit();
+        tackleEffect.SetActive(false);
         enemy.IsAttackNow = false;
         bTackle = false;
     }
