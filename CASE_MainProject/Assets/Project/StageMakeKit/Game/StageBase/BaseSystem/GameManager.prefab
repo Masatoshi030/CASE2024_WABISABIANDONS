@@ -441,7 +441,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1000
   m_TargetDisplay: 0
 --- !u!114 &822446686911880635
 MonoBehaviour:
@@ -644,6 +644,7 @@ GameObject:
   - component: {fileID: 2060375025719988344}
   - component: {fileID: 7269662526180013372}
   - component: {fileID: 2348002472751694806}
+  - component: {fileID: 4893915535366998596}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -749,7 +750,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2e31f25a5adff944a8c62589a7e442d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bDebugEnable: 0
+  bDebugEnable: 1
   debugMonitor: {fileID: 1454363082775630619}
   debugText_FPS: {fileID: 3512663710012108928}
   second: 1
@@ -765,6 +766,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb8d0f35344e1f48af81cb4064d89b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  changeSceneName: Title
 --- !u!114 &7269662526180013372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -790,3 +792,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6442df2aa554a9e4583226fe6e41c54d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4893915535366998596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8498239518984992064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4a5156fbedb4624a8558c44b62bd876, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoldValve: GoldValve
+  Enemy: Enemy
+  Get_Count: 0
+  GoldValve_C: []
+  Enemy_C: []

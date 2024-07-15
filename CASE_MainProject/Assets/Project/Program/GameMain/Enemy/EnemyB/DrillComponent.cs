@@ -35,11 +35,13 @@ public class DrillComponent : MonoBehaviour
         if (collision.transform.tag == "Player")
         {
             PlayerController.instance.Damage(attackPower);
+            Enemy_Manager.instance.CreateExplosionEffect(transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
         else if(collision.transform.tag == "Ground" || collision.transform.tag == "Wall")
         {
             Destroy(gameObject);
+            Enemy_Manager.instance.CreateExplosionEffect(transform.position, Quaternion.identity);
         }
     }
 }

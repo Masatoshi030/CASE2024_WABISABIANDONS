@@ -274,48 +274,55 @@ public class StageSelect : MonoBehaviour
         {
             //決定オン再生
             myAudioSource.PlayOneShot(stageEnterSound);
-            this.GetComponent<SceneChanger>().SceneChange("Title");
+
+            TransitionController.instance.SetEventFunction_SceneChangeSetName("Title");
+            TransitionController.instance.SetFadeOut();
         }
  
         //ステージ決定
-        if (DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.Down)
+        if (DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.NewDown)
         {
-
-            string stageName = "";
-
-            //ワールド数
-            switch(nowPage)
+            //遷移中でなければ
+            if (TransitionController.instance.bTransitioning == false)
             {
-                case 0:
-                    stageName = "A";
-                    break;
-                case 1:
-                    stageName = "B";
-                    break;
-                case 2:
-                    stageName = "C";
-                    break;
-                case 3:
-                    stageName = "D";
-                    break;
-                default:
-                    stageName = "A";
-                    break;
+
+                string stageName = "";
+
+                //ワールド数
+                switch (nowPage)
+                {
+                    case 0:
+                        stageName = "A";
+                        break;
+                    case 1:
+                        stageName = "B";
+                        break;
+                    case 2:
+                        stageName = "C";
+                        break;
+                    case 3:
+                        stageName = "D";
+                        break;
+                    default:
+                        stageName = "A";
+                        break;
+                }
+
+                //ステージ数
+                stageName += "_" + (nowSelect + 1).ToString();
+
+                Debug.Log(stageName);
+
+                //決定音再生
+                myAudioSource.PlayOneShot(stageEnterSound);
+
+                TransitionController.instance.SetEventFunction_SceneChangeSetName(stageName);
+                TransitionController.instance.SetFadeOut();
+
+                //セレクトデータ保存
+                PlayerPrefs.SetInt("SELECT[SelectPageCount]", nowPage);
+                PlayerPrefs.SetInt("SELECT[SelectStageCount]", nowSelect);
             }
-
-            //ステージ数
-            stageName += "_" + (nowSelect + 1).ToString();
-
-            Debug.Log(stageName);
-
-            this.GetComponent<SceneChanger>().SceneChange(stageName);
-
-            //決定オン再生
-            myAudioSource.PlayOneShot(stageEnterSound);
-
-            //セレクトデータ保存
-            PlayerPrefs.SetInt("SELECT[SelectPageCount]", nowPage);
-            PlayerPrefs.SetInt("SELECT[SelectStageCount]", nowSelect);
         }
     }
 

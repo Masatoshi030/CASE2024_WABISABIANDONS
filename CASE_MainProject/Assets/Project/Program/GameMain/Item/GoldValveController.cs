@@ -23,7 +23,7 @@ public class GoldValveController : MonoBehaviour
     public void GetGoldValve()
     {
         PlayerController.instance.GetGoldValve();
-
+        startPosition = transform.position;
         bGetFlag = true;
     }
 
@@ -42,9 +42,8 @@ public class GoldValveController : MonoBehaviour
             if(lerpValue > 1.0f)
             {
                 //リザルト用のカウント
-                //GoldValve_Count.instance.AddValveCount();
+                GoldValve_Count.instance.AddValveCount();
 
-                //GoldValve_Count.instance.AddValveCount();
                 Destroy(this.gameObject);   
             }
         }

@@ -75,8 +75,8 @@ public class State_B_Move : EnemyState
             currentFrameMoveAmout -= remainingDistance;
             isCompletion = true;
         }
-        enemy.transform.Translate(moveDirection * currentFrameMoveAmout);
-
+        //enemy.EnemyRigidbody.MovePosition(enemy.transform.position + moveDirection * currentFrameMoveAmout);
+        enemy.transform.position += moveDirection * currentFrameMoveAmout;
 
         if (subCnt >= angleChangeDuration)
         {
