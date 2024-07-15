@@ -40,7 +40,7 @@ public class Text_randomroulette : MonoBehaviour
     void Start()
     {
         //“|‚µ‚½“G‚ÆŠl“¾‚µ‚½ƒoƒ‹ƒu‚Ì”‚ğæ“¾‚µ‚Ä‚¢‚­
-        finalNumber_Valve = GoldValve_Count.instance.SetValveCount();
+        finalNumber_Valve = GoldValve_Count.instance.GetValveCount();
         finalNumber_Enemy = (int)Enemy_Manager.instance.GetDefeatEnemyNum();
 
 
