@@ -161,9 +161,6 @@ public class GetImagesInCanvas : MonoBehaviour
         if(DualSense_Manager.instance.GetInputState().CrossButton== DualSenseUnity.ButtonState.NewDown)
         {
 
-            //ŽžŠÔ‚ð–ß‚·
-            Time.timeScale = 1.0f;
-
             switch (selectButton)
             {
                 case 0:
@@ -174,13 +171,17 @@ public class GetImagesInCanvas : MonoBehaviour
 
                 case 1:
 
-                    this.GetComponent<SceneChanger>().Reload();
+                    TransitionController.instance.SetFadeOutEventFuction(this.GetComponent<SceneChanger>().Reload);
+
+                    TransitionController.instance.SetFadeOut();
 
                     break;
 
                 case 2:
 
-                    this.GetComponent<SceneChanger>().SceneChange("Select");
+                    TransitionController.instance.SetEventFunction_SceneChangeSetName("Select");
+
+                    TransitionController.instance.SetFadeOut();
 
                     break;
             }

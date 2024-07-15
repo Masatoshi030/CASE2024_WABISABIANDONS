@@ -10,7 +10,13 @@ public class CinemachineCameraSetting : MonoBehaviour
 
     CinemachineVirtualCamera mainVirtualCamera;
 
+    GameObject mainCameraBrain_Object;
+
     float mainCameraFieldOfView = 60.0f;
+
+    bool bAimLock = false;
+
+    CinemachineInputProvider cinemachineInputProvider;
 
     [SerializeField, Header("少し引いたカメラ視野角")]
     float pullCameraFieldOfView = 90.0f;
@@ -18,7 +24,7 @@ public class CinemachineCameraSetting : MonoBehaviour
     [SerializeField, Header("引いたカメラを有効にしている時間")]
     float pulledCameraTimer = 0.0f;
 
-    private void Awake()
+    private void Start()
     {
         if (instance == null)
         {
@@ -31,8 +37,15 @@ public class CinemachineCameraSetting : MonoBehaviour
             Destroy(gameObject);
         }
 
+
+        //メインカメラブレインを格納
+        mainCameraBrain_Object = this.transform.GetChild(0).gameObject;
+
         //メインバーチャルカメラを取得
         mainVirtualCamera = this.transform.GetChild(1).GetComponent<CinemachineVirtualCamera>();
+
+        //Aim入力コントローラーを取得
+        cinemachineInputProvider = mainVirtualCamera.GetComponent<CinemachineInputProvider>();
 
         //メインバーチャルカメラの視野角を取得
         mainCameraFieldOfView = mainVirtualCamera.m_Lens.FieldOfView;
@@ -61,5 +74,23 @@ public class CinemachineCameraSetting : MonoBehaviour
     {
         pulledCameraTimer = _time;
         mainVirtualCamera.m_Lens.FieldOfView = pullCameraFieldOfView;
+    }
+
+    public void SetAimLock(bool _enable)
+    {
+        if(_enable == true)
+        {
+            bAimLock = true;
+            cinemachineInputProvider.enabled = false;
+
+            Debug.Log("カメラの視点移動をロックしました");
+        }
+        else
+        {
+            bAimLock = false;
+            cinemachineInputProvider.enabled = true;
+
+            Debug.Log("カメラの視点移動をロックしました");
+        }
     }
 }

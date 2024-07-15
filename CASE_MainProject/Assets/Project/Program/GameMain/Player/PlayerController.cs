@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using System.Threading.Tasks;
+using Cinemachine;
+using UnityEngine.Animations;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,7 +12,6 @@ public class PlayerController : MonoBehaviour
     //プレイヤーのシングルトンインスタンス
     public static PlayerController instance;
 
-    
 
     //=== 移動 ===//
     [SerializeField, ReadOnly]
@@ -263,6 +264,35 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, Header("メインプレイヤーカメラオブジェクト"), ReadOnly]
     GameObject mainPlayerCamera_Obj;
+    [SerializeField, Header("メインプレイヤーのバーチャルカメラ"), ReadOnly]
+    GameObject virtualPlayerCamera_Obj;
+    [SerializeField, Header("初期FOV"), ReadOnly]
+    float initFOV = 60.0f;
+    [SerializeField, Header("移動オブジェクト搭乗時のFOV")]
+    float targetFOV = 75.0f;
+    [SerializeField, Header("初期の距離"), ReadOnly]
+    float initCameraDistance;
+    [SerializeField, Header("移動オブジェクト搭乗時の距離")]
+    float targetCameraDistance = 9.0f;
+    [SerializeField, Header("初期OffsetY"), ReadOnly]
+    float initCameraOffSetY;
+    [SerializeField, Header("移動オブジェクト搭乗時のOffsetY")]
+    float targetCameraOffsetY = 1.0f;
+    [SerializeField, Header("初期スクリーンY"), ReadOnly]
+    float initCameraScreenY;
+    [SerializeField, Header("移動オブジェクト搭乗時のスクリーンY")]
+    float targetCameraScreenY;
+
+    [SerializeField, Header("視野角補完時間")]
+    float lerpTime_FOV = 1.0f;
+    float lerpTime_FOVCount;
+    public enum CameraFOV
+    {
+        Stay, In, Out
+    }
+    [SerializeField, Header("FOVのステート"), Toolbar(typeof(CameraFOV))]
+    CameraFOV cameraFOVState = CameraFOV.Stay;
+
 
     [SerializeField, Header("ノックバック力")]
     float knockBackPower = 5.0f;
@@ -319,6 +349,12 @@ public class PlayerController : MonoBehaviour
         //メインプレイヤーカメラオブジェクトの参照
         mainPlayerCamera_Obj = GameObject.Find("PlayerCamera_Brain");
 
+        // バーチャルカメラの参照
+        virtualPlayerCamera_Obj = GameObject.Find("VC_PlayerCamera");
+        CinemachineFramingTransposer transposer = virtualPlayerCamera_Obj.GetComponent<CinemachineVirtualCamera>().GetCinemachineComponent<CinemachineFramingTransposer>();
+        initCameraDistance = transposer.m_CameraDistance;
+        initCameraOffSetY = transposer.TrackedPoint.y;
+        initCameraScreenY = transposer.m_ScreenY;
         //VolumeAnimation参照
         volumeAnimation = GameObject.Find("Volumes").GetComponent<Animator>();
 
@@ -389,6 +425,10 @@ public class PlayerController : MonoBehaviour
 
         //==================================================//
         //ロックしたら止まる処理
+
+        //=== カメラワーク処理 ===//
+
+        OnPlayerCameraWork();
 
 
 
@@ -705,10 +745,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Enemy")
-        {
-            Debug.Log("player");
-        }
         if(other.tag == "GoldValve")
         {
             //取得フラグ
@@ -735,7 +771,18 @@ public class PlayerController : MonoBehaviour
     {
         if(collision.transform.root.tag == "MoveGround")
         {
-            transform.parent = collision.transform.parent.parent.GetComponent<MoveGrouond>().startPoint.transform;
+            if(collision.transform.parent.parent.GetComponent<MoveGrouond>() != null)
+            {
+                transform.parent = transform.parent = collision.transform.parent.parent.GetComponent<MoveGrouond>().startPoint.transform;
+            }
+            else if(collision.transform.parent.parent.parent.GetComponent<MoveGrouond>() != null)
+            {
+                transform.parent = transform.parent = collision.transform.parent.parent.parent.GetComponent<MoveGrouond>().startPoint.transform;
+            }
+            
+            // カメラを引く
+            cameraFOVState = CameraFOV.Out;
+            Debug.Log("乗った");
         }
     }
 
@@ -745,6 +792,8 @@ public class PlayerController : MonoBehaviour
         {
             transform.parent = null;
             transform.rotation = Quaternion.identity;
+            cameraFOVState = CameraFOV.In;
+            Debug.Log("離れた");
         }
     }
 
@@ -1093,5 +1142,64 @@ public class PlayerController : MonoBehaviour
 
         //チュートリアルのガイドを削除
         //GameObject.Find("TutorialCanvas").SetActive(false);
+    }
+
+    void OnPlayerCameraWork()
+    {
+        switch (cameraFOVState)
+        {
+            case CameraFOV.In:
+                {
+                    lerpTime_FOVCount -= Time.deltaTime / lerpTime_FOV;
+                    if (lerpTime_FOVCount <= 0.0f)
+                    {
+                        lerpTime_FOVCount = 0.0f;
+                    }
+                    float fov = Mathf.Lerp(initFOV, targetFOV, lerpTime_FOVCount);
+                    float distance = Mathf.Lerp(initCameraDistance, targetCameraDistance, lerpTime_FOVCount);
+                    float offY = Mathf.Lerp(initCameraOffSetY, targetCameraOffsetY, lerpTime_FOVCount);
+                    float screenY = Mathf.Lerp(initCameraScreenY, targetCameraScreenY, lerpTime_FOVCount);
+                    CinemachineVirtualCamera localCamera = virtualPlayerCamera_Obj.GetComponent<CinemachineVirtualCamera>();
+                    localCamera.m_Lens.FieldOfView = fov;
+                    CinemachineFramingTransposer transposer = localCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+                    transposer.m_CameraDistance = distance;
+                    Vector3 offset = transposer.m_TrackedObjectOffset;
+                    offset.y = offY;
+                    transposer.m_TrackedObjectOffset = offset;
+                    transposer.m_ScreenY = screenY;
+                    if (lerpTime_FOVCount < 0.0f)
+                    {
+                        cameraFOVState = CameraFOV.Stay;
+                        lerpTime_FOVCount = 1.0f;
+                    }
+                }
+                break;
+            case CameraFOV.Out:
+                {
+                    lerpTime_FOVCount += Time.deltaTime / lerpTime_FOV;
+                    if (lerpTime_FOVCount >= 1.0f)
+                    {
+                        lerpTime_FOVCount = 1.0f;
+                    }
+                    float fov = Mathf.Lerp(initFOV, targetFOV, lerpTime_FOVCount);
+                    float distance = Mathf.Lerp(initCameraDistance, targetCameraDistance, lerpTime_FOVCount);
+                    float offY = Mathf.Lerp(initCameraOffSetY, targetCameraOffsetY, lerpTime_FOVCount);
+                    float screenY = Mathf.Lerp(initCameraScreenY, targetCameraScreenY, lerpTime_FOVCount);
+                    CinemachineVirtualCamera localCamera = virtualPlayerCamera_Obj.GetComponent<CinemachineVirtualCamera>();
+                    localCamera.m_Lens.FieldOfView = fov;
+                    CinemachineFramingTransposer transposer = localCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+                    transposer.m_CameraDistance = distance;
+                    Vector3 offset = transposer.m_TrackedObjectOffset;
+                    offset.y = offY;
+                    transposer.m_TrackedObjectOffset = offset;
+                    transposer.m_ScreenY = screenY;
+                    if (lerpTime_FOVCount < 0.0f)
+                    {
+                        cameraFOVState = CameraFOV.Stay;
+                        lerpTime_FOVCount = 0.0f;
+                    }
+                }
+                break;
+        }
     }
 }

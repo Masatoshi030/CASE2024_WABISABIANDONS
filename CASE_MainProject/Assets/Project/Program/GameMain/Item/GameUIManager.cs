@@ -77,14 +77,20 @@ public class GameUIManager : MonoBehaviour
         DualSense_Manager.instance.StopLeftRumble();
         DualSense_Manager.instance.StopRightRumble();
 
-        //タイムスケール変更
+        //タイムスケール変更 視点移動の有無
         if (pauseObj.activeSelf)
         {
             Time.timeScale = 0.0f;
+
+            //視点移動を無効
+            CinemachineCameraSetting.instance.SetAimLock(true);
         }
         else
         {
             Time.timeScale = 1.0f;
+
+            //視点移動を有効
+            CinemachineCameraSetting.instance.SetAimLock(false);
         }
     }
 

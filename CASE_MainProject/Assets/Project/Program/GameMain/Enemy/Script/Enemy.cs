@@ -48,8 +48,8 @@ public class Enemy : Subscriber
     public bool IsDropValves { get => isDropValves; set => isDropValves = value; }
 
     [SerializeField, Header("—Ž‚Æ‚·ƒoƒ‹ƒu‚Ì”")]
-    protected uint dropValveNum = 0;
-    public uint DropValveNum { get => dropValveNum; }
+    protected int dropValveNum = 0;
+    public int DropValveNum { get => dropValveNum; }
 
     [SerializeField, Header("Ž©“®Žæ“¾‚Ì—L–³")]
     protected bool isAutoGet = false;

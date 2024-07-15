@@ -46,6 +46,8 @@ public class MoveGrouond : MonoBehaviour
     [SerializeField, Header("停止音オブジェクト")]
     AudioSource au_StopSound;
 
+    bool bPlayStopSound = true;
+
     private void Awake()
     {
         //デバッグ用終着地点を非表示に
@@ -68,6 +70,7 @@ public class MoveGrouond : MonoBehaviour
     {
         if (mySteam_Scale.state == Steam_Scale.State.End)
         {
+            // がががが
             if (delayTimer > 0.0f)
             {
                 delayTimer -= Time.deltaTime;
@@ -88,8 +91,11 @@ public class MoveGrouond : MonoBehaviour
                 moveTimer = moveTime;
 
                 delayTimer = delayTime;
-
-                au_StopSound.PlayOneShot(au_StopSound.clip);
+                if(bPlayStopSound)
+                {
+                    au_StopSound.PlayOneShot(au_StopSound.clip);
+                    bPlayStopSound = false;
+                }
             }
         }
 
@@ -110,6 +116,10 @@ public class MoveGrouond : MonoBehaviour
             }
         }
 
+        if(mySteam_Scale.state == Steam_Scale.State.RunningToStart || mySteam_Scale.state == Steam_Scale.State.RunningToEnd)
+        {
+            bPlayStopSound = true;
+        }
         //座標の線形補間
         startPoint.transform.position = Vector3.Lerp(groundStartPosition, endPoint.transform.position, moveTimer / moveTime);
 

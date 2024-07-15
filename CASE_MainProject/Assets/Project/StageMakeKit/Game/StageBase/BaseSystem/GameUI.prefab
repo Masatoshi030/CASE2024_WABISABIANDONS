@@ -690,16 +690,16 @@ Canvas:
   m_GameObject: {fileID: 4977650454731137552}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_PlaneDistance: 1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -772,6 +772,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afb8d0f35344e1f48af81cb4064d89b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  changeSceneName: Title
 --- !u!1 &5017495733800469153
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,7 +1033,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6531991970515868873
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1093,6 +1094,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Intensity: 0.25
   Speed: 100
+  bHorizontal: 0
   bScale: 0
 --- !u!1 &7473729504314145908
 GameObject:
