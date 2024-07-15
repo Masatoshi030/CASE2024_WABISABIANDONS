@@ -45,4 +45,26 @@ public class DropValveManager : MonoBehaviour
             obj.GetComponent<ValveEmitter>().Create(spawnNum, speed, 0.5f, isAuto);
         }
     }
+
+    public void CreateValves(int spawnNum, Vector3 spawnPosition, bool isAuto, float _speed)
+    {
+        GameObject obj = Instantiate(valveEmitter, spawnPosition, Quaternion.identity);
+        obj.transform.SetParent(transform);
+        if (spawnNum > 36)
+        {
+            obj.GetComponent<ValveEmitter>().Create(spawnNum, _speed, 2.0f, isAuto);
+        }
+        else if (spawnNum > 24)
+        {
+            obj.GetComponent<ValveEmitter>().Create(spawnNum, _speed, 1.5f, isAuto);
+        }
+        else if (spawnNum > 12)
+        {
+            obj.GetComponent<ValveEmitter>().Create(spawnNum, _speed, 1.0f, isAuto);
+        }
+        else
+        {
+            obj.GetComponent<ValveEmitter>().Create(spawnNum, _speed, 0.5f, isAuto);
+        }
+    }
 }

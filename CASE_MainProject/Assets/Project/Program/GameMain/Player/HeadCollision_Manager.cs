@@ -141,6 +141,7 @@ public class HeadCollision_Manager : MonoBehaviour
                         {
                             //ñÿçﬁÇÃéUäJÇê∂ê¨Ç∑ÇÈ
                             Instantiate(woodSplit_BoxBarrel_ParticleEffect, transform.position, Quaternion.identity);
+                            other.GetComponent<GoldValveDropper>().DropValve();
                         }
 
                         if (other.tag == "BrokenWall")
