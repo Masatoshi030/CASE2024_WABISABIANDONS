@@ -56,6 +56,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField, Header("ジャンプ時蒸気エフェクト")]
     GameObject jump_SteamEffect;
 
+    [SerializeField, Header("空ジャンプ蒸気エフェクト")]
+    GameObject jump_SteamEffect_Empty;
+
     [SerializeField, Header("ジャンプ継続最大時間")]
     float jumpMaxTime = 1.0f;
 
@@ -111,10 +114,13 @@ public class PlayerController : MonoBehaviour
     public Material steamMaxAlertMaterial;
 
     [SerializeField, Header("蒸気を使い切った時のフラグ"), ReadOnly]
-    bool bSteamEmptyCoolDown = false;
+    public bool bSteamEmptyCoolDown = false;
 
     [SerializeField, Header("蒸気を使い切った時のクールダウン　復活割合")]
     float steamEmptyCoolDownDisableBorder = 0.1f;
+
+    [SerializeField, Header("蒸気空音")]
+    AudioClip steamEmptySound;
 
 
 
@@ -643,13 +649,22 @@ public class PlayerController : MonoBehaviour
                 //初速をつける
                 moveVelocity = new Vector3(moveVelocity.x, jumpPower, moveVelocity.z);
 
-                //ジャンプ音再生
-                au_Jump.pitch = 1.0f + Random.Range(-0.25f, 2.0f);
-                au_Jump.PlayOneShot(jumpSound);
-
-                //蒸気があるときのみ
-                if (bSteamEmptyCoolDown == false)
+                //圧力がないときは空の音を鳴らす
+                if (bSteamEmptyCoolDown == true)
                 {
+                    au_Jump.pitch = 2.5f;
+                    au_Jump.volume = 0.3f;
+                    au_Jump.PlayOneShot(steamEmptySound);
+
+                    //小蒸気エフェクト
+                    Instantiate(jump_SteamEffect_Empty, transform.position, Quaternion.identity);
+                }
+                else
+                {
+                    au_Jump.pitch = 1.0f;
+                    au_Jump.volume = 0.5f;
+                    au_Jump.PlayOneShot(jumpSound);
+
                     //蒸気エフェクト
                     Instantiate(jump_SteamEffect, transform.position, Quaternion.identity);
 
@@ -756,6 +771,12 @@ public class PlayerController : MonoBehaviour
             //ダメージ
             Damage(10.0f);
         }
+
+        //即死判定
+        if (other.transform.root.tag == "GameOverJudge")
+        {
+            heldSteam = maxHeldSteam;
+        }
     }
 
     public void GetGoldValve()
@@ -773,28 +794,57 @@ public class PlayerController : MonoBehaviour
         {
             if(collision.transform.parent.parent.GetComponent<MoveGrouond>() != null)
             {
-                transform.parent = transform.parent = collision.transform.parent.parent.GetComponent<MoveGrouond>().startPoint.transform;
+                transform.parent = collision.transform.parent.parent.GetComponent<MoveGrouond>().startPoint.transform;
             }
             else if(collision.transform.parent.parent.parent.GetComponent<MoveGrouond>() != null)
             {
-                transform.parent = transform.parent = collision.transform.parent.parent.parent.GetComponent<MoveGrouond>().startPoint.transform;
+                transform.parent = collision.transform.parent.parent.parent.GetComponent<MoveGrouond>().startPoint.transform;
             }
             
             // カメラを引く
             cameraFOVState = CameraFOV.Out;
             Debug.Log("乗った");
         }
+
+        //普通の地面に着地したときに親子関係を切る
+        if (collision.transform.root.tag != "MoveGround")
+        {
+            if (myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.On)
+            {
+                transform.parent = null;
+                transform.rotation = Quaternion.identity;
+                cameraFOVState = CameraFOV.In;
+                Debug.Log("離れた");
+            }
+        }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
         if (collision.transform.root.tag == "MoveGround")
         {
-            transform.parent = null;
-            transform.rotation = Quaternion.identity;
-            cameraFOVState = CameraFOV.In;
-            Debug.Log("離れた");
+            if (transform.parent == null)
+            {
+                if (collision.transform.parent.parent.GetComponent<MoveGrouond>() != null)
+                {
+                    transform.parent = collision.transform.parent.parent.GetComponent<MoveGrouond>().startPoint.transform;
+                }
+                else if (collision.transform.parent.parent.parent.GetComponent<MoveGrouond>() != null)
+                {
+                    transform.parent = collision.transform.parent.parent.parent.GetComponent<MoveGrouond>().startPoint.transform;
+                }
+
+                // カメラを引く
+                cameraFOVState = CameraFOV.Out;
+                Debug.Log("乗った");
+            }
         }
+    }
+
+
+    private void OnCollisionExit(Collision collision)
+    {
+
     }
 
     public void SetValveJump(Vector3 _forceVec)
@@ -1134,14 +1184,8 @@ public class PlayerController : MonoBehaviour
 
     public void OnGoal()
     {
-        //プレイヤーのカメラを無効にする
-        mainPlayerCamera_Obj.GetComponent<Camera>().enabled = false;
-
         //プレイヤーの動きを止める
         bLock = true;
-
-        //チュートリアルのガイドを削除
-        //GameObject.Find("TutorialCanvas").SetActive(false);
     }
 
     void OnPlayerCameraWork()

@@ -105,8 +105,9 @@ public class Text_randomroulette : MonoBehaviour
     void Next_Stage()
     {
         if (DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.NewDown)
-        { 
-            this.GetComponent<SceneChanger>().SceneChange(stageName);
+        {
+            TransitionController.instance.SetEventFunction_SceneChangeSetName("Select");
+            TransitionController.instance.SetFadeOut();
         }
     }
 
