@@ -44,6 +44,9 @@ public class PlayerController : MonoBehaviour
     // カメラの前方ベクトルをプレイヤーの進む方向とする
     Quaternion horizontalRotation;
 
+    [SerializeField, Header("足音コントローラー")]
+    WalkRunSoundController myWalkRunSoundController;
+
 
 
     //=== ジャンプ ===//
@@ -592,7 +595,23 @@ public class PlayerController : MonoBehaviour
         if(myGroundJudgeController.onGroundState == GroundJudgeController.ON_GROUND_STATE.Off)
         {
             runValue *= runSpeed_AirAttenuation;
+
+            myWalkRunSoundController.SetWalkToRunRate(-1.0f);
         }
+        else
+        {
+            if(runInput.magnitude > 0.2f) 
+            {
+                //足音
+                myWalkRunSoundController.SetWalkToRunRate(runValue.magnitude / runSpeed_Steam);
+            }
+            else
+            {
+                myWalkRunSoundController.SetWalkToRunRate(-1.0f);
+            }
+        }
+
+        Debug.Log(runValue.magnitude / runSpeed_Steam);
 
         //フレーム制御
         runValue *= Time.deltaTime;
