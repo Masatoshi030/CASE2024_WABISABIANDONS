@@ -95,4 +95,9 @@ public class SceneChanger : MonoBehaviour
     {
         SceneChange(changeSceneName);
     }
+
+    public void NormalSceneChange(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
 }
