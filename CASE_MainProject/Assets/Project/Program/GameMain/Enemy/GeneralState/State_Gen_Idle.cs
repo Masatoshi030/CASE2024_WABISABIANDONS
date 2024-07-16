@@ -26,7 +26,6 @@ public class State_Gen_Idle : EnemyState
         base.MainFunc();
         if(enemy.IsDamaged)
         {
-            enemy.IsDamaged = false;
             machine.TransitionTo(damagedKey);
         }
         else if(enemy.IsFindPlayer)
