@@ -294,6 +294,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField, Header("視野角補完時間")]
     float lerpTime_FOV = 1.0f;
+    [SerializeField, Header("視野角補完速度(エイム時)")]
+    float lerpTime_FOVAim = 0.25f;
     float lerpTime_FOVCount;
     public enum CameraFOV
     {
@@ -421,6 +423,10 @@ public class PlayerController : MonoBehaviour
             emission.rateOverTime = 50.0f * outSteamValue;
         }
 
+        //=== カメラワーク処理 ===//
+
+        //OnPlayerCameraWork();
+
 
         //ロックしても止まらない処理
         //==================================================//
@@ -434,10 +440,6 @@ public class PlayerController : MonoBehaviour
 
         //==================================================//
         //ロックしたら止まる処理
-
-        //=== カメラワーク処理 ===//
-
-        OnPlayerCameraWork();
 
 
 
@@ -576,6 +578,10 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
+
+        //=== カメラワーク処理 ===//
+
+        OnPlayerCameraWork();
 
         //ロックがかかったら早期リターン
         if (bLock)
@@ -1209,60 +1215,88 @@ public class PlayerController : MonoBehaviour
 
     void OnPlayerCameraWork()
     {
-        switch (cameraFOVState)
+        if(attackState == ATTACK_STATE.Aim)
         {
-            case CameraFOV.In:
-                {
-                    lerpTime_FOVCount -= Time.deltaTime / lerpTime_FOV;
-                    if (lerpTime_FOVCount <= 0.0f)
+            lerpTime_FOVCount -= Time.deltaTime / lerpTime_FOVAim;
+            if (lerpTime_FOVCount <= 0.0f)
+            {
+                lerpTime_FOVCount = 0.0f;
+            }
+            float fov = Mathf.Lerp(initFOV, targetFOV, lerpTime_FOVCount);
+            float distance = Mathf.Lerp(initCameraDistance, targetCameraDistance, lerpTime_FOVCount);
+            float offY = Mathf.Lerp(initCameraOffSetY, targetCameraOffsetY, lerpTime_FOVCount);
+            float screenY = Mathf.Lerp(initCameraScreenY, targetCameraScreenY, lerpTime_FOVCount);
+            CinemachineVirtualCamera localCamera = virtualPlayerCamera_Obj.GetComponent<CinemachineVirtualCamera>();
+            localCamera.m_Lens.FieldOfView = fov;
+            CinemachineFramingTransposer transposer = localCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+            transposer.m_CameraDistance = distance;
+            Vector3 offset = transposer.m_TrackedObjectOffset;
+            offset.y = offY;
+            transposer.m_TrackedObjectOffset = offset;
+            transposer.m_ScreenY = screenY;
+            if (lerpTime_FOVCount < 0.0f)
+            {
+                cameraFOVState = CameraFOV.Stay;
+                lerpTime_FOVCount = 1.0f;
+            }
+        }
+        else
+        {
+            switch (cameraFOVState)
+            {
+                case CameraFOV.In:
                     {
-                        lerpTime_FOVCount = 0.0f;
+                        lerpTime_FOVCount -= Time.deltaTime / lerpTime_FOV;
+                        if (lerpTime_FOVCount <= 0.0f)
+                        {
+                            lerpTime_FOVCount = 0.0f;
+                        }
+                        float fov = Mathf.Lerp(initFOV, targetFOV, lerpTime_FOVCount);
+                        float distance = Mathf.Lerp(initCameraDistance, targetCameraDistance, lerpTime_FOVCount);
+                        float offY = Mathf.Lerp(initCameraOffSetY, targetCameraOffsetY, lerpTime_FOVCount);
+                        float screenY = Mathf.Lerp(initCameraScreenY, targetCameraScreenY, lerpTime_FOVCount);
+                        CinemachineVirtualCamera localCamera = virtualPlayerCamera_Obj.GetComponent<CinemachineVirtualCamera>();
+                        localCamera.m_Lens.FieldOfView = fov;
+                        CinemachineFramingTransposer transposer = localCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+                        transposer.m_CameraDistance = distance;
+                        Vector3 offset = transposer.m_TrackedObjectOffset;
+                        offset.y = offY;
+                        transposer.m_TrackedObjectOffset = offset;
+                        transposer.m_ScreenY = screenY;
+                        if (lerpTime_FOVCount < 0.0f)
+                        {
+                            cameraFOVState = CameraFOV.Stay;
+                            lerpTime_FOVCount = 1.0f;
+                        }
                     }
-                    float fov = Mathf.Lerp(initFOV, targetFOV, lerpTime_FOVCount);
-                    float distance = Mathf.Lerp(initCameraDistance, targetCameraDistance, lerpTime_FOVCount);
-                    float offY = Mathf.Lerp(initCameraOffSetY, targetCameraOffsetY, lerpTime_FOVCount);
-                    float screenY = Mathf.Lerp(initCameraScreenY, targetCameraScreenY, lerpTime_FOVCount);
-                    CinemachineVirtualCamera localCamera = virtualPlayerCamera_Obj.GetComponent<CinemachineVirtualCamera>();
-                    localCamera.m_Lens.FieldOfView = fov;
-                    CinemachineFramingTransposer transposer = localCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
-                    transposer.m_CameraDistance = distance;
-                    Vector3 offset = transposer.m_TrackedObjectOffset;
-                    offset.y = offY;
-                    transposer.m_TrackedObjectOffset = offset;
-                    transposer.m_ScreenY = screenY;
-                    if (lerpTime_FOVCount < 0.0f)
+                    break;
+                case CameraFOV.Out:
                     {
-                        cameraFOVState = CameraFOV.Stay;
-                        lerpTime_FOVCount = 1.0f;
+                        lerpTime_FOVCount += Time.deltaTime / lerpTime_FOV;
+                        if (lerpTime_FOVCount >= 1.0f)
+                        {
+                            lerpTime_FOVCount = 1.0f;
+                        }
+                        float fov = Mathf.Lerp(initFOV, targetFOV, lerpTime_FOVCount);
+                        float distance = Mathf.Lerp(initCameraDistance, targetCameraDistance, lerpTime_FOVCount);
+                        float offY = Mathf.Lerp(initCameraOffSetY, targetCameraOffsetY, lerpTime_FOVCount);
+                        float screenY = Mathf.Lerp(initCameraScreenY, targetCameraScreenY, lerpTime_FOVCount);
+                        CinemachineVirtualCamera localCamera = virtualPlayerCamera_Obj.GetComponent<CinemachineVirtualCamera>();
+                        localCamera.m_Lens.FieldOfView = fov;
+                        CinemachineFramingTransposer transposer = localCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+                        transposer.m_CameraDistance = distance;
+                        Vector3 offset = transposer.m_TrackedObjectOffset;
+                        offset.y = offY;
+                        transposer.m_TrackedObjectOffset = offset;
+                        transposer.m_ScreenY = screenY;
+                        if (lerpTime_FOVCount < 0.0f)
+                        {
+                            cameraFOVState = CameraFOV.Stay;
+                            lerpTime_FOVCount = 0.0f;
+                        }
                     }
-                }
-                break;
-            case CameraFOV.Out:
-                {
-                    lerpTime_FOVCount += Time.deltaTime / lerpTime_FOV;
-                    if (lerpTime_FOVCount >= 1.0f)
-                    {
-                        lerpTime_FOVCount = 1.0f;
-                    }
-                    float fov = Mathf.Lerp(initFOV, targetFOV, lerpTime_FOVCount);
-                    float distance = Mathf.Lerp(initCameraDistance, targetCameraDistance, lerpTime_FOVCount);
-                    float offY = Mathf.Lerp(initCameraOffSetY, targetCameraOffsetY, lerpTime_FOVCount);
-                    float screenY = Mathf.Lerp(initCameraScreenY, targetCameraScreenY, lerpTime_FOVCount);
-                    CinemachineVirtualCamera localCamera = virtualPlayerCamera_Obj.GetComponent<CinemachineVirtualCamera>();
-                    localCamera.m_Lens.FieldOfView = fov;
-                    CinemachineFramingTransposer transposer = localCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
-                    transposer.m_CameraDistance = distance;
-                    Vector3 offset = transposer.m_TrackedObjectOffset;
-                    offset.y = offY;
-                    transposer.m_TrackedObjectOffset = offset;
-                    transposer.m_ScreenY = screenY;
-                    if (lerpTime_FOVCount < 0.0f)
-                    {
-                        cameraFOVState = CameraFOV.Stay;
-                        lerpTime_FOVCount = 0.0f;
-                    }
-                }
-                break;
+                    break;
+            }
         }
     }
 }
