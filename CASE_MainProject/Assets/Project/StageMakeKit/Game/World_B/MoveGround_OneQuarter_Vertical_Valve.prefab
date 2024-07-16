@@ -197,6 +197,7 @@ MonoBehaviour:
   bRotationLerp: 1
   moveSoundObject: {fileID: 1489194561193461404}
   au_StopSound: {fileID: 5152703657018293072}
+  au_SteamSound: {fileID: 8691908675673088121}
 --- !u!1 &6613380984952601137
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,6 +396,12 @@ Transform:
 --- !u!82 &5152703657018293072 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 5866342186594427869, guid: 280d6b0db73cfcc4aa54bc504a8030d7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1651549539111737485}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &8691908675673088121 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 7959170531252926708, guid: 280d6b0db73cfcc4aa54bc504a8030d7,
     type: 3}
   m_PrefabInstance: {fileID: 1651549539111737485}
   m_PrefabAsset: {fileID: 0}
@@ -644,6 +651,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5934914720759601661, guid: ced2bd4f00ab7724885bcac12e3ea8fb,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6310d9d9d047a9046be16dfe26b7b622, type: 2}
     - target: {fileID: 8045572246772734239, guid: ced2bd4f00ab7724885bcac12e3ea8fb,
         type: 3}
       propertyPath: m_Name

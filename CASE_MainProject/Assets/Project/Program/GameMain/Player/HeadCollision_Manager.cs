@@ -178,8 +178,8 @@ public class HeadCollision_Manager : MonoBehaviour
 
                 if (other.tag == "Goal")
                 {
-                    //ゴールのアニメーションを移行
-                    other.GetComponent<Animator>().SetBool("bGoal", true);
+                    //ゴールオブジェクトのゴール処理
+                    GoalManager.instance.OnGoal();
 
                     //プレイヤーのゴール処理
                     PlayerController.instance.OnGoal();
