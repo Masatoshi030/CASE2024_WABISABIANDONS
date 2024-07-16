@@ -103,32 +103,35 @@ public class ButtonManager : MonoBehaviour
 
         if(DualSense_Manager.instance.GetInputState().CrossButton == ButtonState.NewDown)
         {
-            //決定音再生
-            myAudioSource.PlayOneShot(enterSound);
-
-            switch (selectButtonCount)
+            if (TransitionController.instance.bTransitioning == false)
             {
-                //ステージセレクト
-                case 0:
-                    TransitionController.instance.SetEventFunction_SceneChangeSetName("Select");
-                    TransitionController.instance.SetFadeOut();
+                //決定音再生
+                myAudioSource.PlayOneShot(enterSound);
 
-                    break;
+                switch (selectButtonCount)
+                {
+                    //ステージセレクト
+                    case 0:
+                        TransitionController.instance.SetEventFunction_SceneChangeSetName("Select");
+                        TransitionController.instance.SetFadeOut();
 
-                case 1:
-                    break;
+                        break;
 
-                //アプリケーション終了
-                case 2:
+                    case 1:
+                        break;
+
+                    //アプリケーション終了
+                    case 2:
 #if UNITY_EDITOR
-                    UnityEditor.EditorApplication.isPlaying = false;
+                        UnityEditor.EditorApplication.isPlaying = false;
 #else
                     Application.Quit();
 #endif
-                    break;
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
             }
         }
     }

@@ -50,7 +50,7 @@ public class WalkRunSoundController : MonoBehaviour
             myAudioSource.pitch = Mathf.Lerp(1.0f, 2.0f, walkToRunRate);
 
             //速度で音量を変える
-            myAudioSource.volume = Mathf.Lerp(0.5f, 1.0f, walkToRunRate);
+            myAudioSource.volume = Mathf.Lerp(0.5f, 0.8f, walkToRunRate);
 
             //ランダムなクリップを再生する
             myAudioSource.PlayOneShot(woodWalkList[Random.Range(0, woodWalkList.Length - 1)]);

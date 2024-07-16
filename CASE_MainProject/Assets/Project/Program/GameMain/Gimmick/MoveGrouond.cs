@@ -46,7 +46,12 @@ public class MoveGrouond : MonoBehaviour
     [SerializeField, Header("停止音オブジェクト")]
     AudioSource au_StopSound;
 
+    [SerializeField, Header("蒸気音オブジェクト")]
+    AudioSource au_SteamSound;
+
     bool bPlayStopSound = true;
+
+    bool bPlaySteamSound = true;
 
     private void Awake()
     {
@@ -84,6 +89,12 @@ public class MoveGrouond : MonoBehaviour
 
                 au_moveSound.volume = 1.0f;
                 moveSoundObject.SetActive(true);
+
+                if(bPlaySteamSound)
+                {
+                    au_SteamSound.PlayOneShot(au_SteamSound.clip);
+                    bPlaySteamSound = false;
+                }
             }
 
             if (moveTimer > moveTime)
@@ -119,6 +130,7 @@ public class MoveGrouond : MonoBehaviour
         if(mySteam_Scale.state == Steam_Scale.State.RunningToStart || mySteam_Scale.state == Steam_Scale.State.RunningToEnd)
         {
             bPlayStopSound = true;
+            bPlaySteamSound = true;
         }
         //座標の線形補間
         startPoint.transform.position = Vector3.Lerp(groundStartPosition, endPoint.transform.position, moveTimer / moveTime);
