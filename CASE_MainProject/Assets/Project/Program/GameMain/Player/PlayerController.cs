@@ -846,6 +846,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
+        
+    }
+
+
+    private void OnCollisionExit(Collision collision)
+    {
         if (collision.transform.root.tag == "MoveGround")
         {
             if (transform.parent == null)
@@ -860,16 +866,10 @@ public class PlayerController : MonoBehaviour
                 }
 
                 // ÉJÉÅÉâÇà¯Ç≠
-                cameraFOVState = CameraFOV.Out;
+                cameraFOVState = CameraFOV.In;
                 Debug.Log("èÊÇ¡ÇΩ");
             }
         }
-    }
-
-
-    private void OnCollisionExit(Collision collision)
-    {
-
     }
 
     public void SetValveJump(Vector3 _forceVec)
