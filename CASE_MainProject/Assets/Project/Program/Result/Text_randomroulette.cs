@@ -40,8 +40,8 @@ public class Text_randomroulette : MonoBehaviour
     void Start()
     {
         //“|‚µ‚½“G‚ÆŠl“¾‚µ‚½ƒoƒ‹ƒu‚Ì”‚ğæ“¾‚µ‚Ä‚¢‚­
-        finalNumber_Valve = GoldValve_Count.instance.GetValveCount();
-        finalNumber_Enemy = (int)Enemy_Manager.instance.GetDefeatEnemyNum();
+        //finalNumber_Valve = GoldValve_Count.instance.GetValveCount();
+        //finalNumber_Enemy = (int)Enemy_Manager.instance.GetDefeatEnemyNum();
 
 
     }
@@ -105,8 +105,9 @@ public class Text_randomroulette : MonoBehaviour
     void Next_Stage()
     {
         if (DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.NewDown)
-        { 
-            this.GetComponent<SceneChanger>().SceneChange(stageName);
+        {
+            TransitionController.instance.SetEventFunction_SceneChangeSetName("Select");
+            TransitionController.instance.SetFadeOut();
         }
     }
 

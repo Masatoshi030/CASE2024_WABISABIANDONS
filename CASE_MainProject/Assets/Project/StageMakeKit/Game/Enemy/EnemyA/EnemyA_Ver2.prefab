@@ -157,7 +157,8 @@ MonoBehaviour:
   rotationTime: 2
   allowLength: 10
   allowMaterial: {fileID: 2100000, guid: 74431d13e5998a94596d60c97accf534, type: 2}
-  foundEffect: {fileID: 0}
+  foundEffect: {fileID: 780995631120438579, guid: fc529a546ea228144a99c5052bb2ec9c,
+    type: 3}
   elapsedKey:
     stateName: tackle
     stateID: 5
@@ -219,6 +220,7 @@ MonoBehaviour:
   tackleUpVelocity: 5
   stiffnessTime: 3
   bTackle: 0
+  tackleEffect: {fileID: 1625798863125930020}
   tackledKey:
     stateName: wait
     stateID: 6
@@ -501,6 +503,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5649879077160303288}
     m_Modifications:
+    - target: {fileID: 1225564817316744144, guid: 8db4dbfc92755dd4b85ca7186443800d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[0].m_Value
+      value: 0.57
+      objectReference: {fileID: 0}
     - target: {fileID: 2524232118009979208, guid: 8db4dbfc92755dd4b85ca7186443800d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -579,6 +586,12 @@ PrefabInstance:
 --- !u!4 &1135955251858503559 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2524232118009979208, guid: 8db4dbfc92755dd4b85ca7186443800d,
+    type: 3}
+  m_PrefabInstance: {fileID: 3225816434338567887}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1625798863125930020 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4200619884557956843, guid: 8db4dbfc92755dd4b85ca7186443800d,
     type: 3}
   m_PrefabInstance: {fileID: 3225816434338567887}
   m_PrefabAsset: {fileID: 0}

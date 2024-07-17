@@ -23,6 +23,9 @@ public class GameUIManager : MonoBehaviour
 
     float screenSmokeThinTimer = 0.0f;
 
+    [SerializeField, Header("蒸気空マーク")]
+    GameObject noPressureMarkObject;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,6 +68,22 @@ public class GameUIManager : MonoBehaviour
             colorbuf.a = Mathf.Lerp(0.0f, 1.0f, screenSmokeThinTimer / screenSmokeThinTime);
 
             screenSmokePanel.color = colorbuf;
+        }
+
+        //プレイヤーの蒸気が空になったらマークを表示
+        if (PlayerController.instance.bSteamEmptyCoolDown)
+        {
+            if (noPressureMarkObject.activeSelf == false)
+            {
+                noPressureMarkObject.SetActive(true);
+            }
+        }
+        else
+        {
+            if (noPressureMarkObject.activeSelf == true)
+            {
+                noPressureMarkObject.SetActive(false);
+            }
         }
     }
 

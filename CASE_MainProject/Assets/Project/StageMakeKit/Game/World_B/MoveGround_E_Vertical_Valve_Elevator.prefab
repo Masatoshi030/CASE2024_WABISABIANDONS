@@ -92,6 +92,7 @@ MonoBehaviour:
   bRotationLerp: 1
   moveSoundObject: {fileID: 908019613301896750}
   au_StopSound: {fileID: 6895386212949642210}
+  au_SteamSound: {fileID: 6966115848384827595}
 --- !u!1 &8316532173558005491
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,6 +208,12 @@ Transform:
 --- !u!82 &6895386212949642210 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 5866342186594427869, guid: 280d6b0db73cfcc4aa54bc504a8030d7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1069668790568233023}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &6966115848384827595 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 7959170531252926708, guid: 280d6b0db73cfcc4aa54bc504a8030d7,
     type: 3}
   m_PrefabInstance: {fileID: 1069668790568233023}
   m_PrefabAsset: {fileID: 0}
@@ -419,6 +426,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5001851683422028440}
     m_Modifications:
+    - target: {fileID: 2926731724758251732, guid: f30ebc6b986d4934f98ae124c416b739,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 691945325000a454db909fb3ec0e8215, type: 2}
     - target: {fileID: 3719175662854691073, guid: f30ebc6b986d4934f98ae124c416b739,
         type: 3}
       propertyPath: m_Name
@@ -508,6 +520,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9100274105485138106}
     m_Modifications:
+    - target: {fileID: 2926731724758251732, guid: f30ebc6b986d4934f98ae124c416b739,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 691945325000a454db909fb3ec0e8215, type: 2}
     - target: {fileID: 3719175662854691073, guid: f30ebc6b986d4934f98ae124c416b739,
         type: 3}
       propertyPath: m_Name

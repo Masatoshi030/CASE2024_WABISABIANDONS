@@ -28,6 +28,7 @@ public class HeadCollision_Manager : MonoBehaviour
 
     //重複防止　前回衝突したオブジェクト
     string lastCollisionEnterObjectName = "";
+    GameObject lastCollisionEnterObject;
 
 
     // Start is called before the first frame update
@@ -46,12 +47,14 @@ public class HeadCollision_Manager : MonoBehaviour
     {
 
         //同じオブジェクトに複数回衝突した場合は
-        if(other.gameObject.name == lastCollisionEnterObjectName)
+        if(other.gameObject.name == lastCollisionEnterObjectName && lastCollisionEnterObject.tag != "Enemy")
         {
             return;
         }
         else
         {
+            // 衝突したオブジェクトを記録
+            lastCollisionEnterObject = other.gameObject;
             //衝突したオブジェクト名を記録
             lastCollisionEnterObjectName = other.gameObject.name;
         }
@@ -178,8 +181,8 @@ public class HeadCollision_Manager : MonoBehaviour
 
                 if (other.tag == "Goal")
                 {
-                    //ゴールのアニメーションを移行
-                    other.GetComponent<Animator>().SetBool("bGoal", true);
+                    //ゴールオブジェクトのゴール処理
+                    GoalManager.instance.OnGoal();
 
                     //プレイヤーのゴール処理
                     PlayerController.instance.OnGoal();

@@ -23,11 +23,23 @@ public class ButtonManager : MonoBehaviour
     [SerializeField, Header("ボタンリスト"), ReadOnly]
     GameObject[] buttons;
 
+    Vector2 startButtonScale;
+
     float continuousCoolDownTimer = 0.0f;
+
+    [SerializeField, Header("ボタン選択音")]
+    AudioClip selectSound;
+
+    [SerializeField, Header("ボタン決定音")]
+    AudioClip enterSound;
+
+    AudioSource myAudioSource;
 
     // Start is called before the first frame update
     void Start()
     {
+        myAudioSource = this.GetComponent<AudioSource>();
+
         //ボタンの領域を確保
         buttons = new GameObject[transform.childCount];
 
@@ -37,8 +49,10 @@ public class ButtonManager : MonoBehaviour
             buttons[i] = transform.GetChild(i).gameObject;
         }
 
+        startButtonScale = buttons[0].transform.localScale;
+
         //選択中のボタン
-        buttons[selectButtonCount].transform.localScale = new Vector3(activeButtonScale.x, activeButtonScale.y, 1.0f);
+        buttons[selectButtonCount].transform.localScale = new Vector3(startButtonScale.x * activeButtonScale.x, startButtonScale.y * activeButtonScale.y, 1.0f);
         buttons[selectButtonCount].transform.GetChild(1).gameObject.SetActive(true);
     }
 
@@ -89,29 +103,35 @@ public class ButtonManager : MonoBehaviour
 
         if(DualSense_Manager.instance.GetInputState().CrossButton == ButtonState.NewDown)
         {
-            switch (selectButtonCount)
+            if (TransitionController.instance.bTransitioning == false)
             {
-                //ステージセレクト
-                case 0:
-                    TransitionController.instance.SetEventFunction_SceneChangeSetName("Select");
-                    TransitionController.instance.SetFadeOut();
+                //決定音再生
+                myAudioSource.PlayOneShot(enterSound);
 
-                    break;
+                switch (selectButtonCount)
+                {
+                    //ステージセレクト
+                    case 0:
+                        TransitionController.instance.SetEventFunction_SceneChangeSetName("Select");
+                        TransitionController.instance.SetFadeOut();
 
-                case 1:
-                    break;
+                        break;
 
-                //アプリケーション終了
-                case 2:
+                    case 1:
+                        break;
+
+                    //アプリケーション終了
+                    case 2:
 #if UNITY_EDITOR
-                    UnityEditor.EditorApplication.isPlaying = false;
+                        UnityEditor.EditorApplication.isPlaying = false;
 #else
                     Application.Quit();
 #endif
-                    break;
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -120,6 +140,9 @@ public class ButtonManager : MonoBehaviour
     {
 
         int countBuf = selectButtonCount + _addCount;
+
+        //決定音再生
+        //myAudioSource.PlayOneShot(selectSound);
 
         //カウント限界処理
         if (bLoop)
@@ -192,11 +215,11 @@ public class ButtonManager : MonoBehaviour
         }
 
         //前回選択していたボタン
-        buttons[lastSelectButtonCount].transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        buttons[lastSelectButtonCount].transform.localScale = new Vector3(startButtonScale.x, startButtonScale.y, 1.0f);
         buttons[lastSelectButtonCount].transform.GetChild(1).gameObject.SetActive(false);
 
         //選択中のボタン
-        buttons[selectButtonCount].transform.localScale = new Vector3(activeButtonScale.x, activeButtonScale.y, 1.0f);
+        buttons[selectButtonCount].transform.localScale = new Vector3(startButtonScale.x * activeButtonScale.x, startButtonScale.y * activeButtonScale.y, 1.0f);
         buttons[selectButtonCount].transform.GetChild(1).gameObject.SetActive(true);
     }
 }

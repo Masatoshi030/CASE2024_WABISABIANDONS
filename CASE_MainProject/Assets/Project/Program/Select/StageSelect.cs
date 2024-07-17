@@ -272,11 +272,15 @@ public class StageSelect : MonoBehaviour
         //タイトルにもどる
         if (DualSense_Manager.instance.GetInputState().CircleButton == DualSenseUnity.ButtonState.Down)
         {
-            //決定オン再生
-            myAudioSource.PlayOneShot(stageEnterSound);
+            //遷移中でなければ
+            if (TransitionController.instance.bTransitioning == false)
+            {
+                //決定オン再生
+                myAudioSource.PlayOneShot(stageEnterSound);
 
-            TransitionController.instance.SetEventFunction_SceneChangeSetName("Title");
-            TransitionController.instance.SetFadeOut();
+                TransitionController.instance.SetEventFunction_SceneChangeSetName("Title");
+                TransitionController.instance.SetFadeOut();
+            }
         }
  
         //ステージ決定
