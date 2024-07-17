@@ -27,8 +27,21 @@ public class Text_randomroulette : MonoBehaviour
 
     [SerializeField, Header("×ボタンのクールタイム")]
     float buttonCoolTime=0.25f;
+
     [SerializeField, Header("×ボタンを触っていない時間"),ReadOnly]
     float noTouchTime;
+
+    [SerializeField, Header("スコアルーレット音")]
+    GameObject scoreRouletteSoundObject;
+
+    AudioSource au_AnimationSound;
+
+    [SerializeField, Header("スタンプ音")]
+    AudioClip stampSound;
+
+
+    [SerializeField, Header("金属スタンプ音")]
+    AudioClip metalStampSound;
 
     //最後に表示する数字
     private int finalNumber_Valve = 0;
@@ -43,7 +56,9 @@ public class Text_randomroulette : MonoBehaviour
         //finalNumber_Valve = GoldValve_Count.instance.GetValveCount();
         //finalNumber_Enemy = (int)Enemy_Manager.instance.GetDefeatEnemyNum();
 
+        scoreRouletteSoundObject.SetActive(true);
 
+        au_AnimationSound = this.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -93,6 +108,8 @@ public class Text_randomroulette : MonoBehaviour
 
             }
 
+            scoreRouletteSoundObject.SetActive(false);
+
             finish_Rondom = false;
 
             textMeshPro_Valve.text = finalNumber_Valve.ToString();
@@ -111,6 +128,15 @@ public class Text_randomroulette : MonoBehaviour
         }
     }
 
+    public void PlayStampSound()
+    {
+        au_AnimationSound.PlayOneShot(stampSound);
+    }
+
+    public void PlayMetalStampSound()
+    {
+        au_AnimationSound.PlayOneShot(metalStampSound);
+    }
 }
 
     
