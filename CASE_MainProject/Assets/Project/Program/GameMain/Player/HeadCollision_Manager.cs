@@ -28,6 +28,7 @@ public class HeadCollision_Manager : MonoBehaviour
 
     //重複防止　前回衝突したオブジェクト
     string lastCollisionEnterObjectName = "";
+    string lastCollisionEnterObjectTag = "";
 
 
     // Start is called before the first frame update
@@ -46,12 +47,14 @@ public class HeadCollision_Manager : MonoBehaviour
     {
 
         //同じオブジェクトに複数回衝突した場合は
-        if(other.gameObject.name == lastCollisionEnterObjectName)
+        if(other.gameObject.name == lastCollisionEnterObjectName && lastCollisionEnterObjectTag != "Enemy")
         {
             return;
         }
         else
         {
+            // 衝突したオブジェクトを記録
+            lastCollisionEnterObjectTag = other.gameObject.tag;
             //衝突したオブジェクト名を記録
             lastCollisionEnterObjectName = other.gameObject.name;
         }

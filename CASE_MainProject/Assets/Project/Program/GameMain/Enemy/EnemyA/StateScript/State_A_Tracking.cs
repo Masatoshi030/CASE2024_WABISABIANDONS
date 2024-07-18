@@ -16,6 +16,8 @@ public class State_A_Tracking : EnemyState
     float trackSuccessDistance = 7.0f;
     [SerializeField, Header("矢印に適用するマテリアル")]
     Material allowMaterial;
+    [SerializeField, Header("発見時エフェクト")]
+    GameObject foundEffect;
 
     NavMeshPatrol patrol;
     float subCnt = 0.0f;
@@ -55,6 +57,10 @@ public class State_A_Tracking : EnemyState
 
         enemy.SetAllowActive(allowActive);
         enemy.AllowObject.GetComponent<TargetAllow>().SetMaterial(allowMaterial);
+
+        //検知時の発見エフェクト生成
+        GameObject foundEffectObjectBuf = Instantiate(foundEffect, enemy.EyeTransform.position, Quaternion.LookRotation(-enemy.EyeTransform.forward));
+        foundEffectObjectBuf.transform.parent = enemy.EyeTransform;
     }
 
     public override void MainFunc()
