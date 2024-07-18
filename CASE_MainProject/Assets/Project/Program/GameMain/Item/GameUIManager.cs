@@ -44,10 +44,17 @@ public class GameUIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(DualSense_Manager.instance.GetInputState().OptionsButton == DualSenseUnity.ButtonState.NewDown ||
-            DualSense_Manager.instance.GetInputState().CircleButton == DualSenseUnity.ButtonState.NewDown)
+        if(DualSense_Manager.instance.GetInputState().OptionsButton == DualSenseUnity.ButtonState.NewDown)
         {
             SetPause(!pauseObj.activeSelf);
+        }
+
+        if(pauseObj.activeSelf == true)
+        {
+            if(DualSense_Manager.instance.GetInputState().CircleButton == DualSenseUnity.ButtonState.NewDown)
+            {
+                SetPause(false);
+            }
         }
 
         //画面スモークエフェクトの自然消滅
