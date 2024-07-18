@@ -30,7 +30,10 @@ public class State_A_Tackle : EnemyState
     public override void Initialize()
     {
         base.Initialize();
-        tackleEffect = enemy.transform.Find("VFX_SpiderAttack").gameObject;
+        if(tackleEffect == null)
+        {
+            tackleEffect = enemy.transform.Find("VFX_SpiderAttack").gameObject;
+        }
     }
 
     public override void Enter()
