@@ -20,6 +20,10 @@ public class State_A_Tackle : EnemyState
     float subCnt = 0.0f;
     [SerializeField, Header("タックル時エフェクト")]
     GameObject tackleEffect;
+    [SerializeField, Header("攻撃SEのクリップIndex")]
+    int attackSEIndex;
+    [SerializeField, Header("SEボリューム"), Range(0.0f, 1.0f)]
+    float attackSEVolume = 0.75f;
 
     [Space(pad), Header("--遷移先リスト--")]
     [SerializeField, Header("衝突時の遷移")]
@@ -69,6 +73,8 @@ public class State_A_Tackle : EnemyState
 
         bTackle = true;
         subCnt = 0.0f;
+
+        enemy.PlaySound(attackSEIndex, attackSEVolume);
     }
 
     public override void MainFunc()

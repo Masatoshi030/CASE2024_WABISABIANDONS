@@ -159,6 +159,7 @@ MonoBehaviour:
   allowMaterial: {fileID: 2100000, guid: 74431d13e5998a94596d60c97accf534, type: 2}
   foundEffect: {fileID: 780995631120438579, guid: fc529a546ea228144a99c5052bb2ec9c,
     type: 3}
+  accumulateEffect: {fileID: 0}
   elapsedKey:
     stateName: tackle
     stateID: 5
@@ -221,6 +222,8 @@ MonoBehaviour:
   stiffnessTime: 3
   bTackle: 0
   tackleEffect: {fileID: 1625798863125930020}
+  attackSEIndex: 0
+  attackSEVolume: 0.35
   tackledKey:
     stateName: wait
     stateID: 6
@@ -980,6 +983,16 @@ PrefabInstance:
       propertyPath: allowObject
       value: 
       objectReference: {fileID: 1690073042978329071}
+    - target: {fileID: 5708086913351074613, guid: 8db4dbfc92755dd4b85ca7186443800d,
+        type: 3}
+      propertyPath: clips.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5708086913351074613, guid: 8db4dbfc92755dd4b85ca7186443800d,
+        type: 3}
+      propertyPath: clips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: ce225638028e28e4bb8cea52cdb783a3, type: 3}
     - target: {fileID: 8102577439101658313, guid: 8db4dbfc92755dd4b85ca7186443800d,
         type: 3}
       propertyPath: targetParent
