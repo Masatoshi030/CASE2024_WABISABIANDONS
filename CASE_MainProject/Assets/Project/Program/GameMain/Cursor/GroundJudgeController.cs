@@ -25,7 +25,8 @@ public class GroundJudgeController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Ground" ||
-            (other.tag == "BrokenWall" && PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack))
+            (other.tag == "BrokenWall" && PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack) ||
+            (other.tag == "BreakBox" && PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack))
         {
             onGroundState = ON_GROUND_STATE.NewOn;
 
@@ -40,7 +41,8 @@ public class GroundJudgeController : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         if (other.tag == "Ground" || 
-            (other.tag == "BrokenWall" && PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack))
+            (other.tag == "BrokenWall" && PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack)||
+            (other.tag == "BreakBox" && PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack))
         {
             onGroundState = ON_GROUND_STATE.On;
 
@@ -55,7 +57,8 @@ public class GroundJudgeController : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "Ground" ||
-            (other.tag == "BrokenWall" && PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack))
+            (other.tag == "BrokenWall" && PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack) ||
+            (other.tag == "BreakBox" && PlayerController.instance.attackState != PlayerController.ATTACK_STATE.Attack))
         {
             onGroundState = ON_GROUND_STATE.NewOff;
 
