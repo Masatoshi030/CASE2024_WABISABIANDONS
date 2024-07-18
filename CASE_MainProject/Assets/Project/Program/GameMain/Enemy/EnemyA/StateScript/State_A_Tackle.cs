@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class State_A_Tackle : EnemyState
 {
@@ -30,7 +31,6 @@ public class State_A_Tackle : EnemyState
     {
         base.Initialize();
         tackleEffect = enemy.transform.Find("VFX_SpiderAttack").gameObject;
-        tackleEffect.SetActive(false);
     }
 
     public override void Enter()
@@ -62,7 +62,7 @@ public class State_A_Tackle : EnemyState
         enemy.EnemyCollider.isTrigger = true;
 
         enemy.IsAttackNow = true;
-        tackleEffect.SetActive(true);
+        tackleEffect.GetComponent<VisualEffect>().SendEvent("OnPlay");
 
         bTackle = true;
         subCnt = 0.0f;
@@ -103,7 +103,7 @@ public class State_A_Tackle : EnemyState
     public override void Exit()
     {
         base.Exit();
-        tackleEffect.SetActive(false);
+        tackleEffect.GetComponent<VisualEffect>().SendEvent("OnStop");
         enemy.IsAttackNow = false;
         bTackle = false;
     }
