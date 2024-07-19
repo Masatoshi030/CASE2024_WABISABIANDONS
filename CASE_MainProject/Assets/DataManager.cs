@@ -37,5 +37,11 @@ public class DataManager : MonoBehaviour
         PlayerPrefs.SetInt(stageDataName, 1);
 
         Debug.Log(stageDataName + "のクリアデータをセーブしました");
+
+        PlayerPrefs.SetInt("[GoldValve]GetCount", GoldValve_Count.instance.GetValveCount());
+        PlayerPrefs.SetInt("[Enemy]KillCount", (int)Enemy_Manager.instance.GetDefeatEnemyNum());
+
+        Debug.Log(GoldValve_Count.instance.GetValveCount() + "のゴールドバルブをカウントしました。");
+        Debug.Log((int)Enemy_Manager.instance.GetDefeatEnemyNum() + "の敵のキルをカウントしました。");
     }
 }

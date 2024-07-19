@@ -7,8 +7,6 @@ using UnityEngine.SceneManagement;
 
 public class Text_randomroulette : MonoBehaviour
 {
-    [SerializeField, Header("リザルトで使用してるAnimator")]
-    public Animator result_Anim;
 
     [SerializeField, Header("ゴールドバルブ取得の数を示すテキスト")]
     public TextMeshProUGUI textMeshPro_Valve;
@@ -52,9 +50,8 @@ public class Text_randomroulette : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //倒した敵と獲得したバルブの数を取得していく
-        //finalNumber_Valve = GoldValve_Count.instance.GetValveCount();
-        //finalNumber_Enemy = (int)Enemy_Manager.instance.GetDefeatEnemyNum();
+        finalNumber_Valve = PlayerPrefs.GetInt("[GoldValve]GetCount");
+        finalNumber_Enemy = PlayerPrefs.GetInt("[Enemy]KillCount");
 
         scoreRouletteSoundObject.SetActive(true);
 
@@ -102,7 +99,6 @@ public class Text_randomroulette : MonoBehaviour
                 {
                     noTouchTime = 0.0f;
                     finish_Rondom = false;
-                    result_Anim.SetTrigger("Stamp_finish");
                 }
 
 
@@ -114,8 +110,6 @@ public class Text_randomroulette : MonoBehaviour
 
             textMeshPro_Valve.text = finalNumber_Valve.ToString();
             textMeshPro_Enemy.text = finalNumber_Enemy.ToString();
-
-            result_Anim.SetBool("Start_Anim", true);
         }
     }
 

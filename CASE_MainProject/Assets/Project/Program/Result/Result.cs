@@ -13,13 +13,13 @@ public class Result : MonoBehaviour
     public TextMeshProUGUI enemy_Score;
     
     public int result_Valve;  //リザルトに出す数字
-    public uint result_Enemy;
+    public int result_Enemy;
 
     void Start()
     {
         //他のスクリプトから値を取得してくる
-        result_Valve = GoldValve_Count.instance.GetValveCount();
-        result_Enemy = Enemy_Manager.instance.GetDefeatEnemyNum();
+        result_Valve = PlayerPrefs.GetInt("[GoldValve]GetCount");
+        result_Enemy = PlayerPrefs.GetInt("[Enemy]KillCount");
 
         valve_Score.text = result_Valve.ToString();
         enemy_Score.text = result_Enemy.ToString();
