@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MessageJudgeCollision : MonoBehaviour
 {
+    bool bHited = false;
 
     [SerializeField, Header("このチュートリアルを表示する判定オブジェクト")]
     MessageElementController messageElementController;
@@ -12,7 +13,11 @@ public class MessageJudgeCollision : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            messageElementController.SetActiveTutorial();
+            if(!bHited)
+            {
+                messageElementController.SetActiveTutorial();
+                bHited = true;
+            }
 
             Destroy(transform.parent.gameObject);
 
