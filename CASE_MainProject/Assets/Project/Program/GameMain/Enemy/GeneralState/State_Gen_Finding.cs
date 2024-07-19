@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class State_Gen_Finding : EnemyState
 {
@@ -19,11 +20,24 @@ public class State_Gen_Finding : EnemyState
     [SerializeField, Header("発見時エフェクト")]
     GameObject foundEffect;
 
+    [SerializeField, Header("溜めエフェクト")]
+    GameObject accumulateEffect;
+    bool bAccumulate = false;
+
     [Space(pad), Header("--遷移先リスト--")]
     [SerializeField, Header("経過時の遷移")]
     StateKey elapsedKey;
     [SerializeField, Header("ダメージ時の遷移")]
     StateKey damagedKey;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        if(accumulateEffect != null)
+        {
+            bAccumulate = true;
+        }
+    }
 
     public override void Enter()
     {
@@ -41,6 +55,11 @@ public class State_Gen_Finding : EnemyState
         //検知時の発見エフェクト生成
         GameObject foundEffectObjectBuf = Instantiate(foundEffect, enemy.EyeTransform.position, Quaternion.LookRotation(-enemy.EyeTransform.forward));
         foundEffectObjectBuf.transform.parent = enemy.EyeTransform;
+
+        if(bAccumulate)
+        {
+            accumulateEffect.GetComponent<VisualEffect>().SendEvent("OnPlay");
+        }
     }
 
     public override void MainFunc()
@@ -81,6 +100,10 @@ public class State_Gen_Finding : EnemyState
     public override void Exit()
     {
         base.Exit();
+        if (bAccumulate)
+        {
+            accumulateEffect.GetComponent<VisualEffect>().SendEvent("OnStop");
+        }
         enemy.IsAttackNow = false;
         enemy.SetAllowActive(false);
         enemy.AllowObject.GetComponent<TargetAllow>().EndDesignation();

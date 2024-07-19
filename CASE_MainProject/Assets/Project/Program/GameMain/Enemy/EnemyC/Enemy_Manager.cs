@@ -21,6 +21,8 @@ public class Enemy_Manager : MonoBehaviour
     GameObject steamEffect;
     [SerializeField, Header("蒸気SE")]
     AudioSource steamSE;
+    [SerializeField, Header("木散開エフェクト")]
+    GameObject woodEffect;
 
     [SerializeField, Header("反射マテリアル0")]
     Material reflectMaterial0;
@@ -75,6 +77,12 @@ public class Enemy_Manager : MonoBehaviour
     {
         GameObject obj = Instantiate(sparkleEffect, position, quaternion);
         obj.GetComponent<AudioSource>().PlayOneShot(sparkleSE.clip);
+        return obj;
+    }
+
+    public GameObject CreateWoodEffect(Vector3 position, Quaternion quaternion)
+    {
+        GameObject obj = Instantiate(woodEffect, position, quaternion);
         return obj;
     }
 

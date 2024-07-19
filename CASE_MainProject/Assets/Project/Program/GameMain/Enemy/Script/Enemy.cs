@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -112,6 +113,9 @@ public class Enemy : Subscriber
 
     public GameObject AllowObject { get => allowObject; }
 
+    [SerializeField, Header("AudioSource")]
+    AudioClip[] clips;
+    AudioSource audioSource;
     public bool countEnable = true;
 
     public void SetAllowActive(bool active)
@@ -151,6 +155,8 @@ public class Enemy : Subscriber
         enemyStateMachine = GetComponent<EnemyStateMachine>();
         enemyStateMachine.EnemyComponent = this;
         enemyStateMachine.Initialize();
+        audioSource = gameObject.AddComponent<AudioSource>();
+
         if(allowObject != null)
         {
             allowObject.SetActive(false);
@@ -283,5 +289,14 @@ public class Enemy : Subscriber
         enemyPressure += value;
         if (enemyPressure > maxPressure) enemyPressure = maxPressure;
         else if (enemyPressure < 0.0f) enemyPressure = 0.0f;
+    }
+
+    public void PlaySound(int clipIndex, float volume)
+    {
+        if(clipIndex < clips.Length)
+        {
+            audioSource.volume = volume;
+            audioSource.PlayOneShot(clips[clipIndex]);
+        }
     }
 }

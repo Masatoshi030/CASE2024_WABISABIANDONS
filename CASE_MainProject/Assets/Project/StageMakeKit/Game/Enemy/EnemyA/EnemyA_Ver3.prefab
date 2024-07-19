@@ -190,6 +190,7 @@ MonoBehaviour:
   allowMaterial: {fileID: 2100000, guid: 22696f8214ad3064782fd38f1a5d937a, type: 2}
   foundEffect: {fileID: 780995631120438579, guid: fc529a546ea228144a99c5052bb2ec9c,
     type: 3}
+  accumulateEffect: {fileID: 4544877855666442508}
   elapsedKey:
     stateName: tackle
     stateID: 5
@@ -252,6 +253,8 @@ MonoBehaviour:
   stiffnessTime: 2.5
   bTackle: 0
   tackleEffect: {fileID: 4397936334812601422}
+  attackSEIndex: 0
+  attackSEVolume: 0.35
   tackledKey:
     stateName: wait
     stateID: 6
@@ -562,13 +565,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
+      propertyPath: m_PropertySheet.m_Int.m_Array.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
       propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
@@ -582,8 +590,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
+      propertyPath: m_PropertySheet.m_Int.m_Array.Array.data[0].m_Name
+      value: lightningRate
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Int.m_Array.Array.data[0].m_Value
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
@@ -602,6 +620,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Name
+      value: lightningIntensity
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[0].m_Value
       value: 0.25
       objectReference: {fileID: 0}
@@ -617,6 +640,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Value
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
       propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[0].m_Name
       value: mainParticleColor
       objectReference: {fileID: 0}
@@ -627,6 +655,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Name
+      value: lightningGradient
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
       propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[0].m_Name
       value: mainLifeTimeSpace
       objectReference: {fileID: 0}
@@ -634,6 +667,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[0].m_Name
       value: updateVelocity
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Int.m_Array.Array.data[0].m_Overridden
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
@@ -652,13 +690,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
+      propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[3].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
       propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[0].m_Value.x
       value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
       propertyPath: m_PropertySheet.m_Vector2f.m_Array.Array.data[0].m_Value.y
-      value: 0.4
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
@@ -688,6 +731,11 @@ PrefabInstance:
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
       propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[1].m_Overridden
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Overridden
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
@@ -823,17 +871,17 @@ PrefabInstance:
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
       propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[1].m_Value.key0.b
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
       propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[1].m_Value.key0.g
-      value: 3.4910297
+      value: 3.9659834
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
       propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[1].m_Value.key0.r
-      value: 0
+      value: 3.9999995
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
@@ -892,6 +940,61 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Value.atime1
+      value: 55329
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Value.atime2
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Value.ctime1
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Value.key0.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Value.key0.b
+      value: 14.124952
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Value.key0.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Value.key0.r
+      value: 6.021636
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Value.key1.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Value.key1.b
+      value: 18.026129
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Value.key1.g
+      value: 8.58792
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Value.key1.r
+      value: 12.127902
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.data[0].m_Overridden
       value: 1
       objectReference: {fileID: 0}
@@ -903,6 +1006,11 @@ PrefabInstance:
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
       propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[1].m_Value.m_ColorSpace
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Value.m_ColorSpace
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
@@ -923,6 +1031,16 @@ PrefabInstance:
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
       propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[1].m_Value.m_NumColorKeys
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Value.m_NumAlphaKeys
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.data[2].m_Value.m_NumColorKeys
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 411507917808861735, guid: d02053edee8dfab459933d97af5bf05d,
@@ -1015,6 +1133,16 @@ PrefabInstance:
       propertyPath: enemyCollider
       value: 
       objectReference: {fileID: 8465775852069782694}
+    - target: {fileID: 4795324841128855410, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: clips.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4795324841128855410, guid: d02053edee8dfab459933d97af5bf05d,
+        type: 3}
+      propertyPath: clips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: ec931ec16e0591148a7fcf43956ff355, type: 3}
     - target: {fileID: 7508416121371352640, guid: d02053edee8dfab459933d97af5bf05d,
         type: 3}
       propertyPath: m_PropertySheet.m_Gradient.m_Array.Array.size
@@ -1168,6 +1296,12 @@ PrefabInstance:
 --- !u!1 &4397936334812601422 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5478062352208584467, guid: d02053edee8dfab459933d97af5bf05d,
+    type: 3}
+  m_PrefabInstance: {fileID: 8146280984029725533}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4544877855666442508 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5629430473606632017, guid: d02053edee8dfab459933d97af5bf05d,
     type: 3}
   m_PrefabInstance: {fileID: 8146280984029725533}
   m_PrefabAsset: {fileID: 0}
