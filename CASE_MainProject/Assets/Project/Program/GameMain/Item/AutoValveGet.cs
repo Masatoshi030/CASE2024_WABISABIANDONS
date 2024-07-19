@@ -31,8 +31,6 @@ public class AutoValveGet : MonoBehaviour
             }
             if (cnt >= 0.5f)
             {
-                updateEnable = false;
-
                 if (myCollider)
                     myCollider.enabled = true;
             }
