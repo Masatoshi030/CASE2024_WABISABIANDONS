@@ -781,8 +781,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 03f681b0352631443ba6fef5373bfd82, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.8
-  m_Pitch: 2
+  m_Volume: 0.5
+  m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -825,7 +825,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.5
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -2855,6 +2855,8 @@ MonoBehaviour:
     type: 3}
   au_Damage: {fileID: 2820129448502716723}
   damageSound: {fileID: 8300000, guid: 531ef2cf68f44654890728e9140efe99, type: 3}
+  au_GameOver: {fileID: 5738367466518268649}
+  gameOverSound: {fileID: 8300000, guid: 03f681b0352631443ba6fef5373bfd82, type: 3}
   valveFlyTime: 1
   valveFlyTimer: 0
   valveFlyState: 0

@@ -233,6 +233,12 @@ public class PlayerController : MonoBehaviour
 
     bool bGetDamage = false;
 
+    [SerializeField, Header("ゲームオーバー時のオーディオソース")]
+    AudioSource au_GameOver;
+
+    [SerializeField, Header("ゲームオーバー時の効果音")]
+    AudioClip gameOverSound;
+
 
     //=== バルブ蒸気ぶっ飛び ===//
     [SerializeField, Header("バルブぶっ飛び時間")]
@@ -494,6 +500,9 @@ public class PlayerController : MonoBehaviour
 
             //振動処理
             DualSense_Manager.instance.SetLeftRumble(1.0f, 0.5f);
+
+            //死亡効果音
+            au_GameOver.PlayOneShot(gameOverSound);
 
             //BGMをフェード終了
             mainBGMManager.SetFadeStop(2.0f);
