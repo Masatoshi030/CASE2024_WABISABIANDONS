@@ -46,6 +46,8 @@ public class EnemyC_Rolling : EnemyState_C
 
         rb = enemy.transform.GetComponent<Rigidbody>();
         rollingBody = enemy.transform.Find("Body").gameObject;
+        trailObject = rollingBody.transform.Find("Trail").gameObject;
+        trailObject.SetActive(false);
         if (trailObject != null)
         {
             trailObject.SetActive(false);
@@ -261,6 +263,15 @@ public class EnemyC_Rolling : EnemyState_C
 
                 ExplosionMyBody();
             }
+        }
+        else if(collision.transform.tag == "BreakBox")
+        {
+            collision.transform.GetComponent<GoldValveDropper>().DropValve();
+
+            Enemy_Manager.instance.CreateWoodEffect(collision.transform.position, Quaternion.identity);
+
+            //ëŒè€ï®ÇçÌèú
+            Destroy(collision.gameObject);
         }
     }
 

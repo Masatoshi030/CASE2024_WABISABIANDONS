@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
@@ -326,6 +327,18 @@ public class StageSelect : MonoBehaviour
                 //セレクトデータ保存
                 PlayerPrefs.SetInt("SELECT[SelectPageCount]", nowPage);
                 PlayerPrefs.SetInt("SELECT[SelectStageCount]", nowSelect);
+            }
+        }
+
+        // △ボタン押下時の処理(ストーリー)
+        if(DualSense_Manager.instance.GetInputState().TriangleButton == DualSenseUnity.ButtonState.NewDown)
+        {
+            // ストーリーへ遷移
+            //遷移中でなければ
+            if (TransitionController.instance.bTransitioning == false)
+            {
+                TransitionController.instance.SetEventFunction_SceneChangeSetName("Cutscenedevelop");
+                TransitionController.instance.SetFadeOut();
             }
         }
     }
