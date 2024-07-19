@@ -399,7 +399,8 @@ public class PlayerController : MonoBehaviour
             {
                 isSelfHitStop = false;
                 myRigidbody.velocity = saveVeclocity;
-                characterAnimation.speed = saveAnimSpeed;
+                //characterAnimation.speed = saveAnimSpeed;
+                characterAnimation.speed = 1.0f;
             }
             return;
         }
