@@ -41,7 +41,7 @@ public class StoryManager : MonoBehaviour
         if (bLock == false)
         {
             //次へ進む
-            if (DualSense_Manager.instance.GetInputState().CircleButton == DualSenseUnity.ButtonState.NewDown)
+            if (DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.NewDown)
             {
                 if (storyCount < storyMaxCount)
                 {
@@ -57,10 +57,15 @@ public class StoryManager : MonoBehaviour
                     //ページ音再生
                     myAudioSource.PlayOneShot(transitionSound);
                 }
+                else
+                {
+                    TransitionController.instance.SetEventFunction_SceneChangeSetName("Select");
+                    TransitionController.instance.SetFadeOut();
+                }
             }
 
             //前へ戻る
-            if (DualSense_Manager.instance.GetInputState().CrossButton == DualSenseUnity.ButtonState.NewDown)
+            if (DualSense_Manager.instance.GetInputState().CircleButton == DualSenseUnity.ButtonState.NewDown)
             {
                 if (0 < storyCount)
                 {
