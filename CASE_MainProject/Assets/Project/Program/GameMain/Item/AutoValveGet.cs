@@ -12,6 +12,7 @@ public class AutoValveGet : MonoBehaviour
     Rigidbody rb;
     [SerializeField, Header("コライダー")]
     Collider myCollider;
+    bool updateEnable = true;
 
     private void Start()
     {
@@ -19,16 +20,22 @@ public class AutoValveGet : MonoBehaviour
     }
     void Update()
     {
-        cnt += Time.deltaTime;
-        if(cnt >= waitTime && isAuto)
+        if(updateEnable)
         {
-            gameObject.GetComponent<GoldValveController>().startPosition = transform.position;
-            gameObject.GetComponent<GoldValveController>().GetGoldValve();
-            this.enabled = false;
-        }
-        if(cnt >= 0.5f)
-        {
-            myCollider.enabled = true;
+            cnt += Time.deltaTime;
+            if (cnt >= waitTime && isAuto)
+            {
+                gameObject.GetComponent<GoldValveController>().startPosition = transform.position;
+                gameObject.GetComponent<GoldValveController>().GetGoldValve();
+                this.enabled = false;
+            }
+            if (cnt >= 0.5f)
+            {
+                updateEnable = false;
+
+                if (myCollider)
+                    myCollider.enabled = true;
+            }
         }
     }
 

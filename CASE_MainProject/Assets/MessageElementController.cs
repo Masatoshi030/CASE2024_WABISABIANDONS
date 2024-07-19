@@ -17,6 +17,11 @@ public class MessageElementController : MonoBehaviour
 
     GameObject sprits;
 
+    [SerializeField, Header("SEƒNƒŠƒbƒv")]
+    AudioClip[] clips;
+
+    AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +35,8 @@ public class MessageElementController : MonoBehaviour
             messagePageList[i - 1] = transform.GetChild(i).gameObject;
             messagePageList[i - 1].SetActive(false);
         }
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -48,9 +55,11 @@ public class MessageElementController : MonoBehaviour
 
                 messagePageList[pageCount].SetActive(true);
                 messagePageList[pageCount - 1].SetActive(false);
+                audioSource.PlayOneShot(clips[1]);
             }
             else
             {
+                MessageManager.instance.ClearElement();
                 Destroy(this.gameObject);
             }
         }
@@ -63,14 +72,25 @@ public class MessageElementController : MonoBehaviour
 
                 messagePageList[pageCount].SetActive(true);
                 messagePageList[pageCount + 1].SetActive(false);
+                audioSource.PlayOneShot(clips[1]);
             }
         }
     }
 
     public void SetActiveTutorial()
     {
+        MessageManager.instance.SetCurrentMessage(this);
         bShow = true;
         sprits.SetActive(true);
+        audioSource.PlayOneShot(clips[0]);
         messagePageList[pageCount].SetActive(true);
+    }
+
+    public void SetInactiveTutorial()
+    {
+        bShow = false;
+        sprits.SetActive(false);
+        messagePageList[pageCount].SetActive(false);
+        Destroy(this.gameObject);
     }
 }
